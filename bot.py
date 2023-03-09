@@ -1,35 +1,50 @@
-from flask import Flask, jsonify
 from threading import Thread
 import discord
 from discord.ext import commands
+from quart import Quart, jsonify
+import asyncio
 
-app = Flask(__name__)
 bot = commands.Bot(command_prefix="?", intents=discord.Intents.all())
+
+
+app = Quart(__name__)
 
 
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
 
-@app.route('/most_recent_message')
-async def most_recent_message():
-    
-    channel = bot.get_channel(1073104398286340136)  # Replace with the ID of the channel you want to get the most recent message from
+
+@app.route('/ping')
+async def ping():
+    return jsonify({'message': 'pong'})
+
+
+@app.route('/message')
+async def message():
+    # Return most recent message
+    channel = bot.get_channel(1073104398286340136)
     async for message in channel.history(limit=1):
         return jsonify({'message': message.content})
     else:
         return jsonify({'message': 'No messages found'})
 
-# thread function
-def flask_thread(func):
-    thread = Thread(target=func)
-    print('Start Separate Thread From Bot')
-    thread.start()
+
+@bot.command()
+async def hello(ctx):
+    await ctx.send('Hello, World!')
 
 
-def run():
-    app.run()
+async def start_app():
+    await app.run_task(host='0.0.0.0', port=5010)
+
+
+async def start_bot():
+    await bot.start('hehe')
+
+
+async def main():
+    await asyncio.gather(start_app(), start_bot())
 
 if __name__ == '__main__':
-    flask_thread(func=run)
-    bot.run('MTA3NzQ3NDM4Mzc3OTYwNjYwMA.GAejme.M9ozFBunjSXJOuFIjlSlh9trTuFSbtJflZn2nE')
+    asyncio.run(main())
