@@ -1,0 +1,406 @@
+2023-03-11 01:17:16.966  INFO 34585 --- [main] lavalink.server.Launcher                 : Starting Launcher using Java 19.0.1 on br3nrs-Air.modem with PID 34585 (/Users/br3nr/Source/repo/denbot/bot/Lavalink.jar started by br3nr in /Users/br3nr/Source/repo/denbot/bot)
+2023-03-11 01:17:16.968  INFO 34585 --- [main] lavalink.server.Launcher                 : No active profile set, falling back to 1 default profile: "default"
+2023-03-11 01:17:17.414  INFO 34585 --- [main] lavalink.server.Launcher                 : Started Launcher in 0.793 seconds (JVM running for 1.156)
+2023-03-11 01:17:17.416  INFO 34585 --- [main] lavalink.server.Launcher                 : You can safely ignore the big red warning about illegal reflection. See https://github.com/freyacodes/Lavalink/issues/295
+2023-03-11 01:17:17.448  INFO 34585 --- [main] lavalink.server.Launcher                 : 
+
+[32m       .  [31m _                  _ _       _    [32m__ _ _
+[32m      /\\ [31m| | __ ___   ____ _| (_)_ __ | | __[32m\ \ \ \
+[32m     ( ( )[31m| |/ _` \ \ / / _` | | | '_ \| |/ /[32m \ \ \ \
+[32m      \\/ [31m| | (_| |\ V / (_| | | | | | |   < [32m  ) ) ) )
+[32m       '  [31m|_|\__,_| \_/ \__,_|_|_|_| |_|_|\_\[32m / / / /
+[0m    =========================================[32m/_/_/_/[0m
+
+	Version:        3.7.3
+	Build time:     23.01.2023 11:30:01 UTC
+	Branch          HEAD
+	Commit:         702bb8d
+	Commit time:    23.01.2023 11:28:02 UTC
+	JVM:            19.0.1
+	Lavaplayer      1.3.99.2-original
+
+2023-03-11 01:17:17.455  INFO 34585 --- [main] lavalink.server.Launcher                 : No active profile set, falling back to 1 default profile: "default"
+2023-03-11 01:17:17.935  WARN 34585 --- [main] io.undertow.websockets.jsr               : UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+2023-03-11 01:17:17.950  INFO 34585 --- [main] io.undertow.servlet                      : Initializing Spring embedded WebApplicationContext
+2023-03-11 01:17:17.951  INFO 34585 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 493 ms
+2023-03-11 01:17:18.033  WARN 34585 --- [main] l.server.config.SentryConfiguration      : Turning off sentry
+2023-03-11 01:17:18.171  INFO 34585 --- [main] c.s.d.l.tools.GarbageCollectionMonitor   : GC monitoring enabled, reporting results every 2 minutes.
+2023-03-11 01:17:18.283  INFO 34585 --- [main] lavalink.server.config.KoeConfiguration  : OS: DARWIN, Arch: ARMv8_64
+2023-03-11 01:17:18.283  INFO 34585 --- [main] lavalink.server.config.KoeConfiguration  : Enabling JDA-NAS
+2023-03-11 01:17:18.285  INFO 34585 --- [main] c.s.l.c.natives.NativeLibraryLoader      : Native library udpqueue: loading with filter null
+2023-03-11 01:17:19.041  INFO 34585 --- [main] c.s.l.c.natives.NativeLibraryLoader      : Native library udpqueue: successfully loaded.
+2023-03-11 01:17:19.254  INFO 34585 --- [main] io.undertow                              : starting server: Undertow - 2.2.16.Final
+2023-03-11 01:17:19.262  INFO 34585 --- [main] org.xnio                                 : XNIO version 3.8.6.Final
+2023-03-11 01:17:19.269  INFO 34585 --- [main] org.xnio.nio                             : XNIO NIO Implementation Version 3.8.6.Final
+2023-03-11 01:17:19.345  INFO 34585 --- [main] org.jboss.threads                        : JBoss Threads version 3.1.0.Final
+2023-03-11 01:17:19.377  INFO 34585 --- [main] o.s.b.w.e.undertow.UndertowWebServer     : Undertow started on port(s) 2333 (http)
+2023-03-11 01:17:19.380  INFO 34585 --- [main] lavalink.server.Launcher                 : Started Launcher in 1.961 seconds (JVM running for 3.122)
+2023-03-11 01:17:19.380  INFO 34585 --- [main] lavalink.server.Launcher                 : Lavalink is ready to accept connections.
+2023-03-11 01:17:29.554  INFO 34585 --- [XNIO-1 task-1] io.undertow.servlet                      : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-03-11 01:17:29.554  INFO 34585 --- [XNIO-1 task-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-03-11 01:17:29.555  INFO 34585 --- [XNIO-1 task-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-03-11 01:17:29.569  INFO 34585 --- [XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63635
+2023-03-11 01:17:29.569  INFO 34585 --- [XNIO-1 task-2] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63636
+2023-03-11 01:17:29.585  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:17:29.585  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:17:29.733  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:17:29.733  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:17:29.744  INFO 34585 --- [XNIO-1 I/O-5] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "009ea495135e9f1c", "timeout": 60}
+2023-03-11 01:17:29.744  INFO 34585 --- [XNIO-1 I/O-3] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "0c9cd145e685b352", "timeout": 60}
+2023-03-11 01:17:29.744  WARN 34585 --- [XNIO-1 I/O-5] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:17:29.744  WARN 34585 --- [XNIO-1 I/O-3] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:18:22.969  INFO 34585 --- [XNIO-1 task-2] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63643
+2023-03-11 01:18:22.969  INFO 34585 --- [XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63644
+2023-03-11 01:18:22.978  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:18:22.978  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:18:22.982  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:18:22.982  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:18:22.984  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "1ad8defd7049fc78", "timeout": 60}
+2023-03-11 01:18:22.984  INFO 34585 --- [XNIO-1 I/O-6] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "5cef881b142bc875", "timeout": 60}
+2023-03-11 01:18:22.984  WARN 34585 --- [XNIO-1 I/O-8] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:18:22.984  WARN 34585 --- [XNIO-1 I/O-6] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:18:33.944  INFO 34585 --- [XNIO-1 task-1] l.server.player.AudioLoaderRestHandler   : Got request to load for identifier "ytsearch:jaja"
+2023-03-11 01:18:34.396  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "voiceUpdate", "guildId": "1044512992647204864", "sessionId": "ef112dfe6ac2f05f3c1ef29887869dce", "event": {"token": "f07b549ed1ce8394", "guild_id": "1044512992647204864", "endpoint": "singapore11031.discord.media:443"}}
+2023-03-11 01:18:35.042  INFO 34585 --- [lava-daemon-pool-info-loader-2-thread-1] lavalink.server.player.AudioLoader       : Loaded playlist Search results for: jaja
+2023-03-11 01:18:35.089  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /loadtracks?identifier=ytsearch:jaja, client=127.0.0.1
+2023-03-11 01:18:35.090  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "play", "guildId": "1044512992647204864", "track": "QAAAiwIAJUF5YSBOYWthbXVyYSAtIERqYWRqYSAoQ2xpcCBvZmZpY2llbCkADEF5YSBOYWthbXVyYQAAAAAAAquYAAtpUEdnbnpjMzR0WQABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PWlQR2duemMzNHRZAAd5b3V0dWJlAAAAAAAAAAA=", "noReplace": false}
+2023-03-11 01:18:35.101  WARN 34585 --- [lava-daemon-pool-playback-1-thread-1] c.s.d.l.s.y.YoutubeAccessTokenTracker    : YouTube auth tokens can't be retrieved because email and password is not set in YoutubeAudioSourceManager, age restricted videos will throw exceptions.
+2023-03-11 01:18:35.108  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /decodetrack?track=QAAAiwIAJUF5YSBOYWthbXVyYSAtIERqYWRqYSAoQ2xpcCBvZmZpY2llbCkADEF5YSBOYWthbXVyYQAAAAAAAquYAAtpUEdnbnpjMzR0WQABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PWlQR2duemMzNHRZAAd5b3V0dWJlAAAAAAAAAAA%3D, client=127.0.0.1
+2023-03-11 01:18:36.660  INFO 34585 --- [lava-daemon-pool-playback-1-thread-1] c.s.d.l.s.y.YoutubeAccessTokenTracker    : Updating YouTube visitor id (current is null).
+2023-03-11 01:18:37.071  INFO 34585 --- [lava-daemon-pool-playback-1-thread-1] c.s.d.l.s.y.YoutubeAccessTokenTracker    : Updating YouTube visitor id succeeded, new one is CgthWDRSUkhOMktMWSjtzK2gBg%3D%3D, next update will be after 600 seconds.
+2023-03-11 01:20:40.079  INFO 34585 --- [XNIO-1 task-2] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63695
+2023-03-11 01:20:40.080  INFO 34585 --- [XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63694
+2023-03-11 01:20:40.088  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:20:40.088  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:20:40.092  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:20:40.094  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:20:40.094  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "e635cccad62a692d", "timeout": 60}
+2023-03-11 01:20:40.095  WARN 34585 --- [XNIO-1 I/O-8] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:20:40.096  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "96ebe04579f3f967", "timeout": 60}
+2023-03-11 01:20:40.096  WARN 34585 --- [XNIO-1 I/O-8] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:20:44.366  INFO 34585 --- [XNIO-1 task-2] l.server.player.AudioLoaderRestHandler   : Got request to load for identifier "ytsearch:jajajajaja"
+2023-03-11 01:20:44.846  INFO 34585 --- [lava-daemon-pool-info-loader-2-thread-1] lavalink.server.player.AudioLoader       : Loaded playlist Search results for: jajajajaja
+2023-03-11 01:20:44.855  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /loadtracks?identifier=ytsearch:jajajajaja, client=127.0.0.1
+2023-03-11 01:20:44.856  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "play", "guildId": "1044512992647204864", "track": "QAAAiAIAIWphamFqYWphamEg7aC+7bSjICBAc2VsZW5lZ3V6bWFuaAANQ2HDrW4gR3V6bcOhbgAAAAAAAGWQAAtzeU1fRjZHejV5MAABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXN5TV9GNkd6NXkwAAd5b3V0dWJlAAAAAAAAAAA=", "noReplace": false}
+2023-03-11 01:20:44.861  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /decodetrack?track=QAAAiAIAIWphamFqYWphamEg7aC%2B7bSjICBAc2VsZW5lZ3V6bWFuaAANQ2HDrW4gR3V6bcOhbgAAAAAAAGWQAAtzeU1fRjZHejV5MAABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXN5TV9GNkd6NXkwAAd5b3V0dWJlAAAAAAAAAAA%3D, client=127.0.0.1
+2023-03-11 01:20:44.862  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "voiceUpdate", "guildId": "1044512992647204864", "sessionId": "c94a30f57320bb739d3565e4f0b2cc55", "event": {"token": "f07b549ed1ce8394", "guild_id": "1044512992647204864", "endpoint": "singapore11031.discord.media:443"}}
+2023-03-11 01:21:02.021  INFO 34585 --- [XNIO-1 task-2] l.server.player.AudioLoaderRestHandler   : Got request to load for identifier "ytsearch:wow monkey"
+2023-03-11 01:21:02.612  INFO 34585 --- [lava-daemon-pool-info-loader-2-thread-1] lavalink.server.player.AudioLoader       : Loaded playlist Search results for: wow monkey
+2023-03-11 01:21:02.615  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /loadtracks?identifier=ytsearch:wow+monkey, client=127.0.0.1
+2023-03-11 01:21:11.584  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /decodetrack?track=QAAAiAIAIWphamFqYWphamEg7aC%2B7bSjICBAc2VsZW5lZ3V6bWFuaAANQ2HDrW4gR3V6bcOhbgAAAAAAAGWQAAtzeU1fRjZHejV5MAABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXN5TV9GNkd6NXkwAAd5b3V0dWJlAAAAAAAAZWg%3D, client=127.0.0.1
+2023-03-11 01:21:11.587  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "play", "guildId": "1044512992647204864", "track": "QAAAlwIANFN1bW1hcnkgb2YgdGhlIGJlc3QgdmlkZW9zIGFib3V0IEJhYnkgbW9ua2V5IEJvbiBCb24ACUFuaW1hbCBIVAAAAAAAHcEwAAtlakVnWG9lbHEzTQABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PWVqRWdYb2VscTNNAAd5b3V0dWJlAAAAAAAAAAA=", "noReplace": false}
+2023-03-11 01:21:11.593  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /decodetrack?track=QAAAlwIANFN1bW1hcnkgb2YgdGhlIGJlc3QgdmlkZW9zIGFib3V0IEJhYnkgbW9ua2V5IEJvbiBCb24ACUFuaW1hbCBIVAAAAAAAHcEwAAtlakVnWG9lbHEzTQABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PWVqRWdYb2VscTNNAAd5b3V0dWJlAAAAAAAAAAA%3D, client=127.0.0.1
+2023-03-11 01:21:13.770  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "destroy", "guildId": "1044512992647204864"}
+2023-03-11 01:24:52.118  INFO 34585 --- [XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63742
+2023-03-11 01:24:52.118  INFO 34585 --- [XNIO-1 task-2] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63741
+2023-03-11 01:24:52.127  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:24:52.127  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:24:52.135  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:24:52.136  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:24:52.137  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "e92655ceb9c7cefa", "timeout": 60}
+2023-03-11 01:24:52.137  WARN 34585 --- [XNIO-1 I/O-8] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:24:52.138  INFO 34585 --- [XNIO-1 I/O-8] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "5c3d43d6c225ac9f", "timeout": 60}
+2023-03-11 01:24:52.138  WARN 34585 --- [XNIO-1 I/O-8] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:28:34.484  INFO 34585 --- [XNIO-1 task-2] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63778
+2023-03-11 01:28:34.486  INFO 34585 --- [XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63777
+2023-03-11 01:28:34.493  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:28:34.493  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:28:34.497  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:28:34.497  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:28:34.498  INFO 34585 --- [XNIO-1 I/O-5] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "8ec4422c792a6acd", "timeout": 60}
+2023-03-11 01:28:34.498  INFO 34585 --- [XNIO-1 I/O-4] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "9a39c4a0554949d4", "timeout": 60}
+2023-03-11 01:28:34.498  WARN 34585 --- [XNIO-1 I/O-5] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:28:34.498  WARN 34585 --- [XNIO-1 I/O-4] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:32:46.965  INFO 34585 --- [XNIO-1 task-2] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63810
+2023-03-11 01:32:46.965  INFO 34585 --- [XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:63811
+2023-03-11 01:32:46.971  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:32:46.973  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.RequestLoggingFilter  : GET /, client=127.0.0.1
+2023-03-11 01:32:46.976  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:32:46.976  INFO 34585 --- [XNIO-1 task-2] lavalink.server.io.SocketServer          : Connection successfully established from WaveLink
+2023-03-11 01:32:46.977  INFO 34585 --- [XNIO-1 I/O-1] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "52c44a0d3e0595e4", "timeout": 60}
+2023-03-11 01:32:46.977  WARN 34585 --- [XNIO-1 I/O-1] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:32:46.977  INFO 34585 --- [XNIO-1 I/O-7] lavalink.server.io.SocketServer          : {"op": "configureResuming", "key": "7f95b9fd4904cd84", "timeout": 60}
+2023-03-11 01:32:46.977  WARN 34585 --- [XNIO-1 I/O-7] lavalink.server.io.WebSocketHandler      : Sending websocket commands to Lavalink has been deprecated and will be removed in API version 4. API version 3 will be removed in Lavalink 5. Please use the new REST endpoints instead.
+2023-03-11 01:32:52.416  INFO 34585 --- [XNIO-1 task-1] l.server.player.AudioLoaderRestHandler   : Got request to load for identifier "ytsearch:1 hour"
+2023-03-11 01:32:52.926  INFO 34585 --- [XNIO-1 I/O-7] lavalink.server.io.SocketServer          : {"op": "voiceUpdate", "guildId": "1044512992647204864", "sessionId": "4740ebd58e3280ee4dc55acb065a664f", "event": {"token": "e8b998cbc6ad24e8", "guild_id": "1044512992647204864", "endpoint": "singapore11031.discord.media:443"}}
+2023-03-11 01:32:53.368  INFO 34585 --- [lava-daemon-pool-info-loader-2-thread-1] lavalink.server.player.AudioLoader       : Loaded playlist Search results for: 1 hour
+2023-03-11 01:32:53.388  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /loadtracks?identifier=ytsearch:1+hour, client=127.0.0.1
+2023-03-11 01:32:53.389  INFO 34585 --- [XNIO-1 I/O-7] lavalink.server.io.SocketServer          : {"op": "play", "guildId": "1044512992647204864", "track": "QAAAdgIADDEgSG91ciBUaW1lcgAQT25saW5lIEFsYXJtIEt1cgAAAAAANxGoAAt3Ti1tWnRiWDJQZwABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXdOLW1adGJYMlBnAAd5b3V0dWJlAAAAAAAAAAA=", "noReplace": false}
+2023-03-11 01:32:53.391  INFO 34585 --- [lava-daemon-pool-playback-1-thread-1] c.s.d.l.s.y.YoutubeAccessTokenTracker    : Updating YouTube visitor id (current is CgthWDRSUkhOMktMWSjtzK2gBg%3D%3D).
+2023-03-11 01:32:53.394  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /decodetrack?track=QAAAdgIADDEgSG91ciBUaW1lcgAQT25saW5lIEFsYXJtIEt1cgAAAAAANxGoAAt3Ti1tWnRiWDJQZwABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXdOLW1adGJYMlBnAAd5b3V0dWJlAAAAAAAAAAA%3D, client=127.0.0.1
+2023-03-11 01:32:53.783  INFO 34585 --- [lava-daemon-pool-playback-1-thread-1] c.s.d.l.s.y.YoutubeAccessTokenTracker    : Updating YouTube visitor id succeeded, new one is Cgs2ZUgzZEFpRzdYbyjF062gBg%3D%3D, next update will be after 600 seconds.
+2023-03-11 01:33:12.434  INFO 34585 --- [XNIO-1 task-1] l.server.player.AudioLoaderRestHandler   : Got request to load for identifier "ytsearch:1 hour"
+2023-03-11 01:33:13.163  INFO 34585 --- [lava-daemon-pool-info-loader-2-thread-1] lavalink.server.player.AudioLoader       : Loaded playlist Search results for: 1 hour
+2023-03-11 01:33:13.170  INFO 34585 --- [XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /loadtracks?identifier=ytsearch:1+hour, client=127.0.0.1
+2023-03-11 01:33:47.621  INFO 34585 --- [SpringApplicationShutdownHook] io.undertow                              : stopping server: Undertow - 2.2.16.Final
+2023-03-11 01:33:47.623  INFO 34585 --- [SpringApplicationShutdownHook] io.undertow.servlet                      : Destroying Spring FrameworkServlet 'dispatcherServlet'
+2023-03-11 01:33:47.625  INFO 34585 --- [SpringApplicationShutdownHook] c.s.d.l.tools.GarbageCollectionMonitor   : GC monitoring disabled.
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-7] org.xnio.nio                             : XNIO000011: Task io.undertow.websockets.jsr.UndertowSession$3$1@8794f2b failed with an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession.close0(UndertowSession.java:361) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession.closeInternal(UndertowSession.java:241) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3$1.run(UndertowSession.java:401) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.nio.WorkerThread.safeRun(WorkerThread.java:612) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:479) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-4] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-1] org.xnio.nio                             : XNIO000011: Task io.undertow.websockets.jsr.UndertowSession$3$1@38ac6343 failed with an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession.close0(UndertowSession.java:361) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession.closeInternal(UndertowSession.java:241) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3$1.run(UndertowSession.java:401) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.nio.WorkerThread.safeRun(WorkerThread.java:612) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:479) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-5] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-8] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-3] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-6] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-5] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.625 ERROR 34585 --- [XNIO-1 I/O-8] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.626 ERROR 34585 --- [XNIO-1 I/O-8] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.626 ERROR 34585 --- [XNIO-1 I/O-8] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+
+2023-03-11 01:33:47.626  WARN 34585 --- [lava-daemon-pool-playback-1-thread-1] c.s.d.l.t.p.LocalAudioTrackExecutor      : Suspicious exception for playback of wN-mZtbX2Pg
+
+com.sedmelluq.discord.lavaplayer.tools.FriendlyException: The track was unexpectedly terminated.
+	at com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor.handlePlaybackInterrupt(LocalAudioTrackExecutor.java:347) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor.executeProcessingLoop(LocalAudioTrackExecutor.java:291) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor.executeProcessingLoop(LocalAudioTrackExecutor.java:249) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaAudioTrack.process(MatroskaAudioTrack.java:38) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.track.DelegatedAudioTrack.processDelegate(DelegatedAudioTrack.java:25) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack.processStatic(YoutubeAudioTrack.java:58) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack.process(YoutubeAudioTrack.java:50) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor.execute(LocalAudioTrackExecutor.java:104) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager.lambda$executeTrack$1(DefaultAudioPlayerManager.java:361) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:1589) ~[na:na]
+	Suppressed: com.sedmelluq.discord.lavaplayer.tools.exception.EnvironmentInformation: 
+  lavaplayer.version: 1.3.99.2-original
+  os.arch: aarch64
+  os.name: Mac OS X
+  os.version: 12.4
+  java.vendor: Homebrew
+  java.version: 19.0.1
+  java.runtime.version: 19.0.1
+  java.vm.version: 19.0.1
+Caused by: java.lang.InterruptedException: null
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1640) ~[na:na]
+	at java.base/java.util.concurrent.ArrayBlockingQueue.put(ArrayBlockingQueue.java:370) ~[na:na]
+	at com.sedmelluq.discord.lavaplayer.track.playback.AllocatingAudioFrameBuffer.consume(AllocatingAudioFrameBuffer.java:178) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.common.OpusPacketRouter.passThrough(OpusPacketRouter.java:168) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.common.OpusPacketRouter.process(OpusPacketRouter.java:98) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaOpusTrackConsumer.consume(MatroskaOpusTrackConsumer.java:46) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaStreamingFile.processFrameInBlock(MatroskaStreamingFile.java:371) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaStreamingFile.parseClusterSimpleBlock(MatroskaStreamingFile.java:335) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaStreamingFile.parseNextCluster(MatroskaStreamingFile.java:320) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaStreamingFile.provideFrames(MatroskaStreamingFile.java:296) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaAudioTrack.lambda$process$0(MatroskaAudioTrack.java:39) ~[lavaplayer-1.3.99.2.jar!/:na]
+	at com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor.executeProcessingLoop(LocalAudioTrackExecutor.java:275) ~[lavaplayer-1.3.99.2.jar!/:na]
+	... 10 common frames omitted
+
+2023-03-11 01:33:47.626 ERROR 34585 --- [XNIO-1 I/O-8] org.xnio.listener                        : XNIO001007: A channel event listener threw an exception
+
+java.util.concurrent.RejectedExecutionException: XNIO007007: Thread is terminating
+	at org.xnio.nio.WorkerThread.execute(WorkerThread.java:620) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:396) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.websockets.jsr.UndertowSession$3.handleEvent(UndertowSession.java:388) ~[undertow-websockets-jsr-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:1081) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at io.undertow.server.protocol.framed.AbstractFramedChannel$FrameCloseListener.handleEvent(AbstractFramedChannel.java:994) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.terminated(WriteReadyHandler.java:70) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.writeTerminated(NioSocketConduit.java:204) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.terminateWrites(NioSocketConduit.java:193) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.truncateWrites(NioSocketConduit.java:198) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at io.undertow.conduits.IdleTimeoutConduit.truncateWrites(IdleTimeoutConduit.java:387) ~[undertow-core-2.2.16.Final.jar!/:2.2.16.Final]
+	at org.xnio.conduits.ConduitStreamSinkChannel.close(ConduitStreamSinkChannel.java:186) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.IoUtils.safeClose(IoUtils.java:152) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.conduits.WriteReadyHandler$ChannelListenerHandler.forceTermination(WriteReadyHandler.java:57) ~[xnio-api-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.NioSocketConduit.forceTermination(NioSocketConduit.java:108) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+	at org.xnio.nio.WorkerThread.run(WorkerThread.java:507) ~[xnio-nio-3.8.6.Final.jar!/:3.8.6.Final]
+

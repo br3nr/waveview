@@ -3,16 +3,36 @@ import discord
 from discord.ext import commands
 from quart import Quart, jsonify
 import asyncio
+import discord
+from discord.ext import commands
+from discord import app_commands
+from wavelink.ext import spotify
+import re
+import os
+from music import Music
+from discord import ClientException
 
-bot = commands.Bot(command_prefix="?", intents=discord.Intents.all())
 
-
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
-
+m = None
 
 @bot.event
 async def on_ready():
-    print('Logged in as {0.user}'.format(bot))
+    try:
+        print('Logged in as {0.user}'.format(bot))
+        global m 
+        m = Music(bot)
+        await bot.add_cog(m)
+        synced = await bot.tree.sync()
+    except ClientException:
+        print("Failed to sync")
+
+@bot.event
+async def on_connect():
+    print('Connected to Discord')
+    await bot.add_cog(Music(bot))
+    print('Music cog added to bot')
 
 
 @app.route('/ping')
@@ -29,6 +49,13 @@ async def message():
     else:
         return jsonify({'message': 'No messages found'})
 
+@app.route('/song')
+async def song():
+    # Return most recent message
+    m.get_current_song()  
+    
+    return jsonify({'message': 'hi'})
+
 
 @bot.command()
 async def hello(ctx):
@@ -40,7 +67,7 @@ async def start_app():
 
 
 async def start_bot():
-    await bot.start('hehe')
+    await bot.start('')
 
 
 async def main():

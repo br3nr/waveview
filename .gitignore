@@ -2,6 +2,7 @@
 
 # ------
 bot/keys
+bot/__pycache__
 
 # dependencies
 /node_modules
