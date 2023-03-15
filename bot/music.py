@@ -20,11 +20,23 @@ class CustomPlayer(wavelink.Player):
 class Music(commands.Cog):
     """Suite of commands allowing BrennerBot to play music from Youtube and Spotify."""
 
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self, bot: commands.Bot):
+        if hasattr(self, 'initialized'):
+            return
+        self.initialized = True
+
         self.bot = bot
         self.song_queue = {}
         self.cid = os.environ["SPOTIFY_CLIENT_ID"]
         self.csecret = os.environ["SPOTIFY_CLIENT_SECRET"]
+        self.current_track = None
         bot.loop.create_task(self.connect_nodes())
         print("Initialised music")
 
@@ -32,14 +44,40 @@ class Music(commands.Cog):
         guild = self.bot.get_guild(1044512992647204864)
         if guild is None:
             return "Server not found"
-
         vc = guild.voice_client
-
         if vc.is_playing():
-            t_queue = vc.queue
-            t = t_queue.get()
-            print(t)
-            return t
+            return vc.source
+
+    async def pause_track(self):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        if vc:
+            if vc.is_playing() and not vc.is_paused():
+                await vc.pause()
+
+    async def resume_track(self):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        if vc:
+            if vc.is_paused():
+                await vc.resume()
+
+    async def skip_track(self):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        if vc:
+            if vc.queue.is_empty:
+                return await vc.stop()
+            await vc.seek(vc.track.length * 1000)
+            if vc.is_paused():
+                await vc.resume()
+                
+    async def get_thumbnail(self):
+        
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        print(vc.source.thumbnail)
+        return vc.source.thumbnail
 
     async def connect_nodes(self):
         """Connect to our Lavalink nodes."""
@@ -54,6 +92,8 @@ class Music(commands.Cog):
     async def on_wavelink_track_end(self, player: CustomPlayer, track: wavelink.tracks, reason):
         if not player.queue.is_empty:
             next_track = player.queue.get()
+            self.current_track = next_track
+            print("Track end: " + next_track.title)
             await player.play(next_track)
 
     @commands.Cog.listener()
@@ -173,6 +213,7 @@ class Music(commands.Cog):
             ))
         else:
             await vc.play(track)
+            self.current_track = track
             await ctx.send(embed=discord.Embed(
                 title=track.title,
                 url=track.uri,
