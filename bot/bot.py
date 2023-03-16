@@ -1,13 +1,72 @@
 from discord.ext import commands
-from quart import Quart, jsonify
+from quart import Quart, jsonify, websocket
 import asyncio
 import discord
 import os
 from music import Music
 from discord import ClientException
+from flask import abort
+from utils import compare_images
+from queue import Queue
+import json
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
+
+
+@app.websocket('/ws')
+async def ws():
+    while True:
+        try:
+
+            await asyncio.sleep(1.0)  # Sleep for 0.1 seconds
+            music_player = Music(bot).get_player()
+
+            try:
+
+                # Get info about the current track
+                thumbnail_url = music_player.source.thumbnail
+                if compare_images(thumbnail_url):
+                    thumbnail_url = "/images/default.png"
+                track_title = music_player.source.title
+            except AttributeError as e:
+                thumbnail_url = "/images/default.png"
+                track_title = "No track playing"
+                
+            track_info = {
+                'title': track_title,
+                'thumbnail': thumbnail_url
+            }
+
+            # Get the queue information
+            queue_list = list(music_player.queue)
+            json_queue = []
+            for i in range(len(queue_list)):
+                track_title = queue_list[i].title
+                try:
+                    thumbnail_url = queue_list[i].thumbnail
+                    if compare_images(thumbnail_url):
+                        thumbnail_url = "/images/default.png"
+                except AttributeError:
+                    thumbnail_url = "/images/default.png"
+
+                json_queue.append({
+                    'title': track_title,
+                    'thumbnail': thumbnail_url
+                })
+
+            track_info['queue'] = json_queue
+        except AttributeError as e:
+            track_info = {
+                'title': "No track playing",
+                'thumbnail': "/images/default.png",
+                'queue': []
+            }
+            print(e)
+
+        # Send the JSON data through the websocket
+        await websocket.send(json.dumps(track_info))
+
 
 @bot.event
 async def on_ready():
@@ -18,6 +77,7 @@ async def on_ready():
         synced = await bot.tree.sync()
     except ClientException:
         print("Failed to sync")
+
 
 @bot.event
 async def on_connect():
@@ -35,38 +95,88 @@ async def ping():
 async def message():
     # Return most recent message
     channel = bot.get_channel(1073104398286340136)
-    
+
     async for message in channel.history(limit=1):
         return jsonify({'message': message.content})
     else:
         return jsonify({'message': 'No messages found'})
 
+
 @app.route('/song')
 async def song():
     # Return most recent message
-    song = Music(bot).get_current_song()  
-    
+    song = Music(bot).get_current_song()
+
     return jsonify({'message': str(song.title)})
+
+
+@app.route('/playing')
+async def playing():
+    try:
+        music_player = Music(bot).get_player()
+        thumbnail_url = music_player.source.thumbnail
+
+        # Check if thumbnail is the default image
+        if compare_images(thumbnail_url):
+            thumbnail_url = "/images/default.png"
+
+        return jsonify({
+            'title': music_player.source.title,
+            'thumbnail': thumbnail_url
+        })
+
+    except AttributeError:
+        abort(500)
+
+
+@app.route('/queue')
+async def queue():
+
+    music_player = Music(bot).get_player()
+    queue_list = list(music_player.queue)
+    json_queue = []
+
+    # loop through queue
+    for i in range(len(queue_list)):
+        thumbnail_url = queue_list[i].thumbnail
+        track_title = queue_list[i].title
+        # add to dict
+        if compare_images(thumbnail_url):
+            thumbnail_url = "/images/default.png"
+        json_queue.append({
+            'title': track_title,
+            'thumbnail': thumbnail_url
+        })
+
+    return jsonify({"queue": json.dumps(json_queue)})
+
 
 @app.route('/pause')
 async def pause():
-    await Music(bot).pause_track()  
+    await Music(bot).pause_track()
     return "OK"
+
 
 @app.route('/skip')
 async def skip():
-    await Music(bot).skip_track()  
+    await Music(bot).skip_track()
     return "OK"
+
 
 @app.route('/resume')
 async def resume():
-    await Music(bot).resume_track()  
+    await Music(bot).resume_track()
     return "OK"
-    
+
+
 @app.route('/thumbnail')
 async def thumbnail():
-    thumbnail = await Music(bot).get_thumbnail()
-    return {'thumbnailUrl': thumbnail}
+    try:
+        thumbnail = await Music(bot).get_thumbnail()
+        return {'thumbnailUrl': thumbnail}
+    except AttributeError:
+        abort(500)
+
 
 @bot.command()
 async def hello(ctx):
@@ -74,7 +184,7 @@ async def hello(ctx):
 
 
 async def start_app():
-    await app.run_task(host='0.0.0.0', port=5010)
+    await app.run_task(host='0.0.0.0', port=5090)
 
 
 async def start_bot():

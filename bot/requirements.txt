@@ -2,3 +2,4 @@ quart
 quart-discord 
 discord-ext-ipc 
 discord
+cv2

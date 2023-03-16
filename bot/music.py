@@ -7,7 +7,7 @@ import re
 import os
 from log import log_command
 from discord import ClientException
-
+from quart import Quart, websocket
 
 class CustomPlayer(wavelink.Player):
     """Custom player class for wavelink."""
@@ -47,6 +47,11 @@ class Music(commands.Cog):
         vc = guild.voice_client
         if vc.is_playing():
             return vc.source
+        
+    def get_player(self):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        return vc
 
     async def pause_track(self):
         guild = self.bot.get_guild(1044512992647204864)
@@ -76,7 +81,6 @@ class Music(commands.Cog):
         
         guild = self.bot.get_guild(1044512992647204864)
         vc = guild.voice_client
-        print(vc.source.thumbnail)
         return vc.source.thumbnail
 
     async def connect_nodes(self):
