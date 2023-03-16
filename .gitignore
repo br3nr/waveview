@@ -3,6 +3,8 @@
 # ------
 bot/keys
 bot/__pycache__
+logs
+keys
 
 # dependencies
 /node_modules
