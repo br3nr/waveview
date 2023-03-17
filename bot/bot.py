@@ -9,19 +9,19 @@ from flask import abort
 from utils import compare_images
 from queue import Queue
 import json
+from quart_cors import cors
+import requests
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
-
+cors(app)
 
 @app.websocket('/ws')
 async def ws():
     while True:
         try:
-
-            await asyncio.sleep(1.0)  # Sleep for 0.1 seconds
+            await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
             music_player = Music(bot).get_player()
-
             try:
 
                 # Get info about the current track
@@ -42,6 +42,7 @@ async def ws():
             queue_list = list(music_player.queue)
             json_queue = []
             for i in range(len(queue_list)):
+                track_id = queue_list[i].id
                 track_title = queue_list[i].title
                 try:
                     thumbnail_url = queue_list[i].thumbnail
@@ -51,6 +52,7 @@ async def ws():
                     thumbnail_url = "/images/default.png"
 
                 json_queue.append({
+                    'id': i,
                     'title': track_title,
                     'thumbnail': thumbnail_url
                 })
@@ -66,6 +68,7 @@ async def ws():
 
         # Send the JSON data through the websocket
         await websocket.send(json.dumps(track_info))
+
 
 
 @bot.event
@@ -101,6 +104,15 @@ async def message():
     else:
         return jsonify({'message': 'No messages found'})
 
+@app.route('/remove_track/<track>')
+async def remove_track(track):
+    try:
+        Music(bot).dequeue_track_by_id(int(track))
+        return "Ok"
+    except IndexError:
+        print("IndexError in remove_track. Calling track id: " + track)
+        abort(500)
+    
 
 @app.route('/song')
 async def song():

@@ -6,8 +6,8 @@ from wavelink.ext import spotify
 import re
 import os
 from log import log_command
-from discord import ClientException
-from quart import Quart, websocket
+from queue import Queue
+from collections import deque
 
 class CustomPlayer(wavelink.Player):
     """Custom player class for wavelink."""
@@ -47,6 +47,18 @@ class Music(commands.Cog):
         vc = guild.voice_client
         if vc.is_playing():
             return vc.source
+        
+    def dequeue_track_by_id(self, track_id):
+        guild = self.bot.get_guild(1044512992647204864)
+        track_queue = guild.voice_client.queue 
+        queue_list = list(track_queue)
+        queue_list.pop(track_id)
+        wavelinkQueue = wavelink.Queue()
+        # loop through queue_list and add to wavelinkQueue
+        for i in range(len(queue_list)):
+            wavelinkQueue.put(queue_list[i])
+        
+        guild.voice_client.queue = wavelinkQueue
         
     def get_player(self):
         guild = self.bot.get_guild(1044512992647204864)
@@ -226,7 +238,7 @@ class Music(commands.Cog):
 
     async def play_spotify_playlist(self, ctx: discord.ext.commands.Context, playlist: str, vc: CustomPlayer):
         await ctx.send("Loading playlist...")
-        async for partial in spotify.SpotifyTrack.iterator(query=playlist, partial_tracks=True):
+        async for partial in spotify.SpotifyTrack.iterator(query=playlist, partial_tracks=False):
             if vc.is_playing() or not vc.queue.is_empty:
                 vc.queue.put(item=partial)
             else:
