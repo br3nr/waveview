@@ -1,0 +1,15 @@
+
+.spinning[spinning='1'] {
+    animation-name: spinning;
+    animation-duration: 400ms;
+}
+
+@keyframes spinning {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

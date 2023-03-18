@@ -8,6 +8,7 @@ function ThumbnailImage({ thumbnailUrl }) {
           <Image
             src={thumbnailUrl}
             fallbackSrc="/images/default.png"
+            borderRadius='20px'
             style={{
               width: "600px",
               objectFit: "cover",
