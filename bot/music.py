@@ -59,7 +59,7 @@ class Music(commands.Cog):
         if vc.is_playing():
             return vc.source
         
-    def dequeue_track_by_id(self, track_id):
+    async def dequeue_track_by_id(self, track_id):
         guild = self.bot.get_guild(1044512992647204864)
         
         # delete from middlequeue where uuid == track_id
@@ -103,12 +103,27 @@ class Music(commands.Cog):
             await vc.seek(vc.track.length * 1000)
             if vc.is_paused():
                 await vc.resume()
-                
+      
+    async def restart(self):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        queue = vc.queue
+        await vc.play(vc.source)
+        vc.queue = queue
+              
     async def get_thumbnail(self):
         
         guild = self.bot.get_guild(1044512992647204864)
         vc = guild.voice_client
         return vc.source.thumbnail
+    
+    async def play_song_by_query(self, query):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        url_type = self.check_string(query)
+        action = self.url_type_mapping.get(url_type, None)
+        if action:
+            await action(self, None, query, vc)
 
     async def connect_nodes(self):
         """Connect to our Lavalink nodes."""
@@ -237,31 +252,36 @@ class Music(commands.Cog):
         track = await spotify.SpotifyTrack.search(query=track, return_first=True)
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
-            await ctx.send(embed=discord.Embed(
-                title=track.title,
-                url=track.uri,
-                description=f"Queued {track.title} in {vc.channel}"
-            ))
+            self.middlequeue.append(MiddleQueue(track))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=track.title,
+                    url=track.uri,
+                    description=f"Queued {track.title} in {vc.channel}"
+                ))
         else:
             await vc.play(track)
             self.current_track = track
-            await ctx.send(embed=discord.Embed(
-                title=track.title,
-                url=track.uri,
-                description=f"Queued {track.title} in {vc.channel}"
-            ))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=track.title,
+                    url=track.uri,
+                    description=f"Queued {track.title} in {vc.channel}"
+                ))
 
     async def play_spotify_playlist(self, ctx: discord.ext.commands.Context, playlist: str, vc: CustomPlayer):
         await ctx.send("Loading playlist...")
         async for partial in spotify.SpotifyTrack.iterator(query=playlist, partial_tracks=False):
             if vc.is_playing() or not vc.queue.is_empty:
                 vc.queue.put(item=partial)
+                self.middlequeue.append(MiddleQueue(partial))
             else:
                 await vc.play(partial)
-                await ctx.send(embed=discord.Embed(
-                    title=vc.source.title,
-                    description=f"Playing {vc.source.title} in {vc.channel}"
-                ))
+                if ctx is not None:
+                    await ctx.send(embed=discord.Embed(
+                        title=vc.source.title,
+                        description=f"Playing {vc.source.title} in {vc.channel}"
+                    ))
 
     async def play_youtube_song(self, ctx: discord.ext.commands.Context, query: str, vc: CustomPlayer):
         try:
@@ -272,18 +292,21 @@ class Music(commands.Cog):
             track = track[0]
             if vc.is_playing() or not vc.queue.is_empty:
                 vc.queue.put(item=track)                
-                await ctx.send(embed=discord.Embed(
-                    title=track.title,
-                    url=track.uri,
-                    description=f"Queued {track.title} in {vc.channel}"
-                ))
+                self.middlequeue.append(MiddleQueue(track))
+                if ctx is not None:
+                    await ctx.send(embed=discord.Embed(
+                        title=track.title,
+                        url=track.uri,
+                        description=f"Queued {track.title} in {vc.channel}"
+                    ))
             else:
                 await vc.play(track)
-                await ctx.send(embed=discord.Embed(
-                    title=vc.source.title,
-                    url=vc.source.uri,
-                    description=f"Playing {vc.source.title} in {vc.channel}"
-                ))
+                if ctx is not None:
+                    await ctx.send(embed=discord.Embed(
+                        title=vc.source.title,
+                        url=vc.source.uri,
+                        description=f"Playing {vc.source.title} in {vc.channel}"
+                    ))
         except Exception as e:
             await ctx.send(f"That link is weird. Make sure theres no timestamp at the end.")
 
@@ -297,19 +320,20 @@ class Music(commands.Cog):
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
             self.middlequeue.append(MiddleQueue(track))
-            print(self.middlequeue[0].uuid)
-            await ctx.send(embed=discord.Embed(
-                title=track.title,
-                url=track.uri,
-                description=f"Queued {track.title} in {vc.channel}"
-            ))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=track.title,
+                    url=track.uri,
+                    description=f"Queued {track.title} in {vc.channel}"
+                ))
         else:
             await vc.play(track)
-            await ctx.send(embed=discord.Embed(
-                title=vc.source.title,
-                url=vc.source.uri,
-                description=f"Playing {vc.source.title} in {vc.channel}"
-            ))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=vc.source.title,
+                    url=vc.source.uri,
+                    description=f"Playing {vc.source.title} in {vc.channel}"
+                ))
 
     # Map URL types to their corresponding functions
     url_type_mapping = {

@@ -109,7 +109,16 @@ async def message():
 @app.route('/remove_track/<track_id>')
 async def remove_track(track_id):
     try:
-        Music(bot).dequeue_track_by_id(track_id)
+        await Music(bot).dequeue_track_by_id(track_id)
+        return "Ok"
+    except IndexError:
+        print("IndexError in remove_track. Calling track id: " + track_id)
+        abort(500)
+        
+@app.route('/play_song/<query>')
+async def play_song(query):
+    try:
+        await Music(bot).play_song_by_query(query)
         return "Ok"
     except IndexError:
         print("IndexError in remove_track. Calling track id: " + track_id)
@@ -167,6 +176,12 @@ async def queue():
 @app.route('/pause')
 async def pause():
     await Music(bot).pause_track()
+    return "OK"
+
+
+@app.route('/restart')
+async def restart():
+    await Music(bot).restart()
     return "OK"
 
 
