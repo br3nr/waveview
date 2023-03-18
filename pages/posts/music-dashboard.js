@@ -1,59 +1,36 @@
 import Link from 'next/link';
 import Script from 'next/script';
 import Layout from '../../components/layout';
-import { Grid, GridItem, Text, Heading, Button, Center, Flex, Box, Image, Icon, Container, ButtonSpinner } from '@chakra-ui/react'
+import { Grid, GridItem, Button,  Flex, Box, Image } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
-import { FaPlay, FaPause, FaStepForward } from 'react-icons/fa'
-import { MdOutlinePlaylistRemove } from 'react-icons/md'
+import {  MdPlaylistRemove } from 'react-icons/md'
 import React from 'react';
-import Marquee from "react-fast-marquee";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { SpinningCircles } from 'react-loading-icons'
 import ThumbnailImage from '../../components/thumbnail_image';
 import MarqueeText from '../../components/marquee_text';
 import PlayControls from '../../components/play_controls';
-import TrackQueue from '../../components/track_queue_element';
 import _ from 'lodash';
+import { Spinner } from '@chakra-ui/react';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 
 function MusicDashboard() {
 
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png')
-  const [isDeleting, setIsDeleting] = useState(false); // Add state variable for locking
   const [songState, setSongState] = useState("No song is playing.");
-  const [isActive, setIsActive] = useState(false);
   const [trackQueue, setTrackQueue] = useState([]);
+  const [removedTrackIds, setRemovedTrackIds] = useState([]);
+
 
 
   const removeTrack = async (track) => {
-    if (isDeleting) {
-      // If a deletion is already in progress, return without doing anything
-      return;
-    }
-  
-    try {
-      setIsDeleting(true); // Lock the deletion process
-      setIsActive(!isActive);
-  
-      const url = `http://localhost:5090/remove_track/${track.id}`;
-      await fetch(url);
-  
-      // Update the track queue
-      const updatedQueue = trackQueue
-        .filter((t) => t.id !== track.id)
-        .map((t, index) => ({
-          ...t,
-          index: index + 1, // Update the index of each track in the array
-        }));
-      setTrackQueue(updatedQueue);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsDeleting(false); // Release the lock
-    }
+    setRemovedTrackIds([...removedTrackIds, track.uuid]);
+    const url = `http://localhost:5090/remove_track/${track.uuid}`;
+    await fetch(url);
+    // remove the track from the queue
+    const newQueue = trackQueue.filter((t) => t.uuid !== track.uuid);
+    setTrackQueue(newQueue);
+    // add the UUID of the removed track to the removedTrackIds array
   };
-
-  const debouncedRemoveTrack = _.debounce(removeTrack, 500);
-
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:5090/ws');
@@ -105,8 +82,12 @@ function MusicDashboard() {
                   </Box>
                 </Flex>
                 <Flex w="20%">
-                  <Button key={track.id} onClick={() => debouncedRemoveTrack(track)}>
-                    <MdOutlinePlaylistRemove />
+                  <Button onClick={() => removeTrack(track)}>
+                    {removedTrackIds.includes(track.uuid) ? (
+                      <Spinner size='xs' />
+                    ) : (
+                      <MdPlaylistRemove />
+                    )}
                   </Button>
                 </Flex>
               </Flex>

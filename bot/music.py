@@ -8,6 +8,8 @@ import os
 from log import log_command
 from queue import Queue
 from collections import deque
+import uuid 
+
 
 class CustomPlayer(wavelink.Player):
     """Custom player class for wavelink."""
@@ -15,6 +17,11 @@ class CustomPlayer(wavelink.Player):
     def __init__(self):
         super().__init__()
         self.queue = wavelink.Queue()
+
+class MiddleQueue:
+    def __init__(self, track):
+        self.uuid = str(uuid.uuid4())
+        self.track = track
 
 
 class Music(commands.Cog):
@@ -38,7 +45,11 @@ class Music(commands.Cog):
         self.csecret = os.environ["SPOTIFY_CLIENT_SECRET"]
         self.current_track = None
         bot.loop.create_task(self.connect_nodes())
+        self.middlequeue = []
         print("Initialised music")
+        
+    def get_queue(self):
+        return self.middlequeue
 
     def get_current_song(self):
         guild = self.bot.get_guild(1044512992647204864)
@@ -50,13 +61,17 @@ class Music(commands.Cog):
         
     def dequeue_track_by_id(self, track_id):
         guild = self.bot.get_guild(1044512992647204864)
-        track_queue = guild.voice_client.queue 
-        queue_list = list(track_queue)
-        queue_list.pop(track_id)
+        
+        # delete from middlequeue where uuid == track_id
+        for i in range(len(self.middlequeue)):
+            if self.middlequeue[i].uuid == track_id:
+                del self.middlequeue[i]
+                break
+        
         wavelinkQueue = wavelink.Queue()
         # loop through queue_list and add to wavelinkQueue
-        for i in range(len(queue_list)):
-            wavelinkQueue.put(queue_list[i])
+        for i in range(len(self.middlequeue)):
+            wavelinkQueue.put(self.middlequeue[i].track)
         
         guild.voice_client.queue = wavelinkQueue
         
@@ -107,6 +122,7 @@ class Music(commands.Cog):
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: CustomPlayer, track: wavelink.tracks, reason):
         if not player.queue.is_empty:
+            self.middlequeue.pop(0)
             next_track = player.queue.get()
             self.current_track = next_track
             print("Track end: " + next_track.title)
@@ -218,7 +234,6 @@ class Music(commands.Cog):
         await ctx.send("I now use ?leave instead of ?disconnect")
 
     async def play_spotify_track(self, ctx: discord.ext.commands.Context, track: str, vc: CustomPlayer):
-
         track = await spotify.SpotifyTrack.search(query=track, return_first=True)
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
@@ -256,7 +271,7 @@ class Music(commands.Cog):
             track = await wavelink.NodePool.get_node().get_tracks(wavelink.YouTubeTrack, query)
             track = track[0]
             if vc.is_playing() or not vc.queue.is_empty:
-                vc.queue.put(item=track)
+                vc.queue.put(item=track)                
                 await ctx.send(embed=discord.Embed(
                     title=track.title,
                     url=track.uri,
@@ -281,6 +296,8 @@ class Music(commands.Cog):
         track = await wavelink.YouTubeTrack.search(query=search, return_first=True)
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
+            self.middlequeue.append(MiddleQueue(track))
+            print(self.middlequeue[0].uuid)
             await ctx.send(embed=discord.Embed(
                 title=track.title,
                 url=track.uri,

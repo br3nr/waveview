@@ -21,7 +21,8 @@ async def ws():
     while True:
         try:
             await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
-            music_player = Music(bot).get_player()
+            music_cls = Music(bot)
+            music_player = music_cls.get_player()
             try:
 
                 # Get info about the current track
@@ -39,13 +40,13 @@ async def ws():
             }
 
             # Get the queue information
-            queue_list = list(music_player.queue)
+            queue_list = music_cls.get_queue()
             json_queue = []
             for i in range(len(queue_list)):
-                track_id = queue_list[i].id
-                track_title = queue_list[i].title
+                track_uuid = queue_list[i].uuid
+                track_title = queue_list[i].track.title
                 try:
-                    thumbnail_url = queue_list[i].thumbnail
+                    thumbnail_url = queue_list[i].track.thumbnail
                     if compare_images(thumbnail_url):
                         thumbnail_url = "/images/default.png"
                 except AttributeError:
@@ -53,6 +54,7 @@ async def ws():
 
                 json_queue.append({
                     'id': i,
+                    'uuid': track_uuid,
                     'title': track_title,
                     'thumbnail': thumbnail_url
                 })
@@ -104,15 +106,14 @@ async def message():
     else:
         return jsonify({'message': 'No messages found'})
 
-@app.route('/remove_track/<track>')
-async def remove_track(track):
+@app.route('/remove_track/<track_id>')
+async def remove_track(track_id):
     try:
-        Music(bot).dequeue_track_by_id(int(track))
+        Music(bot).dequeue_track_by_id(track_id)
         return "Ok"
     except IndexError:
-        print("IndexError in remove_track. Calling track id: " + track)
+        print("IndexError in remove_track. Calling track id: " + track_id)
         abort(500)
-    
 
 @app.route('/song')
 async def song():
