@@ -8,9 +8,9 @@ function PlayControls() {
     const [buttonState, setButtonState] = useState("pause");
     const [spinning, setSpinning] = useState(0);
     const { colorMode, toggleColorMode } = useColorMode()
-		const [value, setValue] = React.useState('')
-  	const handleChange = (event) => setValue(event.target.value)
-
+    const [value, setValue] = React.useState('')
+    const handleChange = (event) => setValue(event.target.value)
+    
 
     async function handleRestartClick() {
         setSpinning(1);
@@ -19,12 +19,12 @@ function PlayControls() {
 
     const handleKeyPress = async (event) => {
         if (event.key === "Enter") {
-						setValue("")
-            const url = `http://localhost:5090/play_song/${value}`;
+            setValue("")
+            const url = `/play_song/${value}`;
             await fetch(url);
             // Do something, e.g. submit a query
             console.log("Enter key pressed!");
-						console.log(value)
+            console.log(value)
         }
     };
 
@@ -61,14 +61,14 @@ function PlayControls() {
                     <Icon as={FaStepForward} />
                 </Button>
             </Center>
-						<Center>
-            <Input marginTop={10} width="80%"
-              placeholder="Search for music via query or url" 
-							onKeyPress={handleKeyPress} onKeyUpCaptur 
-							value={value}
-							onChange={handleChange}
-						/>
-						</Center>
+            <Center>
+                <Input marginTop={10} width="80%"
+                    placeholder="Search for music via query or url"
+                    onKeyPress={handleKeyPress} 
+                    value={value}
+                    onChange={handleChange}
+                />
+            </Center>
         </>
     );
 }

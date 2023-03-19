@@ -10,6 +10,7 @@ import PlayControls from '../../components/play_controls';
 import _ from 'lodash';
 import { Spinner } from '@chakra-ui/react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import Nav from '../../components/navbar'
 
 function MusicDashboard() {
 
@@ -20,7 +21,7 @@ function MusicDashboard() {
 
   const removeTrack = async (track) => {
     setRemovedTrackIds([...removedTrackIds, track.uuid]);
-    const url = `http://localhost:5090/remove_track/${track.uuid}`;
+    const url = `/remove_track/${track.uuid}`;
     await fetch(url);
     // remove the track from the queue
     const newQueue = trackQueue.filter((t) => t.uuid !== track.uuid);
@@ -30,7 +31,6 @@ function MusicDashboard() {
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:5090/ws');
-
     socket.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
       setSongState(data.title)
@@ -45,7 +45,8 @@ function MusicDashboard() {
 
   return (
     <>
-      <h1>brennerbot / pandaden preview</h1>
+      <Nav/>
+      <br/>
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1} >
          

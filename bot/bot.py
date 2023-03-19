@@ -73,6 +73,7 @@ async def ws():
 
 
 
+
 @bot.event
 async def on_ready():
     try:
@@ -89,6 +90,17 @@ async def on_connect():
     print('Connected to Discord')
     await bot.add_cog(Music(bot))
     print('Music cog added to bot')
+
+
+@app.route('/get_servers')
+async def get_servers():
+    active_servers = bot.guilds
+    guild_list = []
+    for guild in active_servers:
+        guild_list.append({"name": guild.name,
+                           "icon": str(guild.icon.url)})
+    
+    return jsonify(guild_list)
 
 
 @app.route('/ping')
