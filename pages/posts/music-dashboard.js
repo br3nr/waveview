@@ -18,6 +18,17 @@ function MusicDashboard() {
   const [songState, setSongState] = useState("No song is playing.");
   const [trackQueue, setTrackQueue] = useState([]);
   const [removedTrackIds, setRemovedTrackIds] = useState([]);
+  const [selectedServer, setSelectedServer] = React.useState(null);
+  const [voiceChannels, setVoiceChannels] = useState([{}]);
+
+  async function handleServerClick(server)
+  {
+    console.log(server)
+    const response = await fetch('/get_vc/'+server.id);
+    const servers = await response.json();
+    setVoiceChannels(servers);
+    console.log(servers);
+  }
 
   const removeTrack = async (track) => {
     setRemovedTrackIds([...removedTrackIds, track.uuid]);
@@ -45,10 +56,16 @@ function MusicDashboard() {
 
   return (
     <>
-      <Nav/>
+      <Nav handleServerClick={handleServerClick}/>
       <br/>
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1} >
+         
+        {voiceChannels?.map((server) => (
+                <Flex key={server.vc_name} borderRadius="50px" alignItems="center" width={550} margin="10px" >
+                  <Button>{server.vc_name}</Button>
+                </Flex>
+              ))}
          
         </GridItem>
 

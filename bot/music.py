@@ -167,6 +167,14 @@ class Music(commands.Cog):
 
     @commands.command()
     @log_command
+    async def join_vc(self, vc_id, guild_id):
+        guild = self.bot.get_guild(guild_id)
+        vc = guild.voice_client
+        channel = guild.get_channel(vc_id)
+        await channel.connect(cls=CustomPlayer())
+
+    @commands.command()
+    @log_command
     async def leave(self, ctx):
         vc = ctx.voice_client
         if vc:

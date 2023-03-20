@@ -14,6 +14,7 @@ import {
   useColorModeValue,
   Stack,
   useColorMode,
+  Text,
   Center,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
@@ -37,15 +38,25 @@ const NavLink = ({ children }) => (
   </Link>
 );
 
-export default function Nav() {
+export default function Nav(props) {
+
+  
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [serverList, setServerList] = useState([{}]);
 
+
+  function handleServerClick(server)
+  {
+    props.handleServerClick(server);
+  }
+
+  
   async function onMenuClick() {
     const response = await fetch("/get_servers");
     const data = await response.json();
     setServerList(data);
+    console.log(data)
   }
 
 
@@ -63,23 +74,20 @@ export default function Nav() {
               minW={0}>
               <Avatar
                 size={'sm'}
-                src={'https://static1.personality-database.com/profile_images/4097d505c488482688656aad6cd03992.png'}
+                src={'https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg'}
               />
             </MenuButton>
             <MenuList alignItems={'center'}>
-
+              <Text paddingLeft={5} paddingTop={3}>Available Servers:</Text>
               {serverList?.map((server) => (
                 <Flex key={server.name} borderRadius="50px" alignItems="center" width={550} margin="10px" >
-                  <MenuItem>{server.name}</MenuItem>
+                  <MenuItem >
+                    <Text onClick={() => handleServerClick(server)} >{server.name}</Text>
+                    </MenuItem>
                 </Flex>
               ))}
-
-              <MenuDivider />
-              <MenuItem>Account Settings</MenuItem>
-              <MenuDivider />
-              <MenuItem>Logout</MenuItem>
             </MenuList>
-          </Menu>
+          </Menu>    
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
@@ -109,13 +117,9 @@ export default function Nav() {
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <p>m4x</p>
                   </Center>
                   <br />
-                  <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
                 </MenuList>
               </Menu>
 

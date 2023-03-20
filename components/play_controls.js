@@ -10,7 +10,6 @@ function PlayControls() {
     const { colorMode, toggleColorMode } = useColorMode()
     const [value, setValue] = React.useState('')
     const handleChange = (event) => setValue(event.target.value)
-    
 
     async function handleRestartClick() {
         setSpinning(1);
@@ -45,10 +44,7 @@ function PlayControls() {
     return (
         <>
             <Center>
-                <Button onClick={toggleColorMode}>
-                    <FaLightbulb /> {colorMode === 'light' ? '' : ''}
-                </Button>
-                <Box paddingRight={10} paddingLeft={10}>
+                <Box paddingRight={10} >
                     <Button onClick={handleClick}>
                         {buttonState === "play" ? (
                             <Icon as={FaPlay} />

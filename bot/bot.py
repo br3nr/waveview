@@ -16,6 +16,7 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
 cors(app)
 
+
 @app.websocket('/ws')
 async def ws():
     while True:
@@ -33,7 +34,7 @@ async def ws():
             except AttributeError as e:
                 thumbnail_url = "/images/default.png"
                 track_title = "No track playing"
-                
+
             track_info = {
                 'title': track_title,
                 'thumbnail': thumbnail_url
@@ -72,8 +73,6 @@ async def ws():
         await websocket.send(json.dumps(track_info))
 
 
-
-
 @bot.event
 async def on_ready():
     try:
@@ -97,10 +96,29 @@ async def get_servers():
     active_servers = bot.guilds
     guild_list = []
     for guild in active_servers:
-        guild_list.append({"name": guild.name,
+        print(guild.id)
+        guild_list.append({"id": str(guild.id),
+                           "name": str(guild.name),
                            "icon": str(guild.icon.url)})
-    
     return jsonify(guild_list)
+
+
+@app.route('/get_vc/<guild_id>')
+async def get_vc(guild_id):
+    print(guild_id)
+    guild = bot.get_guild(int(guild_id))
+    vc_list = []
+    for vc in guild.voice_channels:
+        vc_list.append({"vc_name": str(vc.name),
+                        "vc_id": str(vc.id)})
+    print(vc_list)
+    return jsonify(vc_list)
+
+
+@app.route('/join_vc/<guild_id>/<vc_id>')
+async def join_vc(guild_id, vc_id):
+    await Music(bot).join_vc(guild_id, vc_id)
+    return "Ok"
 
 
 @app.route('/ping')
@@ -118,6 +136,7 @@ async def message():
     else:
         return jsonify({'message': 'No messages found'})
 
+
 @app.route('/remove_track/<track_id>')
 async def remove_track(track_id):
     try:
@@ -126,7 +145,8 @@ async def remove_track(track_id):
     except IndexError:
         print("IndexError in remove_track. Calling track id: " + track_id)
         abort(500)
-        
+
+
 @app.route('/play_song/<query>')
 async def play_song(query):
     try:
@@ -135,6 +155,7 @@ async def play_song(query):
     except IndexError:
         print("IndexError in remove_track. Calling track id: " + track_id)
         abort(500)
+
 
 @app.route('/song')
 async def song():
