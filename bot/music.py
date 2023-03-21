@@ -74,7 +74,7 @@ class Music(commands.Cog):
             wavelinkQueue.put(self.middlequeue[i].track)
         
         guild.voice_client.queue = wavelinkQueue
-        
+    
     def get_player(self):
         guild = self.bot.get_guild(1044512992647204864)
         vc = guild.voice_client
@@ -165,11 +165,12 @@ class Music(commands.Cog):
             await vc.disconnect()
         await channel.connect(cls=CustomPlayer())
 
-    @commands.command()
-    @log_command
-    async def join_vc(self, vc_id, guild_id):
+    async def join_vc(self, guild_id, vc_id):
         guild = self.bot.get_guild(guild_id)
         vc = guild.voice_client
+        # Check if already connected to vc
+        if vc: 
+            await vc.disconnect()
         channel = guild.get_channel(vc_id)
         await channel.connect(cls=CustomPlayer())
 

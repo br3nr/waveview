@@ -1,16 +1,13 @@
-import { ReactNode } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Flex,
   Avatar,
-  Link,
   Button,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider,
-  useDisclosure,
   useColorModeValue,
   Stack,
   useColorMode,
@@ -18,48 +15,24 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
-import { useState, useEffect } from 'react';
-import Script from 'next/script';
-import { MdPlaylistRemove } from 'react-icons/md'
 import React from 'react';
 
-
-const NavLink = ({ children }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    href={'#'}>
-    {children}
-  </Link>
-);
-
 export default function Nav(props) {
-
-  
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [serverList, setServerList] = useState([{}]);
+  const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
 
-
-  function handleServerClick(server)
-  {
+  function handleServerClick(server) {
     props.handleServerClick(server);
+    setServerIcon(server.icon);
   }
 
-  
   async function onMenuClick() {
     const response = await fetch("/get_servers");
     const data = await response.json();
     setServerList(data);
     console.log(data)
   }
-
-
 
   return (
     <>
@@ -74,27 +47,25 @@ export default function Nav(props) {
               minW={0}>
               <Avatar
                 size={'sm'}
-                src={'https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg'}
+                src={serverIcon}
               />
             </MenuButton>
             <MenuList alignItems={'center'}>
               <Text paddingLeft={5} paddingTop={3}>Available Servers:</Text>
               {serverList?.map((server) => (
-                <Flex key={server.name} borderRadius="50px" alignItems="center" width={550} margin="10px" >
+                <Flex key={server.name} borderRadius="50px" alignItems="center" width={350} margin="10px" >
                   <MenuItem >
                     <Text onClick={() => handleServerClick(server)} >{server.name}</Text>
-                    </MenuItem>
+                  </MenuItem>
                 </Flex>
               ))}
             </MenuList>
-          </Menu>    
-
+          </Menu>
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
-
               <Menu>
                 <MenuButton
                   as={Button}
@@ -122,7 +93,6 @@ export default function Nav(props) {
                   <br />
                 </MenuList>
               </Menu>
-
             </Stack>
           </Flex>
         </Flex>

@@ -117,8 +117,9 @@ async def get_vc(guild_id):
 
 @app.route('/join_vc/<guild_id>/<vc_id>')
 async def join_vc(guild_id, vc_id):
-    await Music(bot).join_vc(guild_id, vc_id)
-    return "Ok"
+    print("Joining vc: " + vc_id + " in guild: " + guild_id + "")
+    await Music(bot).join_vc(int(guild_id), int(vc_id))
+    return "Success", 200
 
 
 @app.route('/ping')

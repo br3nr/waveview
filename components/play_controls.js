@@ -7,14 +7,8 @@ import { Input, Form } from "@chakra-ui/react";
 function PlayControls() {
     const [buttonState, setButtonState] = useState("pause");
     const [spinning, setSpinning] = useState(0);
-    const { colorMode, toggleColorMode } = useColorMode()
     const [value, setValue] = React.useState('')
     const handleChange = (event) => setValue(event.target.value)
-
-    async function handleRestartClick() {
-        setSpinning(1);
-        await fetch('/restart');
-    };
 
     const handleKeyPress = async (event) => {
         if (event.key === "Enter") {
