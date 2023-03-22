@@ -8,6 +8,8 @@ import os
 from log import log_command
 from queue import Queue
 from collections import deque
+import uuid 
+
 
 class CustomPlayer(wavelink.Player):
     """Custom player class for wavelink."""
@@ -15,6 +17,11 @@ class CustomPlayer(wavelink.Player):
     def __init__(self):
         super().__init__()
         self.queue = wavelink.Queue()
+
+class MiddleQueue:
+    def __init__(self, track):
+        self.uuid = str(uuid.uuid4())
+        self.track = track
 
 
 class Music(commands.Cog):
@@ -38,7 +45,11 @@ class Music(commands.Cog):
         self.csecret = os.environ["SPOTIFY_CLIENT_SECRET"]
         self.current_track = None
         bot.loop.create_task(self.connect_nodes())
+        self.middlequeue = []
         print("Initialised music")
+        
+    def get_queue(self):
+        return self.middlequeue
 
     def get_current_song(self):
         guild = self.bot.get_guild(1044512992647204864)
@@ -48,18 +59,22 @@ class Music(commands.Cog):
         if vc.is_playing():
             return vc.source
         
-    def dequeue_track_by_id(self, track_id):
+    async def dequeue_track_by_id(self, track_id):
         guild = self.bot.get_guild(1044512992647204864)
-        track_queue = guild.voice_client.queue 
-        queue_list = list(track_queue)
-        queue_list.pop(track_id)
+        
+        # delete from middlequeue where uuid == track_id
+        for i in range(len(self.middlequeue)):
+            if self.middlequeue[i].uuid == track_id:
+                del self.middlequeue[i]
+                break
+        
         wavelinkQueue = wavelink.Queue()
         # loop through queue_list and add to wavelinkQueue
-        for i in range(len(queue_list)):
-            wavelinkQueue.put(queue_list[i])
+        for i in range(len(self.middlequeue)):
+            wavelinkQueue.put(self.middlequeue[i].track)
         
         guild.voice_client.queue = wavelinkQueue
-        
+    
     def get_player(self):
         guild = self.bot.get_guild(1044512992647204864)
         vc = guild.voice_client
@@ -88,12 +103,27 @@ class Music(commands.Cog):
             await vc.seek(vc.track.length * 1000)
             if vc.is_paused():
                 await vc.resume()
-                
+      
+    async def restart(self):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        queue = vc.queue
+        await vc.play(vc.source)
+        vc.queue = queue
+              
     async def get_thumbnail(self):
         
         guild = self.bot.get_guild(1044512992647204864)
         vc = guild.voice_client
         return vc.source.thumbnail
+    
+    async def play_song_by_query(self, query):
+        guild = self.bot.get_guild(1044512992647204864)
+        vc = guild.voice_client
+        url_type = self.check_string(query)
+        action = self.url_type_mapping.get(url_type, None)
+        if action:
+            await action(self, None, query, vc)
 
     async def connect_nodes(self):
         """Connect to our Lavalink nodes."""
@@ -107,6 +137,7 @@ class Music(commands.Cog):
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: CustomPlayer, track: wavelink.tracks, reason):
         if not player.queue.is_empty:
+            self.middlequeue.pop(0)
             next_track = player.queue.get()
             self.current_track = next_track
             print("Track end: " + next_track.title)
@@ -132,6 +163,15 @@ class Music(commands.Cog):
             return await ctx.send("How can I join if you are nowhere to be found?")
         if vc:
             await vc.disconnect()
+        await channel.connect(cls=CustomPlayer())
+
+    async def join_vc(self, guild_id, vc_id):
+        guild = self.bot.get_guild(guild_id)
+        vc = guild.voice_client
+        # Check if already connected to vc
+        if vc: 
+            await vc.disconnect()
+        channel = guild.get_channel(vc_id)
         await channel.connect(cls=CustomPlayer())
 
     @commands.command()
@@ -218,35 +258,39 @@ class Music(commands.Cog):
         await ctx.send("I now use ?leave instead of ?disconnect")
 
     async def play_spotify_track(self, ctx: discord.ext.commands.Context, track: str, vc: CustomPlayer):
-
         track = await spotify.SpotifyTrack.search(query=track, return_first=True)
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
-            await ctx.send(embed=discord.Embed(
-                title=track.title,
-                url=track.uri,
-                description=f"Queued {track.title} in {vc.channel}"
-            ))
+            self.middlequeue.append(MiddleQueue(track))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=track.title,
+                    url=track.uri,
+                    description=f"Queued {track.title} in {vc.channel}"
+                ))
         else:
             await vc.play(track)
             self.current_track = track
-            await ctx.send(embed=discord.Embed(
-                title=track.title,
-                url=track.uri,
-                description=f"Queued {track.title} in {vc.channel}"
-            ))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=track.title,
+                    url=track.uri,
+                    description=f"Queued {track.title} in {vc.channel}"
+                ))
 
     async def play_spotify_playlist(self, ctx: discord.ext.commands.Context, playlist: str, vc: CustomPlayer):
         await ctx.send("Loading playlist...")
         async for partial in spotify.SpotifyTrack.iterator(query=playlist, partial_tracks=False):
             if vc.is_playing() or not vc.queue.is_empty:
                 vc.queue.put(item=partial)
+                self.middlequeue.append(MiddleQueue(partial))
             else:
                 await vc.play(partial)
-                await ctx.send(embed=discord.Embed(
-                    title=vc.source.title,
-                    description=f"Playing {vc.source.title} in {vc.channel}"
-                ))
+                if ctx is not None:
+                    await ctx.send(embed=discord.Embed(
+                        title=vc.source.title,
+                        description=f"Playing {vc.source.title} in {vc.channel}"
+                    ))
 
     async def play_youtube_song(self, ctx: discord.ext.commands.Context, query: str, vc: CustomPlayer):
         try:
@@ -256,19 +300,22 @@ class Music(commands.Cog):
             track = await wavelink.NodePool.get_node().get_tracks(wavelink.YouTubeTrack, query)
             track = track[0]
             if vc.is_playing() or not vc.queue.is_empty:
-                vc.queue.put(item=track)
-                await ctx.send(embed=discord.Embed(
-                    title=track.title,
-                    url=track.uri,
-                    description=f"Queued {track.title} in {vc.channel}"
-                ))
+                vc.queue.put(item=track)                
+                self.middlequeue.append(MiddleQueue(track))
+                if ctx is not None:
+                    await ctx.send(embed=discord.Embed(
+                        title=track.title,
+                        url=track.uri,
+                        description=f"Queued {track.title} in {vc.channel}"
+                    ))
             else:
                 await vc.play(track)
-                await ctx.send(embed=discord.Embed(
-                    title=vc.source.title,
-                    url=vc.source.uri,
-                    description=f"Playing {vc.source.title} in {vc.channel}"
-                ))
+                if ctx is not None:
+                    await ctx.send(embed=discord.Embed(
+                        title=vc.source.title,
+                        url=vc.source.uri,
+                        description=f"Playing {vc.source.title} in {vc.channel}"
+                    ))
         except Exception as e:
             await ctx.send(f"That link is weird. Make sure theres no timestamp at the end.")
 
@@ -281,18 +328,21 @@ class Music(commands.Cog):
         track = await wavelink.YouTubeTrack.search(query=search, return_first=True)
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
-            await ctx.send(embed=discord.Embed(
-                title=track.title,
-                url=track.uri,
-                description=f"Queued {track.title} in {vc.channel}"
-            ))
+            self.middlequeue.append(MiddleQueue(track))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=track.title,
+                    url=track.uri,
+                    description=f"Queued {track.title} in {vc.channel}"
+                ))
         else:
             await vc.play(track)
-            await ctx.send(embed=discord.Embed(
-                title=vc.source.title,
-                url=vc.source.uri,
-                description=f"Playing {vc.source.title} in {vc.channel}"
-            ))
+            if ctx is not None:
+                await ctx.send(embed=discord.Embed(
+                    title=vc.source.title,
+                    url=vc.source.uri,
+                    description=f"Playing {vc.source.title} in {vc.channel}"
+                ))
 
     # Map URL types to their corresponding functions
     url_type_mapping = {

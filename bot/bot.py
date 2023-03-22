@@ -1,5 +1,5 @@
 from discord.ext import commands
-from quart import Quart, jsonify, websocket
+from quart import Quart, jsonify, websocket, request, make_response, redirect
 import asyncio
 import discord
 import os
@@ -7,21 +7,36 @@ from music import Music
 from discord import ClientException
 from flask import abort
 from utils import compare_images
-from queue import Queue
 import json
 from quart_cors import cors
-import requests
+from zenora import APIClient 
+from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
 cors(app)
+
+api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
+
+
+@app.route("/auth/redirect")
+async def callback():
+    code = request.args.get("code")
+    access_token = api_client.oauth.get_access_token(code, REDIRECT_URI).access_token
+    bearer_client = APIClient(access_token, bearer=True)
+    current_user = bearer_client.users.get_current_user()
+    response = await make_response(redirect("http://localhost:3000/posts/login-callback"))
+    response.set_cookie("current_user", str(current_user))
+    return response
+
 
 @app.websocket('/ws')
 async def ws():
     while True:
         try:
             await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
-            music_player = Music(bot).get_player()
+            music_cls = Music(bot)
+            music_player = music_cls.get_player()
             try:
 
                 # Get info about the current track
@@ -32,20 +47,20 @@ async def ws():
             except AttributeError as e:
                 thumbnail_url = "/images/default.png"
                 track_title = "No track playing"
-                
+
             track_info = {
                 'title': track_title,
                 'thumbnail': thumbnail_url
             }
 
             # Get the queue information
-            queue_list = list(music_player.queue)
+            queue_list = music_cls.get_queue()
             json_queue = []
             for i in range(len(queue_list)):
-                track_id = queue_list[i].id
-                track_title = queue_list[i].title
+                track_uuid = queue_list[i].uuid
+                track_title = queue_list[i].track.title
                 try:
-                    thumbnail_url = queue_list[i].thumbnail
+                    thumbnail_url = queue_list[i].track.thumbnail
                     if compare_images(thumbnail_url):
                         thumbnail_url = "/images/default.png"
                 except AttributeError:
@@ -53,6 +68,7 @@ async def ws():
 
                 json_queue.append({
                     'id': i,
+                    'uuid': track_uuid,
                     'title': track_title,
                     'thumbnail': thumbnail_url
                 })
@@ -68,7 +84,6 @@ async def ws():
 
         # Send the JSON data through the websocket
         await websocket.send(json.dumps(track_info))
-
 
 
 @bot.event
@@ -89,6 +104,38 @@ async def on_connect():
     print('Music cog added to bot')
 
 
+@app.route('/get_servers')
+async def get_servers():
+    active_servers = bot.guilds
+    guild_list = []
+    for guild in active_servers:
+        print(guild.id)
+        guild_list.append({"id": str(guild.id),
+                           "name": str(guild.name),
+                           "icon": str(guild.icon.url)})
+    return jsonify(guild_list)
+
+
+
+@app.route('/get_vc/<guild_id>')
+async def get_vc(guild_id):
+    print(guild_id)
+    guild = bot.get_guild(int(guild_id))
+    vc_list = []
+    for vc in guild.voice_channels:
+        vc_list.append({"vc_name": str(vc.name),
+                        "vc_id": str(vc.id)})
+    print(vc_list)
+    return jsonify(vc_list)
+
+
+@app.route('/join_vc/<guild_id>/<vc_id>')
+async def join_vc(guild_id, vc_id):
+    print("Joining vc: " + vc_id + " in guild: " + guild_id + "")
+    await Music(bot).join_vc(int(guild_id), int(vc_id))
+    return "Success", 200
+
+
 @app.route('/ping')
 async def ping():
     return jsonify({'message': 'pong'})
@@ -104,15 +151,26 @@ async def message():
     else:
         return jsonify({'message': 'No messages found'})
 
-@app.route('/remove_track/<track>')
-async def remove_track(track):
+
+@app.route('/remove_track/<track_id>')
+async def remove_track(track_id):
     try:
-        Music(bot).dequeue_track_by_id(int(track))
+        await Music(bot).dequeue_track_by_id(track_id)
         return "Ok"
     except IndexError:
-        print("IndexError in remove_track. Calling track id: " + track)
+        print("IndexError in remove_track. Calling track id: " + track_id)
         abort(500)
-    
+
+
+@app.route('/play_song/<query>')
+async def play_song(query):
+    try:
+        await Music(bot).play_song_by_query(query)
+        return "Ok"
+    except IndexError:
+        print("IndexError in remove_track. Calling track id: " + track_id)
+        abort(500)
+
 
 @app.route('/song')
 async def song():
@@ -166,6 +224,12 @@ async def queue():
 @app.route('/pause')
 async def pause():
     await Music(bot).pause_track()
+    return "OK"
+
+
+@app.route('/restart')
+async def restart():
+    await Music(bot).restart()
     return "OK"
 
 
