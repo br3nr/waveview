@@ -5,7 +5,7 @@ bot/keys
 bot/__pycache__
 logs
 keys
-
+bot/config.py
 # dependencies
 /node_modules
 /.pnp

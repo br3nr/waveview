@@ -1,5 +1,5 @@
 from discord.ext import commands
-from quart import Quart, jsonify, websocket
+from quart import Quart, jsonify, websocket, request, make_response, redirect
 import asyncio
 import discord
 import os
@@ -7,14 +7,27 @@ from music import Music
 from discord import ClientException
 from flask import abort
 from utils import compare_images
-from queue import Queue
 import json
 from quart_cors import cors
-import requests
+from zenora import APIClient 
+from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
 cors(app)
+
+api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
+
+
+@app.route("/auth/redirect")
+async def callback():
+    code = request.args.get("code")
+    access_token = api_client.oauth.get_access_token(code, REDIRECT_URI).access_token
+    bearer_client = APIClient(access_token, bearer=True)
+    current_user = bearer_client.users.get_current_user()
+    response = await make_response(redirect("http://localhost:3000/posts/login-callback"))
+    response.set_cookie("current_user", str(current_user))
+    return response
 
 
 @app.websocket('/ws')
@@ -101,6 +114,7 @@ async def get_servers():
                            "name": str(guild.name),
                            "icon": str(guild.icon.url)})
     return jsonify(guild_list)
+
 
 
 @app.route('/get_vc/<guild_id>')
