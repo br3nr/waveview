@@ -1,5 +1,6 @@
 quart 
+quart_cors
 quart-discord 
 discord-ext-ipc 
 discord
-cv2
+Wavelink==1.3.5
