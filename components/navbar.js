@@ -75,7 +75,7 @@ export default function Nav(props) {
                   minW={0}>
                   <Avatar
                     size={'sm'}
-                    src={'https://static1.personality-database.com/profile_images/4097d505c488482688656aad6cd03992.png'}
+                    src={props.currentUser.avatar_url}
                   />
                 </MenuButton>
                 <MenuList alignItems={'center'}>
@@ -83,12 +83,12 @@ export default function Nav(props) {
                   <Center>
                     <Avatar
                       size={'2xl'}
-                      src={'https://static1.personality-database.com/profile_images/4097d505c488482688656aad6cd03992.png'}
+                      src={props.currentUser.avatar_url}
                     />
                   </Center>
                   <br />
                   <Center>
-                    <p>m4x</p>
+                    <p>{props.currentUser.username}</p>
                   </Center>
                   <br />
                 </MenuList>

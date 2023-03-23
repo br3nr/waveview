@@ -25,8 +25,18 @@ async def callback():
     access_token = api_client.oauth.get_access_token(code, REDIRECT_URI).access_token
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
-    response = await make_response(redirect("http://localhost:3000/posts/login-callback"))
-    response.set_cookie("current_user", str(current_user))
+    response = await make_response(redirect("http://localhost:3000/posts/music-dashboard"))
+    
+    user = {
+        "id": str(current_user.id),
+        "discriminator": str(current_user.discriminator),
+        "name": str(current_user.username),
+        "avatar_url": str(current_user.avatar_url),
+        "username": str(current_user.username),
+        "access_token": str(access_token)
+    }
+    
+    response.set_cookie("current_user", str(json.dumps(user)))
     return response
 
 

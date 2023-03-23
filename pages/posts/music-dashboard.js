@@ -7,6 +7,9 @@ import ThumbnailImage from '../../components/thumbnail_image';
 import MarqueeText from '../../components/marquee_text';
 import PlayControls from '../../components/play_controls';
 import _ from 'lodash';
+import Cookies from "js-cookie";
+import { useToast } from "@chakra-ui/react";
+
 
 function MusicDashboard() {
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png');
@@ -14,6 +17,31 @@ function MusicDashboard() {
   const [selectedServer, setSelectedServer] = useState(null);
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const toast = useToast();
+  const [userInformation, setUserInformation] = useState({});
+
+  useEffect(() => {
+    const userJSON = Cookies.get("current_user");
+    if (userJSON) {
+        
+        // replace \054 with , 
+        const formatJSON = userJSON.replace(/\\054/g, ',').replace(/\\/g, "");
+        console.log(formatJSON)
+
+        const userInformation = JSON.parse(formatJSON);
+        setUserInformation(userInformation);
+    } else {
+        toast({
+            title: "Error",
+            description: "Access token not found",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+        });
+    }
+    setLoading(false);
+  }, []);
 
   async function handleJoinServer(vc_id) {
     const url = `/join_vc/${selectedServer}/${vc_id}`;
@@ -48,7 +76,7 @@ function MusicDashboard() {
 
   return (
     <>
-      <Nav handleServerClick={handleServerClick} />
+      <Nav handleServerClick={handleServerClick} currentUser={userInformation} />
       <br />
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1}>
