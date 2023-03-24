@@ -1,5 +1,5 @@
 from discord.ext import commands
-from quart import Quart, jsonify, websocket, request, make_response, redirect
+from quart import Quart, jsonify, websocket, request, make_response, redirect, session
 import asyncio
 import discord
 import os
@@ -10,10 +10,12 @@ from utils import compare_images
 import json
 from quart_cors import cors
 from zenora import APIClient 
-from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID
+import uuid 
+from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID, SESSION_KEY
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
+app.secret_key = SESSION_KEY
 cors(app)
 
 api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
@@ -25,10 +27,35 @@ async def callback():
     access_token = api_client.oauth.get_access_token(code, REDIRECT_URI).access_token
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
-    response = await make_response(redirect("http://localhost:3000/posts/login-callback"))
-    response.set_cookie("current_user", str(current_user))
+    response = await make_response(redirect("http://localhost:3000/posts/music-dashboard"))
+    
+    user = {
+        "id": str(current_user.id),
+        "discriminator": str(current_user.discriminator),
+        "name": str(current_user.username),
+        "avatar_url": str(current_user.avatar_url),
+        "username": str(current_user.username),
+        "access_token": str(access_token) # may need to remove for security
+    }
+
+    session_id = str(uuid.uuid4())
+    
+    while session_id in session: # make sure the uuid is unique
+        session_id = str(uuid.uuid4())
+    
+    session[session_id] = user
+    response.set_cookie("session_id", session_id)
     return response
 
+@app.route("/auth/login/<session_id>")
+async def login(session_id):
+    session_keys = session.keys()
+    print(session_keys)
+    print(session_id)
+    if session_id in session.keys():
+        return jsonify(session[session_id])
+    else:
+        return abort(401)
 
 @app.websocket('/ws')
 async def ws():

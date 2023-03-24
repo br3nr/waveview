@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, GridItem, Button, Text,  List, ListItem, ListIcon } from '@chakra-ui/react';
+import { Grid, GridItem, Button, Text, List, ListItem, ListIcon } from '@chakra-ui/react';
 import { RiDiscordLine } from 'react-icons/ri';
 import Nav from '../../components/navbar';
 import MusicQueue from '../../components/music_queue';
@@ -7,6 +7,10 @@ import ThumbnailImage from '../../components/thumbnail_image';
 import MarqueeText from '../../components/marquee_text';
 import PlayControls from '../../components/play_controls';
 import _ from 'lodash';
+import Cookies from "js-cookie";
+import { useToast } from "@chakra-ui/react";
+import { useRouter } from 'next/router';
+
 
 function MusicDashboard() {
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png');
@@ -14,6 +18,31 @@ function MusicDashboard() {
   const [selectedServer, setSelectedServer] = useState(null);
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userInformation, setUserInformation] = useState({});
+  const router = useRouter();
+
+  useEffect(async () => {
+
+    // check if cookie exists
+    const sessionId = Cookies.get("session_id");
+    if (sessionId) {
+      const response = await fetch(`/auth/login/${sessionId}`);
+      // replace \054 with , 
+      if (!response.ok) {
+        router.push('/');
+      }
+      else {
+        const userJson = await response.json()
+        //const formatJSON = sessionID.replace(/\\054/g, ',').replace(/\\/g, "");
+        setUserInformation(userJson);
+      }
+
+    } else {
+      router.push('/');
+    }
+    setLoading(false);
+  }, []);
 
   async function handleJoinServer(vc_id) {
     const url = `/join_vc/${selectedServer}/${vc_id}`;
@@ -48,7 +77,7 @@ function MusicDashboard() {
 
   return (
     <>
-      <Nav handleServerClick={handleServerClick} />
+      <Nav handleServerClick={handleServerClick} currentUser={userInformation} />
       <br />
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1}>
@@ -72,13 +101,11 @@ function MusicDashboard() {
             ))}
           </List>
         </GridItem>
-
         <GridItem colSpan={1}>
           <ThumbnailImage thumbnailUrl={thumbnailUrl} />
           <MarqueeText songState={songState} />
           <PlayControls />
         </GridItem>
-
         <GridItem colSpan={1}>
           <Text as='b' paddingLeft="10px">Song Queue</Text>
           <MusicQueue setTrackQueue={setTrackQueue} trackQueue={trackQueue} />
