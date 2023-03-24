@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, GridItem, Button, Text,  List, ListItem, ListIcon } from '@chakra-ui/react';
+import { Grid, GridItem, Button, Text, List, ListItem, ListIcon } from '@chakra-ui/react';
 import { RiDiscordLine } from 'react-icons/ri';
 import Nav from '../../components/navbar';
 import MusicQueue from '../../components/music_queue';
@@ -9,6 +9,7 @@ import PlayControls from '../../components/play_controls';
 import _ from 'lodash';
 import Cookies from "js-cookie";
 import { useToast } from "@chakra-ui/react";
+import { useRouter } from 'next/router';
 
 
 function MusicDashboard() {
@@ -18,27 +19,27 @@ function MusicDashboard() {
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
   const [loading, setLoading] = useState(true);
-  const toast = useToast();
   const [userInformation, setUserInformation] = useState({});
+  const router = useRouter();
 
-  useEffect(() => {
-    const userJSON = Cookies.get("current_user");
-    if (userJSON) {
-        
-        // replace \054 with , 
-        const formatJSON = userJSON.replace(/\\054/g, ',').replace(/\\/g, "");
-        console.log(formatJSON)
+  useEffect(async () => {
 
-        const userInformation = JSON.parse(formatJSON);
-        setUserInformation(userInformation);
+    // check if cookie exists
+    const sessionId = Cookies.get("session_id");
+    if (sessionId) {
+      const response = await fetch(`/auth/login/${sessionId}`);
+      // replace \054 with , 
+      if (!response.ok) {
+        router.push('/');
+      }
+      else {
+        const userJson = await response.json()
+        //const formatJSON = sessionID.replace(/\\054/g, ',').replace(/\\/g, "");
+        setUserInformation(userJson);
+      }
+
     } else {
-        toast({
-            title: "Error",
-            description: "Access token not found",
-            status: "error",
-            duration: 9000,
-            isClosable: true,
-        });
+      router.push('/');
     }
     setLoading(false);
   }, []);
@@ -100,13 +101,11 @@ function MusicDashboard() {
             ))}
           </List>
         </GridItem>
-
         <GridItem colSpan={1}>
           <ThumbnailImage thumbnailUrl={thumbnailUrl} />
           <MarqueeText songState={songState} />
           <PlayControls />
         </GridItem>
-
         <GridItem colSpan={1}>
           <Text as='b' paddingLeft="10px">Song Queue</Text>
           <MusicQueue setTrackQueue={setTrackQueue} trackQueue={trackQueue} />
