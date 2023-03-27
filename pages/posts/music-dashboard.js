@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, GridItem, Button, Text, List, ListItem, ListIcon } from '@chakra-ui/react';
+import { Grid, GridItem, Button, Text, List, ListItem, ListIcon, Select, Flex } from '@chakra-ui/react';
 import { RiDiscordLine } from 'react-icons/ri';
 import Nav from '../../components/navbar';
 import MusicQueue from '../../components/music_queue';
@@ -21,27 +21,41 @@ function MusicDashboard() {
   const [loading, setLoading] = useState(true);
   const [userInformation, setUserInformation] = useState({});
   const router = useRouter();
+  const [serverList, setServerList] = useState([{}]);
+  const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
 
-  useEffect(async () => {
+  function handleServerClick(server) {
+    props.handleServerClick(server);
+    setServerIcon(server.icon);
+  }
 
-    // check if cookie exists
-    const sessionId = Cookies.get("session_id");
-    if (sessionId) {
-      const response = await fetch(`/auth/login/${sessionId}`);
-      // replace \054 with , 
-      if (!response.ok) {
+  async function onMenuClick() {
+
+  }
+
+  onMenuClick();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // check if cookie exists
+      const sessionId = Cookies.get("session_id");
+      if (sessionId) {
+        const response = await fetch(`/auth/login/${sessionId}`);
+
+        if (!response.ok) {
+          router.push('/');
+        } else {
+          const userJson = await response.json();
+          setUserInformation(userJson);
+          const userServers = await (await fetch("/get_servers")).json();
+          setServerList(userServers);
+        }
+      } else {
         router.push('/');
       }
-      else {
-        const userJson = await response.json()
-        //const formatJSON = sessionID.replace(/\\054/g, ',').replace(/\\/g, "");
-        setUserInformation(userJson);
-      }
-
-    } else {
-      router.push('/');
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   async function handleJoinServer(vc_id) {
@@ -79,9 +93,14 @@ function MusicDashboard() {
     <>
       <Nav handleServerClick={handleServerClick} currentUser={userInformation} />
       <br />
+
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1}>
-          <Text fontSize='lg' as='b' paddingLeft={5}>Available Channels:</Text>
+          <Select width="60%" paddingLeft={5}  placeholder="-- Select a Discord server --">
+            {serverList?.map((server) => (
+              <option key={server.id} value={server.id} onClick={() => handleServerClick(server)}>{server.name}</option>
+            ))}
+          </Select>
           <List paddingLeft={5} paddingTop={1} spacing={3}>
             {voiceChannels?.map((server) => (
               <ListItem key={server.vc_id}>
@@ -94,7 +113,6 @@ function MusicDashboard() {
                   width={275}
                   onClick={() => handleJoinServer(server.vc_id)}
                 >
-                  <ListIcon as={RiDiscordLine} color='green.500' />
                   {server.vc_name}
                 </Button>
               </ListItem>

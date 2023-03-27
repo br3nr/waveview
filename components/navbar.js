@@ -16,24 +16,20 @@ import {
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import React from 'react';
+import { useRouter } from 'next/router';
 
 export default function Nav(props) {
   const { colorMode, toggleColorMode } = useColorMode();
   const [serverList, setServerList] = useState([{}]);
   const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
+  const router = useRouter();
 
-  function handleServerClick(server) {
-    props.handleServerClick(server);
-    setServerIcon(server.icon);
-  }
+  const [currentPath, setCurrentPath] = useState(router.pathname);
 
-  async function onMenuClick() {
-    const response = await fetch("/get_servers");
-    const data = await response.json();
-    setServerList(data);
-    console.log(data)
-  }
-
+  const handleHomeClick = () => {
+    // TODO: Make this a link to the home page
+  };
+  
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -43,23 +39,14 @@ export default function Nav(props) {
               as={Button}
               variant={'link'}
               cursor={'pointer'}
-              onClick={onMenuClick}
-              minW={0}>
+              onClick={handleHomeClick}
+              minW={0}
+              key={currentPath}>
               <Avatar
                 size={'sm'}
                 src={serverIcon}
               />
-            </MenuButton>
-            <MenuList alignItems={'center'}>
-              <Text paddingLeft={5} paddingTop={3}>Available Servers:</Text>
-              {serverList?.map((server) => (
-                <Flex key={server.name} borderRadius="50px" alignItems="center" width={350} margin="10px" >
-                  <MenuItem >
-                    <Text onClick={() => handleServerClick(server)} >{server.name}</Text>
-                  </MenuItem>
-                </Flex>
-              ))}
-            </MenuList>
+            </MenuButton> 
           </Menu>
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
