@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Grid, GridItem, Button, Text, List, ListItem, ListIcon, Select, Flex } from '@chakra-ui/react';
-import { RiDiscordLine } from 'react-icons/ri';
 import Nav from '../../components/navbar';
 import MusicQueue from '../../components/music_queue';
 import ThumbnailImage from '../../components/thumbnail_image';
@@ -8,9 +7,8 @@ import MarqueeText from '../../components/marquee_text';
 import PlayControls from '../../components/play_controls';
 import _ from 'lodash';
 import Cookies from "js-cookie";
-import { useToast } from "@chakra-ui/react";
 import { useRouter } from 'next/router';
-
+import { RiDiscordFill } from 'react-icons/ri';
 
 function MusicDashboard() {
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png');
@@ -27,6 +25,7 @@ function MusicDashboard() {
   function handleServerClick(server) {
     props.handleServerClick(server);
     setServerIcon(server.icon);
+
   }
 
   async function onMenuClick() {
@@ -46,8 +45,10 @@ function MusicDashboard() {
           router.push('/');
         } else {
           const userJson = await response.json();
+          const serverUrl = `/get_servers/${userJson.id}`;
           setUserInformation(userJson);
-          const userServers = await (await fetch("/get_servers")).json();
+
+          const userServers = await (await fetch(serverUrl)).json();
           setServerList(userServers);
         }
       } else {
@@ -59,20 +60,20 @@ function MusicDashboard() {
   }, []);
 
   async function handleJoinServer(vc_id) {
-    const url = `/join_vc/${selectedServer}/${vc_id}`;
+    const url = `/join_vc/${selectedServer.id}/${vc_id}`;
     const response = await fetch(url);
     if (response.ok) {
       console.log("ok")
     }
+    await handleServerClick(selectedServer)
   }
 
   async function handleServerClick(server) {
-    console.log(server);
+    console.log(server.id);
     const response = await fetch(`/get_vc/${server.id}`);
     const servers = await response.json();
     setVoiceChannels(servers);
-    setSelectedServer(server.id);
-    console.log(servers);
+    setSelectedServer(server);
   }
 
   useEffect(() => {
@@ -96,9 +97,12 @@ function MusicDashboard() {
 
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1}>
-          <Select width="60%" paddingLeft={5}  placeholder="-- Select a Discord server --">
+          <Select width="60%" paddingLeft={5}>
+            <option selected hidden disabled value="">-- Select a Discord server --</option>
             {serverList?.map((server) => (
-              <option key={server.id} value={server.id} onClick={() => handleServerClick(server)}>{server.name}</option>
+              <option key={server.id} value={server.id} onClick={() => handleServerClick(server)}>
+                {server.name}
+              </option>
             ))}
           </Select>
           <List paddingLeft={5} paddingTop={1} spacing={3}>
@@ -113,7 +117,10 @@ function MusicDashboard() {
                   width={275}
                   onClick={() => handleJoinServer(server.vc_id)}
                 >
-                  {server.vc_name}
+                  <Flex alignItems="center">
+                    {server.vc_name}
+                    {server.is_connected ? <RiDiscordFill/> : null}
+                  </Flex>
                 </Button>
               </ListItem>
             ))}

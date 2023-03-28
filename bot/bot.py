@@ -9,8 +9,8 @@ from flask import abort
 from utils import compare_images
 import json
 from quart_cors import cors
-from zenora import APIClient 
-import uuid 
+from zenora import APIClient
+import uuid
 from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID, SESSION_KEY
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -24,28 +24,30 @@ api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
 @app.route("/auth/redirect")
 async def callback():
     code = request.args.get("code")
-    access_token = api_client.oauth.get_access_token(code, REDIRECT_URI).access_token
+    access_token = api_client.oauth.get_access_token(
+        code, REDIRECT_URI).access_token
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
     response = await make_response(redirect("http://localhost:3000/posts/music-dashboard"))
-    
+
     user = {
         "id": str(current_user.id),
         "discriminator": str(current_user.discriminator),
         "name": str(current_user.username),
         "avatar_url": str(current_user.avatar_url),
         "username": str(current_user.username),
-        "access_token": str(access_token) # may need to remove for security
+        "access_token": str(access_token)  # may need to remove for security
     }
 
     session_id = str(uuid.uuid4())
-    
-    while session_id in session: # make sure the uuid is unique
+
+    while session_id in session:  # make sure the uuid is unique
         session_id = str(uuid.uuid4())
-    
+
     session[session_id] = user
     response.set_cookie("session_id", session_id)
     return response
+
 
 @app.route("/auth/login/<session_id>")
 async def login(session_id):
@@ -56,6 +58,7 @@ async def login(session_id):
         return jsonify(session[session_id])
     else:
         return abort(401)
+
 
 @app.websocket('/ws')
 async def ws():
@@ -131,17 +134,17 @@ async def on_connect():
     print('Music cog added to bot')
 
 
-@app.route('/get_servers')
-async def get_servers():
+@app.route('/get_servers/<user_id>')
+async def get_servers(user_id):
     active_servers = bot.guilds
     guild_list = []
-    for guild in active_servers:
-        print(guild.id)
-        guild_list.append({"id": str(guild.id),
-                           "name": str(guild.name),
-                           "icon": str(guild.icon.url)})
-    return jsonify(guild_list)
 
+    for guild in active_servers:
+        if guild.get_member(int(user_id)):
+            guild_list.append({"id": str(guild.id),
+                               "name": str(guild.name),
+                               "icon": str(guild.icon.url)})
+    return jsonify(guild_list)
 
 
 @app.route('/get_vc/<guild_id>')
@@ -150,8 +153,14 @@ async def get_vc(guild_id):
     guild = bot.get_guild(int(guild_id))
     vc_list = []
     for vc in guild.voice_channels:
-        vc_list.append({"vc_name": str(vc.name),
-                        "vc_id": str(vc.id)})
+        is_connected = False
+        if guild.voice_client and guild.voice_client.channel == vc:
+            is_connected = True
+        vc_list.append({
+            "vc_name": str(vc.name),
+            "vc_id": str(vc.id),
+            "is_connected": is_connected
+        })
     print(vc_list)
     return jsonify(vc_list)
 
