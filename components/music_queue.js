@@ -3,22 +3,22 @@ import { Button, Flex, Image, Text, Spinner } from '@chakra-ui/react';
 import { MdPlaylistRemove } from 'react-icons/md';
 
 function MusicQueue(props) {
-  const [removedTrackIds, setRemovedTrackIds] = useState([]);
+	const [removedTrackIds, setRemovedTrackIds] = useState([]);
 
-  function setTrackQueue(track) {
-    props.setTrackQueue(track);
-  }
-	
-  const removeTrack = useCallback(async (track) => {
-    setRemovedTrackIds([...removedTrackIds, track.uuid]);
-    const url = `/remove_track/${track.uuid}`;
-    await fetch(url);
-  }, [removedTrackIds]);
+	function setTrackQueue(track) {
+		props.setTrackQueue(track);
+	}
 
-  useEffect(() => {
-    const newQueue = props.trackQueue.filter((t) => !removedTrackIds.includes(t.uuid));
-    setTrackQueue(newQueue);
-  }, [props.trackQueue, removedTrackIds]);
+	const removeTrack = useCallback(async (track) => {
+		setRemovedTrackIds([...removedTrackIds, track.uuid]);
+		const url = `/remove_track/${track.uuid}`;
+		await fetch(url);
+	}, [removedTrackIds]);
+
+	useEffect(() => {
+		const newQueue = props.trackQueue.filter((t) => !removedTrackIds.includes(t.uuid));
+		setTrackQueue(newQueue);
+	}, [props.trackQueue, removedTrackIds]);
 
 	return (
 		<>

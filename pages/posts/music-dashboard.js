@@ -13,7 +13,7 @@ import { RiDiscordFill } from 'react-icons/ri';
 function MusicDashboard() {
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png');
   const [songState, setSongState] = useState("No song is playing.");
-  const [selectedServer, setSelectedServer] = useState(null);
+  const [selectedServer, setSelectedServer] = useState("1044512992647204864");
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,6 @@ function MusicDashboard() {
   function handleServerClick(server) {
     props.handleServerClick(server);
     setServerIcon(server.icon);
-
   }
 
   async function onMenuClick() {
@@ -74,21 +73,28 @@ function MusicDashboard() {
     const servers = await response.json();
     setVoiceChannels(servers);
     setSelectedServer(server);
+    console.log("Setting selected server to: " + server.name)
   }
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:5090/ws');
     socket.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
-      setSongState(data.title);
-      setThumbnailUrl(data.thumbnail);
-      setTrackQueue(data.queue);
+      console.log("selectedServer: " + selectedServer.name)
+      if(selectedServer != null)
+      {
+        const serverData = data[selectedServer.id];
+        setSongState(serverData.title);
+        setThumbnailUrl(serverData.thumbnail);
+        console.log(serverData.queue);
+        setTrackQueue(serverData.queue);
+      }
     });
 
     return () => {
       socket.close();
     };
-  }, []);
+  }, [selectedServer]);
 
   return (
     <>
@@ -129,11 +135,11 @@ function MusicDashboard() {
         <GridItem colSpan={1}>
           <ThumbnailImage thumbnailUrl={thumbnailUrl} />
           <MarqueeText songState={songState} />
-          <PlayControls />
+          <PlayControls selectedServer={selectedServer}/>
         </GridItem>
         <GridItem colSpan={1}>
           <Text as='b' paddingLeft="10px">Song Queue</Text>
-          <MusicQueue setTrackQueue={setTrackQueue} trackQueue={trackQueue} />
+          <MusicQueue trackQueue={trackQueue} setTrackQueue={setTrackQueue}/>
         </GridItem>
       </Grid>
     </>

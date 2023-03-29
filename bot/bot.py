@@ -62,58 +62,66 @@ async def login(session_id):
 
 @app.websocket('/ws')
 async def ws():
+    music_cls = Music(bot)
+
     while True:
+        print("\n\n\n")
         try:
-            await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
-            music_cls = Music(bot)
-            music_player = music_cls.get_player()
-            try:
-
-                # Get info about the current track
-                thumbnail_url = music_player.source.thumbnail
-                if compare_images(thumbnail_url):
-                    thumbnail_url = "/images/default.png"
-                track_title = music_player.source.title
-            except AttributeError as e:
-                thumbnail_url = "/images/default.png"
-                track_title = "No track playing"
-
-            track_info = {
-                'title': track_title,
-                'thumbnail': thumbnail_url
-            }
-
-            # Get the queue information
-            queue_list = music_cls.get_queue()
-            json_queue = []
-            for i in range(len(queue_list)):
-                track_uuid = queue_list[i].uuid
-                track_title = queue_list[i].track.title
-                try:
-                    thumbnail_url = queue_list[i].track.thumbnail
-                    if compare_images(thumbnail_url):
+            await asyncio.sleep(3.0)  # Sleep for 0.1 seconds
+            guilds = music_cls.get_guilds()
+            guild_tracks = {}
+            for guild in guilds:
+                music_player = music_cls.get_player(guild.id)
+                if music_player is not None:  # Check if music_player is not None
+                    try:
+                        print("mplayer" + str(music_player))
+                        # Get info about the current track
+                        thumbnail_url = music_player.source.thumbnail
+                        print("thumbnail url: " + thumbnail_url)
+                        if compare_images(thumbnail_url):
+                            thumbnail_url = "/images/default.png"
+                        track_title = music_player.source.title
+                    except AttributeError as e:
+                        print(e)
                         thumbnail_url = "/images/default.png"
-                except AttributeError:
-                    thumbnail_url = "/images/default.png"
+                        track_title = "No track playing"
 
-                json_queue.append({
-                    'id': i,
-                    'uuid': track_uuid,
-                    'title': track_title,
-                    'thumbnail': thumbnail_url
-                })
+                    track_info = {
+                        'title': track_title,
+                        'thumbnail': thumbnail_url
+                    }
 
-            track_info['queue'] = json_queue
+                    guild_tracks[str(guild.id)] = track_info
+
+                    queue_list = music_cls.get_queue(guild.id)
+
+                    json_queue = []
+
+                    for i in range(len(queue_list)):
+                        track_uuid = queue_list[i].uuid
+                        track_title = queue_list[i].track.title
+                        try:
+                            thumbnail_url = queue_list[i].track.thumbnail
+                            if compare_images(thumbnail_url):
+                                thumbnail_url = "/images/default.png"
+                        except AttributeError:
+                            thumbnail_url = "/images/default.png"
+
+                        json_queue.append({
+                            'id': i,
+                            'uuid': track_uuid,
+                            'title': track_title,
+                            'thumbnail': thumbnail_url
+                        })
+
+                    guild_tracks[str(guild.id)]['queue'] = json_queue
+
+            # Send the JSON data through the websocket
+            await websocket.send(json.dumps(guild_tracks))
+            print("Guild tracks sent: " + str(guild_tracks))
         except AttributeError as e:
-            track_info = {
-                'title': "No track playing",
-                'thumbnail': "/images/default.png",
-                'queue': []
-            }
+            print("EEEEPA")
             print(e)
-
-        # Send the JSON data through the websocket
-        await websocket.send(json.dumps(track_info))
 
 
 @bot.event
@@ -188,23 +196,24 @@ async def message():
         return jsonify({'message': 'No messages found'})
 
 
-@app.route('/remove_track/<track_id>')
-async def remove_track(track_id):
+@app.route('/remove_track/<guild_id>/<track_id>')
+async def remove_track(guild_id, track_id):
     try:
-        await Music(bot).dequeue_track_by_id(track_id)
+        await Music(bot).dequeue_track_by_id(guild_id, track_id)
         return "Ok"
     except IndexError:
         print("IndexError in remove_track. Calling track id: " + track_id)
         abort(500)
 
 
-@app.route('/play_song/<query>')
-async def play_song(query):
+@app.route('/play_song/<guild_id>/<query>')
+async def play_song(guild_id, query):
     try:
-        await Music(bot).play_song_by_query(query)
+        print("Playing song: " + query + " in guild: " + guild_id + "")
+        await Music(bot).play_song_by_query(guild_id, query)
         return "Ok"
     except IndexError:
-        print("IndexError in remove_track. Calling track id: " + track_id)
+        print("IndexError in remove_track. Calling track id: " + query)
         abort(500)
 
 
@@ -216,10 +225,10 @@ async def song():
     return jsonify({'message': str(song.title)})
 
 
-@app.route('/playing')
-async def playing():
+@app.route('/playing/<guild_id>')
+async def playing(guild_id):
     try:
-        music_player = Music(bot).get_player()
+        music_player = Music(bot).get_player(guild_id)
         thumbnail_url = music_player.source.thumbnail
 
         # Check if thumbnail is the default image
@@ -235,10 +244,10 @@ async def playing():
         abort(500)
 
 
-@app.route('/queue')
-async def queue():
+@app.route('/queue/<guild_id>')
+async def queue(guild_id):
 
-    music_player = Music(bot).get_player()
+    music_player = Music(bot).get_player(guild_id)
     queue_list = list(music_player.queue)
     json_queue = []
 
@@ -257,34 +266,28 @@ async def queue():
     return jsonify({"queue": json.dumps(json_queue)})
 
 
-@app.route('/pause')
-async def pause():
-    await Music(bot).pause_track()
+@app.route('/pause/<guild_id>')
+async def pause(guild_id):
+    await Music(bot).pause_track(guild_id)
     return "OK"
 
 
-@app.route('/restart')
-async def restart():
-    await Music(bot).restart()
+@app.route('/skip/<guild_id>')
+async def skip(guild_id):
+    await Music(bot).skip_track(guild_id)
     return "OK"
 
 
-@app.route('/skip')
-async def skip():
-    await Music(bot).skip_track()
+@app.route('/resume/<guild_id>')
+async def resume(guild_id):
+    await Music(bot).resume_track(guild_id)
     return "OK"
 
 
-@app.route('/resume')
-async def resume():
-    await Music(bot).resume_track()
-    return "OK"
-
-
-@app.route('/thumbnail')
-async def thumbnail():
+@app.route('/thumbnail/<guild_id>')
+async def thumbnail(guild_id):
     try:
-        thumbnail = await Music(bot).get_thumbnail()
+        thumbnail = await Music(bot).get_thumbnail(guild_id)
         return {'thumbnailUrl': thumbnail}
     except AttributeError:
         abort(500)
