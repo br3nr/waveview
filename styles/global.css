@@ -1,45 +1,16 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
-    Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  line-height: 1.6;
-  font-size: 18px;
+:root {
+  
+  --blue-rgb: 255 204 204;
+  --primary-rgb: var(--blue-rgb);
+  
+  --blob-color-1: rgb(var(--blue-rgb));
+  --blob-color-2: dodgerblue;
 }
 
 * {
   box-sizing: border-box;
 }
 
-a {
-  color: #0070f3;
-  text-decoration: none;
-}
 
-a:hover {
-  text-decoration: underline;
-}
 
-img {
-  max-width: 100%;
-  display: block;
-}
 
-.image-container {
-    position: relative;
-    height: 300px;
-    overflow: hidden;
-  }
-
-.image-container img {
-position: absolute;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-margin: auto;
-min-width: 100%;
-min-height: 100%;
-filter: blur(10px);
-}

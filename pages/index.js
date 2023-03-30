@@ -2,10 +2,10 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import { ChakraProvider, Image } from '@chakra-ui/react'
-import { Button, Flex } from '@chakra-ui/react'
+import { Button, Center, Text, Flex, Box } from '@chakra-ui/react'
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router'
-
+import Login from '../components/Login';
 export default function Home() {
   const router = useRouter()
 
@@ -36,14 +36,20 @@ export default function Home() {
     //const response = await fetch('http://localhost:5090/auth/login');
     //const data = await response.json();
     //console.log(data)
+    //      <Image margin={10} src="https://static1.personality-database.com/profile_images/4097d505c488482688656aad6cd03992.png" alt="Discord Logo" />
+
   }
 
   return (
     <div >
       <Flex direction={'column'} alignItems={'center'} justifyContent={'center'} height={'100vh'}>
-      <Image margin={10} src="https://static1.personality-database.com/profile_images/4097d505c488482688656aad6cd03992.png" alt="Discord Logo" />
       <h1 className="title">
-        <Button onClick={() => checkIsLoggedIn()}>Login</Button>
+        <Center>
+          <Text marginBottom={3} fontFamily="mono">br3nr bot</Text>
+        </Center>
+        <Box onClick={() => checkIsLoggedIn()}>
+          <Login/>
+        </Box>
       </h1>
       </Flex>
     </div>
