@@ -46,8 +46,11 @@ class Music(commands.Cog):
         self.csecret = os.environ["SPOTIFY_CLIENT_SECRET"]
         self.current_track = None
         bot.loop.create_task(self.connect_nodes())
-        self.middlequeue = []
         self.middlequeues = {}
+        # for each guild, create a middlequeue
+        for guild in self.bot.guilds:
+            self.middlequeues[str(guild.id)] = []
+            
         print("Initialised music")
 
     def get_queue(self, guild_id):
@@ -149,13 +152,12 @@ class Music(commands.Cog):
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: CustomPlayer, track: wavelink.tracks, reason):
         if not player.queue.is_empty:
-            guild_id = player.guild_id
-            cur_queue = self.middlequeues.get(guild_id, [])
-            cur_queue.pop(0)
+            guild_id = player.guild.id
+            cur_queue = self.middlequeues[str(guild_id)].pop(0)
             self.middlequeues[guild_id] = cur_queue
             next_track = player.queue.get()
             self.current_track = next_track
-            print("Track end: " + next_track.title)
+            print("the next track is" + next_track.title)
             await player.play(next_track)
 
     @commands.Cog.listener()
@@ -352,8 +354,9 @@ class Music(commands.Cog):
         track = await wavelink.YouTubeTrack.search(query=search, return_first=True)
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
-            guild_id = vc.guild.id
-            cur_queue = self.middlequeues.get(guild_id, [])
+            guild_id = str(vc.guild.id)
+            print("CURRENT GUILD ID", guild_id)
+            cur_queue = self.middlequeues[guild_id]            
             cur_queue.append(MiddleQueue(track))
             self.middlequeues[guild_id] = cur_queue
             if ctx is not None:

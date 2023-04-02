@@ -65,7 +65,6 @@ async def ws():
     music_cls = Music(bot)
 
     while True:
-        print("\n\n\n")
         try:
             await asyncio.sleep(3.0)  # Sleep for 0.1 seconds
             guilds = music_cls.get_guilds()
@@ -74,15 +73,12 @@ async def ws():
                 music_player = music_cls.get_player(guild.id)
                 if music_player is not None:  # Check if music_player is not None
                     try:
-                        print("mplayer" + str(music_player))
                         # Get info about the current track
                         thumbnail_url = music_player.source.thumbnail
-                        print("thumbnail url: " + thumbnail_url)
                         if compare_images(thumbnail_url):
                             thumbnail_url = "/images/default.png"
                         track_title = music_player.source.title
                     except AttributeError as e:
-                        print(e)
                         thumbnail_url = "/images/default.png"
                         track_title = "No track playing"
 
@@ -92,9 +88,7 @@ async def ws():
                     }
 
                     guild_tracks[str(guild.id)] = track_info
-
-                    queue_list = music_cls.get_queue(guild.id)
-
+                    queue_list = music_cls.get_queue(str(guild.id))
                     json_queue = []
 
                     for i in range(len(queue_list)):
@@ -118,7 +112,6 @@ async def ws():
 
             # Send the JSON data through the websocket
             await websocket.send(json.dumps(guild_tracks))
-            print("Guild tracks sent: " + str(guild_tracks))
         except AttributeError as e:
             print("EEEEPA")
             print(e)
