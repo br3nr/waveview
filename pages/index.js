@@ -6,16 +6,10 @@ import { Button, Center, Text, Flex, Box } from '@chakra-ui/react'
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router'
 import Login from '../components/Login';
+
+
 export default function Home() {
   const router = useRouter()
-
-
-  async function handleClick()
-  {
-    const response = await fetch('https://discord.com/api/oauth2/authorize?client_id=748778849751400871&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds');
-    const data = await response.json();
-    console.log(data)
-  }
 
   async function checkIsLoggedIn()
   {
@@ -23,7 +17,7 @@ export default function Home() {
     const session_id = Cookies.get("session_id");
 
     if (session_id) {
-      router.push('/posts/music-dashboard')
+      router.push('/posts/server-select')
       console.log(session_id);
     }
     else

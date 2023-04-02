@@ -5,15 +5,17 @@ import MusicQueue from '../../components/music_queue';
 import ThumbnailImage from '../../components/thumbnail_image';
 import MarqueeText from '../../components/marquee_text';
 import PlayControls from '../../components/play_controls';
-import _ from 'lodash';
+import _, { set } from 'lodash';
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router';
 import { RiDiscordFill } from 'react-icons/ri';
+import Link from 'next/link';
+
 
 function MusicDashboard() {
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png');
   const [songState, setSongState] = useState("No song is playing.");
-  const [selectedServer, setSelectedServer] = useState("1044512992647204864");
+  const [selectedServer, setSelectedServer] = useState();
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,17 +23,14 @@ function MusicDashboard() {
   const router = useRouter();
   const [serverList, setServerList] = useState([{}]);
   const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
+  const { serverId } = router.query;
+  const [serverDetails, setServerDetails] = useState({});
+  const [voiceChannel, setVoiceChannel] = useState();
 
   function handleServerClick(server) {
     props.handleServerClick(server);
     setServerIcon(server.icon);
   }
-
-  async function onMenuClick() {
-
-  }
-
-  onMenuClick();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,56 +38,65 @@ function MusicDashboard() {
       const sessionId = Cookies.get("session_id");
       if (sessionId) {
         const response = await fetch(`/auth/login/${sessionId}`);
-
         if (!response.ok) {
           router.push('/');
         } else {
           const userJson = await response.json();
           const serverUrl = `/get_servers/${userJson.id}`;
           setUserInformation(userJson);
-
           const userServers = await (await fetch(serverUrl)).json();
           setServerList(userServers);
         }
       } else {
-        router.push('/');
+        router.push("/")
+        setTimeout(() => {
+          window.location.reload()
+        }, 200)
       }
       setLoading(false);
     };
     fetchData();
   }, []);
 
+  // make a useEffect that checks if the cookie exists
+  // if it does, fetch the user information
+  // if it doesn't, redirect to the login page
+
+
   async function handleJoinServer(vc_id) {
-    const url = `/join_vc/${selectedServer.id}/${vc_id}`;
+    const url = `/join_vc/${selectedServer}/${vc_id}`;
     const response = await fetch(url);
     if (response.ok) {
       console.log("ok")
     }
-    await handleServerClick(selectedServer)
+    setVoiceChannel(vc_id);
   }
 
-  async function handleServerClick(server) {
-    console.log(server.id);
-    const response = await fetch(`/get_vc/${server.id}`);
-    const servers = await response.json();
-    setVoiceChannels(servers);
-    setSelectedServer(server);
-    console.log("Setting selected server to: " + server.name)
-  }
+  useEffect(() => {
+    if (serverId) {
+      const fetchData = async () => {
+        const response = await fetch(`/get_vc/${serverId}`);
+        const servers = await response.json();
+        setVoiceChannels(servers);
+        setSelectedServer(serverId);
+      };
+      fetchData();
+      console.log("fetching data")
+    }
+  }, [serverId, voiceChannel])
+
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:5090/ws');
     socket.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
-      console.log("selectedServer: " + selectedServer.name)
-      if(selectedServer != null)
-      {
-        const serverData = data[selectedServer.id];
-        setSongState(serverData.title);
-        setThumbnailUrl(serverData.thumbnail);
-        console.log(serverData.queue);
-        setTrackQueue(serverData.queue);
-      }
+      console.log("selectedServer: " + selectedServer)
+      const server = data[selectedServer];
+      setSongState(server.title);
+      setThumbnailUrl(server.thumbnail);
+      setTrackQueue(server.queue);
+      setServerDetails(server);
+      console.log(trackQueue)
     });
 
     return () => {
@@ -100,17 +108,8 @@ function MusicDashboard() {
     <>
       <Nav handleServerClick={handleServerClick} currentUser={userInformation} />
       <br />
-
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1}>
-          <Select width="60%" paddingLeft={5}>
-            <option selected hidden disabled value="">-- Select a Discord server --</option>
-            {serverList?.map((server) => (
-              <option key={server.id} value={server.id} onClick={() => handleServerClick(server)}>
-                {server.name}
-              </option>
-            ))}
-          </Select>
           <List paddingLeft={5} paddingTop={1} spacing={3}>
             {voiceChannels?.map((server) => (
               <ListItem key={server.vc_id}>
@@ -125,7 +124,7 @@ function MusicDashboard() {
                 >
                   <Flex alignItems="center">
                     {server.vc_name}
-                    {server.is_connected ? <RiDiscordFill/> : null}
+                    {server.is_connected ? <RiDiscordFill /> : null}
                   </Flex>
                 </Button>
               </ListItem>
@@ -135,11 +134,11 @@ function MusicDashboard() {
         <GridItem colSpan={1}>
           <ThumbnailImage thumbnailUrl={thumbnailUrl} />
           <MarqueeText songState={songState} />
-          <PlayControls selectedServer={selectedServer}/>
+          <PlayControls selectedServer={selectedServer} />
         </GridItem>
         <GridItem colSpan={1}>
           <Text as='b' paddingLeft="10px">Song Queue</Text>
-          <MusicQueue trackQueue={trackQueue} setTrackQueue={setTrackQueue}/>
+          <MusicQueue trackQueue={trackQueue} setTrackQueue={setTrackQueue} />
         </GridItem>
       </Grid>
     </>

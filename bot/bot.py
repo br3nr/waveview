@@ -28,7 +28,7 @@ async def callback():
         code, REDIRECT_URI).access_token
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
-    response = await make_response(redirect("http://localhost:3000/posts/music-dashboard"))
+    response = await make_response(redirect("http://localhost:3000/posts/server-select"))
 
     user = {
         "id": str(current_user.id),

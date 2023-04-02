@@ -17,6 +17,7 @@ import {
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import React from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function Nav(props) {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -24,12 +25,15 @@ export default function Nav(props) {
   const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
   const router = useRouter();
 
-  const [currentPath, setCurrentPath] = useState(router.pathname);
+  function handleMenuClick() 
+  {
+    // TODO: Make this work without reloading the page
+    router.push("/posts/server-select")
+    setTimeout(() => {
+      window.location.reload()
+    }, 200)
+  }
 
-  const handleHomeClick = () => {
-    // TODO: Make this a link to the home page
-  };
-  
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -39,14 +43,15 @@ export default function Nav(props) {
               as={Button}
               variant={'link'}
               cursor={'pointer'}
-              onClick={handleHomeClick}
               minW={0}
-              key={currentPath}>
+              onClick={handleMenuClick}
+            >
               <Avatar
+                borderRadius="0px"
                 size={'sm'}
                 src={serverIcon}
               />
-            </MenuButton> 
+            </MenuButton>
           </Menu>
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
