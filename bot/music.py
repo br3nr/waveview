@@ -50,8 +50,6 @@ class Music(commands.Cog):
         # for each guild, create a middlequeue
         for guild in self.bot.guilds:
             self.middlequeues[str(guild.id)] = []
-            
-        print("Initialised music")
 
     def get_queue(self, guild_id):
         if guild_id in self.middlequeues:
@@ -112,10 +110,8 @@ class Music(commands.Cog):
         vc = guild.voice_client
         if vc:
             if vc.queue.is_empty:
-                print("QUEUEUE ISS EMPPTTYYY!!!")
                 return await vc.stop()
             await vc.seek(vc.track.length * 1000)
-            print("SSEEEEEEEEEEEEKY")
             if vc.is_paused():
                 await vc.resume()
 
@@ -185,11 +181,13 @@ class Music(commands.Cog):
     async def join_vc(self, guild_id, vc_id):
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
+        self.middlequeues[str(guild_id)] = []
         # Check if already connected to vc
-        if vc:
-            await vc.disconnect()
-        channel = guild.get_channel(vc_id)
-        await channel.connect(cls=CustomPlayer())
+        if not vc or vc.channel.id != vc_id:
+            if vc:
+                await vc.disconnect()
+            channel = guild.get_channel(vc_id)
+            await channel.connect(cls=CustomPlayer())
 
     @commands.command()
     @log_command
@@ -319,7 +317,6 @@ class Music(commands.Cog):
         try:
             # remove time from youtube link
             query = re.sub(r'&t=\d+', '', query)
-            print(query)
             track = await wavelink.NodePool.get_node().get_tracks(wavelink.YouTubeTrack, query)
             track = track[0]
             guild_id = ctx.guild.id
@@ -355,8 +352,7 @@ class Music(commands.Cog):
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
             guild_id = str(vc.guild.id)
-            print("CURRENT GUILD ID", guild_id)
-            cur_queue = self.middlequeues[guild_id]            
+            cur_queue = self.middlequeues[guild_id]
             cur_queue.append(MiddleQueue(track))
             self.middlequeues[guild_id] = cur_queue
             if ctx is not None:

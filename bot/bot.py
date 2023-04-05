@@ -19,7 +19,9 @@ app.secret_key = SESSION_KEY
 cors(app)
 
 api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
-
+# 212e8574-4605-468a-8d0b-746706f321fe
+# bad== Xl9pX6kZdJptNckoh4pxKOjOpezEG7
+# good= D8cfW5Ai1iaX163N6u3vAOKrJ7YgcT
 
 @app.route("/auth/redirect")
 async def callback():
@@ -51,9 +53,6 @@ async def callback():
 
 @app.route("/auth/login/<session_id>")
 async def login(session_id):
-    session_keys = session.keys()
-    print(session_keys)
-    print(session_id)
     if session_id in session.keys():
         return jsonify(session[session_id])
     else:
@@ -113,8 +112,6 @@ async def ws():
             # Send the JSON data through the websocket
             await websocket.send(json.dumps(guild_tracks))
         except AttributeError as e:
-            print("EEEEPA")
-            print(e)
 
 
 @bot.event
