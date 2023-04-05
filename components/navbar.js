@@ -13,11 +13,13 @@ import {
   useColorMode,
   Text,
   Center,
+  IconButton
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { BiLeftArrowAlt } from 'react-icons/bi'
 
 export default function Nav(props) {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -25,8 +27,7 @@ export default function Nav(props) {
   const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
   const router = useRouter();
 
-  function handleMenuClick() 
-  {
+  function handleMenuClick() {
     // TODO: Make this work without reloading the page
     router.push("/posts/server-select")
     setTimeout(() => {
@@ -36,23 +37,11 @@ export default function Nav(props) {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box bg={useColorModeValue('gray.100', 'gray.900')} pl={2} pr={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <Menu>
-            <MenuButton
-              as={Button}
-              variant={'link'}
-              cursor={'pointer'}
-              minW={0}
-              onClick={handleMenuClick}
-            >
-              <Avatar
-                borderRadius="0px"
-                size={'sm'}
-                src={serverIcon}
-              />
-            </MenuButton>
-          </Menu>
+            <Button height="50px" width="50px" background="transparent" onClick={handleMenuClick}>
+              <BiLeftArrowAlt />
+            </Button>
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
               <Button onClick={toggleColorMode}>

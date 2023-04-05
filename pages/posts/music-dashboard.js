@@ -13,14 +13,14 @@ import Link from 'next/link';
 
 
 function MusicDashboard() {
+  const router = useRouter();
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png');
   const [songState, setSongState] = useState("No song is playing.");
-  const [selectedServer, setSelectedServer] = useState();
+  const [selectedServer, setSelectedServer] = useState(router.query.serverId);
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userInformation, setUserInformation] = useState({});
-  const router = useRouter();
   const [serverList, setServerList] = useState([{}]);
   const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
   const { serverId } = router.query;
@@ -138,7 +138,7 @@ function MusicDashboard() {
         </GridItem>
         <GridItem colSpan={1}>
           <Text as='b' paddingLeft="10px">Song Queue</Text>
-          <MusicQueue trackQueue={trackQueue} setTrackQueue={setTrackQueue} />
+          <MusicQueue selectedServer={selectedServer} trackQueue={trackQueue} setTrackQueue={setTrackQueue} />
         </GridItem>
       </Grid>
     </>

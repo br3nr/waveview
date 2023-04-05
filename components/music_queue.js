@@ -11,7 +11,7 @@ function MusicQueue(props) {
 
 	const removeTrack = useCallback(async (track) => {
 		setRemovedTrackIds([...removedTrackIds, track.uuid]);
-		const url = `/remove_track/${track.uuid}`;
+		const url = `/remove_track/${props.selectedServer}/${track.uuid}`;
 		await fetch(url);
 	}, [removedTrackIds]);
 
@@ -47,6 +47,7 @@ function MusicQueue(props) {
 							<Button
 								height="50px"
 								borderRadius="50px"
+								background="transparent"
 								onClick={() => removeTrack(track)} marginLeft="auto">
 								{removedTrackIds.includes(track.uuid) ? (
 									<Spinner size='xs' />
