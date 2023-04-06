@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, Flex, Image, Text, Spinner } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, Spinner, Box } from '@chakra-ui/react';
 import { MdPlaylistRemove } from 'react-icons/md';
 
 function MusicQueue(props) {
@@ -22,7 +22,7 @@ function MusicQueue(props) {
 
 	return (
 		<>
-			<Flex flexDirection="column" >
+			<Flex flexDirection="column" overflowY="scroll" height="800px" marginTop="10px">
 				{props.trackQueue.map((track) => (
 					<Flex key={track.id} borderRadius="50px" alignItems="center" width={550} margin="10px" >
 						<Flex w="80%" alignItems="center">

@@ -11,15 +11,21 @@ function PlayControls(props) {
 	const handleChange = (event) => setValue(event.target.value)
 
 	const handleKeyPress = async (event) => {
-		if (event.key === "Enter") {
-			setValue("")
-			const url = `/play_song/${props.selectedServer}/${value}`;
-			await fetch(url);
-			// Do something, e.g. submit a query
-			console.log("Enter key pressed!");
-			console.log(value)
-		}
-	};
+    if (event.key === "Enter") {
+      setValue("");
+      const url = `/play_song/${props.selectedServer}`;
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: value }),
+      });
+      console.log("Enter key pressed!");
+      console.log(value);
+    }
+  };
+  
 
 	async function handleClick() {
 		setButtonState(buttonState === "play" ? "pause" : "play");

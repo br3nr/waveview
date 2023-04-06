@@ -23,6 +23,7 @@ api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
 # bad== Xl9pX6kZdJptNckoh4pxKOjOpezEG7
 # good= D8cfW5Ai1iaX163N6u3vAOKrJ7YgcT
 
+
 @app.route("/auth/redirect")
 async def callback():
     code = request.args.get("code")
@@ -62,10 +63,9 @@ async def login(session_id):
 @app.websocket('/ws')
 async def ws():
     music_cls = Music(bot)
-
     while True:
         try:
-            await asyncio.sleep(3.0)  # Sleep for 0.1 seconds
+            await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
             guilds = music_cls.get_guilds()
             guild_tracks = {}
             for guild in guilds:
@@ -112,7 +112,7 @@ async def ws():
             # Send the JSON data through the websocket
             await websocket.send(json.dumps(guild_tracks))
         except AttributeError as e:
-
+            print(e)
 
 @bot.event
 async def on_ready():
@@ -196,14 +196,16 @@ async def remove_track(guild_id, track_id):
         abort(500)
 
 
-@app.route('/play_song/<guild_id>/<query>')
-async def play_song(guild_id, query):
+@app.route('/play_song/<guild_id>', methods=["POST"])
+async def play_song(guild_id):
     try:
-        print("Playing song: " + query + " in guild: " + guild_id + "")
-        await Music(bot).play_song_by_query(guild_id, query)
+        data = await request.get_json()
+        url = data.get("url")
+        print("Playing song: " + url + " in guild: " + guild_id + "")
+        await Music(bot).play_song_by_query(guild_id, url)
         return "Ok"
     except IndexError:
-        print("IndexError in remove_track. Calling track id: " + query)
+        print("IndexError in remove_track. Calling track id: " + url)
         abort(500)
 
 

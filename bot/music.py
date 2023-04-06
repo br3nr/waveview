@@ -297,11 +297,10 @@ class Music(commands.Cog):
                 ))
 
     async def play_spotify_playlist(self, ctx: discord.ext.commands.Context, playlist: str, vc: CustomPlayer):
-        await ctx.send("Loading playlist...")
         async for partial in spotify.SpotifyTrack.iterator(query=playlist, partial_tracks=False):
             if vc.is_playing() or not vc.queue.is_empty:
                 vc.queue.put(item=partial)
-                guild_id = vc.guild_id
+                guild_id = str(vc.guild.id)
                 cur_queue = self.middlequeues.get(guild_id, [])
                 cur_queue.append(MiddleQueue(partial))
                 self.middlequeues[str(guild_id)] = cur_queue
