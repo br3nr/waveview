@@ -65,6 +65,7 @@ async def login(session_id: str, response: Response):
 
 @app.websocket("/ws")
 async def ws(websocket: WebSocket):
+    await websocket.accept()
     music_cls = Music(bot)
     while True:
         try:
