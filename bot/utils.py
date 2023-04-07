@@ -3,7 +3,7 @@ import requests
 
 def compare_images(url):
     
-    local_path = "assets/maxresdefault.jpg"
+    local_path = "bot/assets/maxresdefault.jpg"
     with open(local_path, "rb") as f:
         local_data = f.read()
 
