@@ -149,11 +149,10 @@ class Music(commands.Cog):
     async def on_wavelink_track_end(self, player: CustomPlayer, track: wavelink.tracks, reason):
         if not player.queue.is_empty:
             guild_id = player.guild.id
-            cur_queue = self.middlequeues[str(guild_id)].pop(0)
+            cur_queue = self.middlequeues[str(guild_id)][1:]
             self.middlequeues[guild_id] = cur_queue
             next_track = player.queue.get()
             self.current_track = next_track
-            print("the next track is" + next_track.title)
             await player.play(next_track)
 
     @commands.Cog.listener()

@@ -8,7 +8,7 @@ module.exports = {
     return Promise.resolve([
       {
         source: '/:path*',
-        destination: `http://45.32.191.6:5090/:path*`,
+        destination: `http://localhost:5090/:path*`,
       },
     ]);
   },

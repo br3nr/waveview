@@ -12,7 +12,7 @@ import json
 from quart_cors import cors
 from zenora import APIClient
 import uuid
-from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID, SESSION_KEY, VPS_REDIRECT_LOC, VPS_REDIRECT_URI
+from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT_LOC, VPS_REDIRECT_URI
 import sys 
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -37,7 +37,7 @@ async def callback():
     
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
-    response = await make_response(redirect(VPS_REDIRECT_LOC))
+    response = await make_response(redirect(REDIRECT_LOC))
     
     user = {
         "id": str(current_user.id),
