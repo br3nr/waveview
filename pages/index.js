@@ -22,7 +22,7 @@ export default function Home() {
     }
     else
     {
-      // redirect to login page
+      //router.push('https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2F45.32.191.6%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds')
       router.push('https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2Flocalhost%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds')
     }
 

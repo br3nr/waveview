@@ -3,6 +3,7 @@ from quart import Quart, jsonify, websocket, request, make_response, redirect, s
 import asyncio
 import discord
 import os
+import argparse
 from music import Music
 from discord import ClientException
 from flask import abort
@@ -11,12 +12,14 @@ import json
 from quart_cors import cors
 from zenora import APIClient
 import uuid
-from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID, SESSION_KEY
+from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, OAUTH_URL, CLIENT_ID, SESSION_KEY, VPS_REDIRECT_LOC, VPS_REDIRECT_URI
+import sys 
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 app = Quart(__name__)
 app.secret_key = SESSION_KEY
 cors(app)
+is_vps = False
 
 api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
 # 212e8574-4605-468a-8d0b-746706f321fe
@@ -27,12 +30,19 @@ api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
 @app.route("/auth/redirect")
 async def callback():
     code = request.args.get("code")
+    # http://45.32.191.6:5090/auth/redirect
+    
     access_token = api_client.oauth.get_access_token(
-        code, REDIRECT_URI).access_token
+    code, REDIRECT_URI).access_token
+    
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
-    response = await make_response(redirect("http://localhost:3000/posts/server-select"))
-
+    
+    if is_vps == True:
+        response = await make_response(redirect(VPS_REDIRECT_LOC))
+    else:
+        response = await make_response(redirect("http://localhost:3000/posts/server-select"))
+    
     user = {
         "id": str(current_user.id),
         "discriminator": str(current_user.discriminator),
@@ -80,7 +90,7 @@ async def ws():
                     except AttributeError as e:
                         thumbnail_url = "/images/default.png"
                         track_title = "No track playing"
-
+                
                     track_info = {
                         'title': track_title,
                         'thumbnail': thumbnail_url
@@ -106,8 +116,15 @@ async def ws():
                             'title': track_title,
                             'thumbnail': thumbnail_url
                         })
-
+                
                     guild_tracks[str(guild.id)]['queue'] = json_queue
+
+                else:
+                    guild_tracks[str(guild.id)] = {
+                        'title': "No track playing",
+                        'thumbnail': "/images/default.png",
+                        'queue': []
+                    }
 
             # Send the JSON data through the websocket
             await websocket.send(json.dumps(guild_tracks))
@@ -302,4 +319,10 @@ async def main():
     await asyncio.gather(start_app(), start_bot())
 
 if __name__ == '__main__':
+    # check if the --vps flag is set
+    if len(sys.argv) > 1 and sys.argv[1] == "--vps":
+        is_vps = True
+
+        
+
     asyncio.run(main())

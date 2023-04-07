@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 import { RiDiscordFill } from 'react-icons/ri';
 import Link from 'next/link';
 
-
 function MusicDashboard() {
   const router = useRouter();
   const [thumbnailUrl, setThumbnailUrl] = useState('/images/default.png');
@@ -84,13 +83,16 @@ function MusicDashboard() {
       console.log("fetching data")
     }
   }, [serverId, voiceChannel])
-
-
+  
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:5090/ws');
+    //const socket = new WebSocket('ws://45.32.191.6:5090/ws');
     socket.addEventListener('message', (event) => {
+      setSelectedServer(router.query.serverId);
       const data = JSON.parse(event.data);
       console.log("selectedServer: " + selectedServer)
+      console.log("Router: " + router.query.serverId)
+      console.log("data: " + event.data)
       const server = data[selectedServer];
       setSongState(server.title);
       setThumbnailUrl(server.thumbnail);

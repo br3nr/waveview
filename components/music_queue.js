@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Flex, Image, Text, Spinner, Box } from '@chakra-ui/react';
 import { MdPlaylistRemove } from 'react-icons/md';
 
-function MusicQueue(props) {
+function MusicQueue(props) 
+{
 	const [removedTrackIds, setRemovedTrackIds] = useState([]);
 
 	function setTrackQueue(track) {
@@ -14,7 +15,7 @@ function MusicQueue(props) {
 		const url = `/remove_track/${props.selectedServer}/${track.uuid}`;
 		await fetch(url);
 	}, [removedTrackIds]);
-
+	
 	useEffect(() => {
 		const newQueue = props.trackQueue.filter((t) => !removedTrackIds.includes(t.uuid));
 		setTrackQueue(newQueue);
