@@ -37,11 +37,7 @@ async def callback():
     
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
-    
-    if is_vps == True:
-        response = await make_response(redirect(VPS_REDIRECT_LOC))
-    else:
-        response = await make_response(redirect("http://localhost:3000/posts/server-select"))
+    response = await make_response(redirect(VPS_REDIRECT_LOC))
     
     user = {
         "id": str(current_user.id),

@@ -85,8 +85,8 @@ function MusicDashboard() {
   }, [serverId, voiceChannel])
   
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:5090/ws');
-    //const socket = new WebSocket('ws://45.32.191.6:5090/ws');
+    //const socket = new WebSocket('ws://localhost:5090/ws');
+    const socket = new WebSocket('ws://45.32.191.6:5090/ws');
     socket.addEventListener('message', (event) => {
       setSelectedServer(router.query.serverId);
       const data = JSON.parse(event.data);
