@@ -1,44 +1,36 @@
-from discord.ext import commands
-from quart import Quart, jsonify, websocket, request, make_response, redirect, session
 import asyncio
-import discord
 import os
-import argparse
-from music import Music
-from discord import ClientException
-from flask import abort
-from utils import compare_images
+import discord
 import json
-from quart_cors import cors
-from zenora import APIClient
 import uuid
-from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT_LOC, VPS_REDIRECT_URI
-import sys 
+from fastapi.encoders import jsonable_encoder as jsonify
+from fastapi import FastAPI, HTTPException, Request, Response, WebSocket
+from fastapi.responses import RedirectResponse, JSONResponse
+from discord.ext import commands
+from bot.music import Music
+from discord import ClientException
+from bot.utils import compare_images
+from bot.config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT_LOC, VPS_REDIRECT_URI
+from zenora import APIClient
 
+
+app = FastAPI()
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-app = Quart(__name__)
-app.secret_key = SESSION_KEY
-cors(app)
-is_vps = False
-
 api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
-# 212e8574-4605-468a-8d0b-746706f321fe
-# bad== Xl9pX6kZdJptNckoh4pxKOjOpezEG7
-# good= D8cfW5Ai1iaX163N6u3vAOKrJ7YgcT
+session = {}
+@app.get("/")
+async def hello_world():
+    return{"hello":"world"}
 
 
-@app.route("/auth/redirect")
-async def callback():
-    code = request.args.get("code")
-    # http://45.32.191.6:5090/auth/redirect
-    
-    access_token = api_client.oauth.get_access_token(
-    code, REDIRECT_URI).access_token
-    
+@app.get("/auth/redirect")
+async def callback(code: str):
+    global session
+    access_token = api_client.oauth.get_access_token(code, REDIRECT_URI).access_token
+
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
-    response = await make_response(redirect(REDIRECT_LOC))
-    
+
     user = {
         "id": str(current_user.id),
         "discriminator": str(current_user.discriminator),
@@ -54,20 +46,25 @@ async def callback():
         session_id = str(uuid.uuid4())
 
     session[session_id] = user
+
+    response = RedirectResponse(REDIRECT_LOC)
     response.set_cookie("session_id", session_id)
+
     return response
 
 
-@app.route("/auth/login/<session_id>")
-async def login(session_id):
+@app.get("/auth/login/{session_id}")
+async def login(session_id: str, response: Response):
+    global session 
     if session_id in session.keys():
-        return jsonify(session[session_id])
-    else:
-        return abort(401)
+        return JSONResponse(content=session[session_id])
+
+    response.status_code = 401
+    return response
 
 
-@app.websocket('/ws')
-async def ws():
+@app.websocket("/ws")
+async def ws(websocket: WebSocket):
     music_cls = Music(bot)
     while True:
         try:
@@ -123,29 +120,12 @@ async def ws():
                     }
 
             # Send the JSON data through the websocket
-            await websocket.send(json.dumps(guild_tracks))
+            await websocket.send_json(guild_tracks)
         except AttributeError as e:
             print(e)
 
-@bot.event
-async def on_ready():
-    try:
-        print('Logged in as {0.user}'.format(bot))
-        music = Music(bot)
-        await bot.add_cog(music)
-        synced = await bot.tree.sync()
-    except ClientException:
-        print("Failed to sync")
 
-
-@bot.event
-async def on_connect():
-    print('Connected to Discord')
-    await bot.add_cog(Music(bot))
-    print('Music cog added to bot')
-
-
-@app.route('/get_servers/<user_id>')
+@app.get("/get_servers/{user_id}")
 async def get_servers(user_id):
     active_servers = bot.guilds
     guild_list = []
@@ -158,7 +138,30 @@ async def get_servers(user_id):
     return jsonify(guild_list)
 
 
-@app.route('/get_vc/<guild_id>')
+@app.get("/remove_track/{guild_id}/{track_id}")
+async def remove_track(guild_id, track_id):
+    try:
+        await Music(bot).dequeue_track_by_id(guild_id, track_id)
+        return "Ok"
+    except IndexError:
+        print("IndexError in remove_track. Calling track id: " + track_id)
+        raise HTTPException(status_code=404, detail="Track not found")
+
+
+
+@app.get("/get_servers/{user_id}")
+async def get_servers(user_id):
+    active_servers = bot.guilds
+    guild_list = []
+
+    for guild in active_servers:
+        if guild.get_member(int(user_id)):
+            guild_list.append({"id": str(guild.id),
+                               "name": str(guild.name),
+                               "icon": str(guild.icon.url)})
+    return jsonify(guild_list)
+
+@app.get("/get_vc/{guild_id}")
 async def get_vc(guild_id):
     print(guild_id)
     guild = bot.get_guild(int(guild_id))
@@ -172,65 +175,30 @@ async def get_vc(guild_id):
             "vc_id": str(vc.id),
             "is_connected": is_connected
         })
-    print(vc_list)
     return jsonify(vc_list)
 
 
-@app.route('/join_vc/<guild_id>/<vc_id>')
+@app.get("/join_vc/{guild_id}/{vc_id}")
 async def join_vc(guild_id, vc_id):
     print("Joining vc: " + vc_id + " in guild: " + guild_id + "")
     await Music(bot).join_vc(int(guild_id), int(vc_id))
-    return "Success", 200
+    return "Success"
 
 
-@app.route('/ping')
-async def ping():
-    return jsonify({'message': 'pong'})
-
-
-@app.route('/message')
-async def message():
-    # Return most recent message
-    channel = bot.get_channel(1073104398286340136)
-
-    async for message in channel.history(limit=1):
-        return jsonify({'message': message.content})
-    else:
-        return jsonify({'message': 'No messages found'})
-
-
-@app.route('/remove_track/<guild_id>/<track_id>')
-async def remove_track(guild_id, track_id):
+@app.post("/play_song/{guild_id}")
+async def play_song(guild_id: str, request: Request):
     try:
-        await Music(bot).dequeue_track_by_id(guild_id, track_id)
-        return "Ok"
-    except IndexError:
-        print("IndexError in remove_track. Calling track id: " + track_id)
-        abort(500)
-
-
-@app.route('/play_song/<guild_id>', methods=["POST"])
-async def play_song(guild_id):
-    try:
-        data = await request.get_json()
+        data = await request.json()
         url = data.get("url")
-        print("Playing song: " + url + " in guild: " + guild_id + "")
+        print(f"Playing song: {url} in guild: {guild_id}")
         await Music(bot).play_song_by_query(guild_id, url)
-        return "Ok"
+        return {"message": "Ok"}
     except IndexError:
-        print("IndexError in remove_track. Calling track id: " + url)
-        abort(500)
+        print(f"IndexError in remove_track. Calling track id: {url}")
+        return {"error": "500 Internal Server Error"}
 
 
-@app.route('/song')
-async def song():
-    # Return most recent message
-    song = Music(bot).get_current_song()
-
-    return jsonify({'message': str(song.title)})
-
-
-@app.route('/playing/<guild_id>')
+@app.get("/playing/{guild_id}")
 async def playing(guild_id):
     try:
         music_player = Music(bot).get_player(guild_id)
@@ -246,10 +214,11 @@ async def playing(guild_id):
         })
 
     except AttributeError:
-        abort(500)
+        raise HTTPException(status_code=500, detail="Server bronk")
 
 
-@app.route('/queue/<guild_id>')
+
+@app.get("/queue/{guild_id}")
 async def queue(guild_id):
 
     music_player = Music(bot).get_player(guild_id)
@@ -271,54 +240,53 @@ async def queue(guild_id):
     return jsonify({"queue": json.dumps(json_queue)})
 
 
-@app.route('/pause/<guild_id>')
-async def pause(guild_id):
+@app.get('/pause/{guild_id}')
+async def pause(guild_id: str):
     await Music(bot).pause_track(guild_id)
-    return "OK"
+    return {"message": "OK"}
 
-
-@app.route('/skip/<guild_id>')
-async def skip(guild_id):
+@app.get('/skip/{guild_id}')
+async def skip(guild_id: str):
     await Music(bot).skip_track(guild_id)
-    return "OK"
+    return {"message": "OK"}
 
-
-@app.route('/resume/<guild_id>')
-async def resume(guild_id):
+@app.get('/resume/{guild_id}')
+async def resume(guild_id: str):
     await Music(bot).resume_track(guild_id)
-    return "OK"
+    return {"message": "OK"}
 
-
-@app.route('/thumbnail/<guild_id>')
-async def thumbnail(guild_id):
+@app.get('/thumbnail/{guild_id}')
+async def thumbnail(guild_id: str):
     try:
         thumbnail = await Music(bot).get_thumbnail(guild_id)
         return {'thumbnailUrl': thumbnail}
     except AttributeError:
-        abort(500)
+        return {"error": "500 Internal Server Error"}
+
+# --- BOT EVENTS --- #
 
 
-@bot.command()
-async def hello(ctx):
-    await ctx.send('Hello, World!')
+@bot.event
+async def on_ready():
+    try:
+        print('Logged in as {0.user}'.format(bot))
+        music = Music(bot)
+        await bot.add_cog(music)
+        synced = await bot.tree.sync()
+    except ClientException:
+        print("Failed to sync")
 
 
-async def start_app():
-    await app.run_task(host='0.0.0.0', port=5090)
+@bot.event
+async def on_connect():
+    print('Connected to Discord')
+    await bot.add_cog(Music(bot))
+    print('Music cog added to bot')
 
+async def run():
+    try: 
+        await bot.start(os.environ["DEV_CLIENT_ID"])
+    except KeyboardInterrupt:
+        await bot.logout()
 
-async def start_bot():
-    await bot.start(os.environ["DEV_CLIENT_ID"])
-
-
-async def main():
-    await asyncio.gather(start_app(), start_bot())
-
-if __name__ == '__main__':
-    # check if the --vps flag is set
-    if len(sys.argv) > 1 and sys.argv[1] == "--vps":
-        is_vps = True
-
-        
-
-    asyncio.run(main())
+asyncio.create_task(run())

@@ -5,7 +5,7 @@ from discord import app_commands
 from wavelink.ext import spotify
 import re
 import os
-from log import log_command
+from bot.log import log_command
 from queue import Queue
 from collections import deque
 import uuid
