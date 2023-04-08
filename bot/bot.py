@@ -13,9 +13,8 @@ from bot.utils import compare_images
 from bot.config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT_LOC, VPS_REDIRECT_URI
 from zenora import APIClient
 
-# {"379871840249577472": {"title": "No track playing", "thumbnail": "/images/default.png", "queue": []}, "1044512992647204864": {"title": "No track playing", "thumbnail": "/images/default.png", "queue": []}}
-# {'379871840249577472': {'title': 'No track playing', 'thumbnail': '/images/default.png', 'queue': []}, '1044512992647204864': {'title': 'No track playing', 'thumbnail': '/images/default.png', 'queue': []}}
-app = FastAPI()
+
+app = FastAPI(debug=True)
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
 session = {}
