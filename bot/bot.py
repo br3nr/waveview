@@ -14,19 +14,22 @@ from bot.config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT
 from zenora import APIClient
 
 
-app = FastAPI()
+app = FastAPI(debug=True)
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
 session = {}
+
+
 @app.get("/")
 async def hello_world():
-    return{"hello":"world"}
+    return {"hello": "world"}
 
 
 @app.get("/auth/redirect")
 async def callback(code: str):
     global session
-    access_token = api_client.oauth.get_access_token(code, REDIRECT_URI).access_token
+    access_token = api_client.oauth.get_access_token(
+        code, REDIRECT_URI).access_token
 
     bearer_client = APIClient(access_token, bearer=True)
     current_user = bearer_client.users.get_current_user()
@@ -55,7 +58,7 @@ async def callback(code: str):
 
 @app.get("/auth/login/{session_id}")
 async def login(session_id: str, response: Response):
-    global session 
+    global session
     if session_id in session.keys():
         return JSONResponse(content=session[session_id])
 
@@ -68,62 +71,72 @@ async def ws(websocket: WebSocket):
     await websocket.accept()
     music_cls = Music(bot)
     while True:
+        await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
+        guild_tracks = {}
+        for guild in music_cls.get_guilds():
+            music_player = music_cls.get_player(guild.id)
+            if music_player is not None:
+                track_info = await get_track_info(music_player)
+                queue_list = music_cls.get_queue(str(guild.id))
+                json_queue = await get_queue_json(queue_list)
+
+                guild_tracks[str(guild.id)] = {
+                    'title': track_info['title'],
+                    'thumbnail': track_info['thumbnail'],
+                    'queue': json_queue
+                }
+            else:
+                guild_tracks[str(guild.id)
+                                ] = get_default_guild_track_data()
+
+        await send_guild_tracks(guild_tracks, websocket)
+        
+
+async def get_track_info(music_player):
+    if music_player.source is None:
+        return get_default_guild_track_data()
+    else:  
+        thumbnail_url = music_player.source.thumbnail
+        if compare_images(thumbnail_url):
+            thumbnail_url = "/images/default.png"
+        track_title = music_player.source.title
+        return {
+            'title': track_title,
+            'thumbnail': thumbnail_url
+        }
+        
+
+async def get_queue_json(queue_list):
+    json_queue = []
+    for i in range(len(queue_list)):
+        track_uuid = queue_list[i].uuid
+        track_title = queue_list[i].track.title
         try:
-            await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
-            guilds = music_cls.get_guilds()
-            guild_tracks = {}
-            for guild in guilds:
-                music_player = music_cls.get_player(guild.id)
-                if music_player is not None:  # Check if music_player is not None
-                    try:
-                        # Get info about the current track
-                        thumbnail_url = music_player.source.thumbnail
-                        if compare_images(thumbnail_url):
-                            thumbnail_url = "/images/default.png"
-                        track_title = music_player.source.title
-                    except AttributeError as e:
-                        thumbnail_url = "/images/default.png"
-                        track_title = "No track playing"
-                
-                    track_info = {
-                        'title': track_title,
-                        'thumbnail': thumbnail_url
-                    }
+            thumbnail_url = queue_list[i].track.thumbnail
+            if compare_images(thumbnail_url):
+                thumbnail_url = "/images/default.png"
+        except AttributeError:
+            thumbnail_url = "/images/default.png"
 
-                    guild_tracks[str(guild.id)] = track_info
-                    queue_list = music_cls.get_queue(str(guild.id))
-                    json_queue = []
+        json_queue.append({
+            'id': i,
+            'uuid': track_uuid,
+            'title': track_title,
+            'thumbnail': thumbnail_url
+        })
+    return json_queue
 
-                    for i in range(len(queue_list)):
-                        track_uuid = queue_list[i].uuid
-                        track_title = queue_list[i].track.title
-                        try:
-                            thumbnail_url = queue_list[i].track.thumbnail
-                            if compare_images(thumbnail_url):
-                                thumbnail_url = "/images/default.png"
-                        except AttributeError:
-                            thumbnail_url = "/images/default.png"
 
-                        json_queue.append({
-                            'id': i,
-                            'uuid': track_uuid,
-                            'title': track_title,
-                            'thumbnail': thumbnail_url
-                        })
-                
-                    guild_tracks[str(guild.id)]['queue'] = json_queue
+def get_default_guild_track_data():
+    return {
+        'title': "No track playing",
+        'thumbnail': "/images/default.png",
+        'queue': []
+    }
 
-                else:
-                    guild_tracks[str(guild.id)] = {
-                        'title': "No track playing",
-                        'thumbnail': "/images/default.png",
-                        'queue': []
-                    }
 
-            # Send the JSON data through the websocket
-            await websocket.send_json(guild_tracks)
-        except AttributeError as e:
-            print(e)
+async def send_guild_tracks(guild_tracks, websocket):
+    await websocket.send_json(guild_tracks)
 
 
 @app.get("/get_servers/{user_id}")
@@ -145,9 +158,8 @@ async def remove_track(guild_id, track_id):
         await Music(bot).dequeue_track_by_id(guild_id, track_id)
         return "Ok"
     except IndexError:
-        print("IndexError in remove_track. Calling track id: " + track_id)
+        ("IndexError in remove_track. Calling track id: " + track_id)
         raise HTTPException(status_code=404, detail="Track not found")
-
 
 
 @app.get("/get_servers/{user_id}")
@@ -161,6 +173,7 @@ async def get_servers(user_id):
                                "name": str(guild.name),
                                "icon": str(guild.icon.url)})
     return jsonify(guild_list)
+
 
 @app.get("/get_vc/{guild_id}")
 async def get_vc(guild_id):
@@ -218,7 +231,6 @@ async def playing(guild_id):
         raise HTTPException(status_code=500, detail="Server bronk")
 
 
-
 @app.get("/queue/{guild_id}")
 async def queue(guild_id):
 
@@ -246,15 +258,18 @@ async def pause(guild_id: str):
     await Music(bot).pause_track(guild_id)
     return {"message": "OK"}
 
+
 @app.get('/skip/{guild_id}')
 async def skip(guild_id: str):
     await Music(bot).skip_track(guild_id)
     return {"message": "OK"}
 
+
 @app.get('/resume/{guild_id}')
 async def resume(guild_id: str):
     await Music(bot).resume_track(guild_id)
     return {"message": "OK"}
+
 
 @app.get('/thumbnail/{guild_id}')
 async def thumbnail(guild_id: str):
@@ -284,8 +299,9 @@ async def on_connect():
     await bot.add_cog(Music(bot))
     print('Music cog added to bot')
 
+
 async def run():
-    try: 
+    try:
         await bot.start(os.environ["DEV_CLIENT_ID"])
     except KeyboardInterrupt:
         await bot.logout()
