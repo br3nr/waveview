@@ -6,7 +6,8 @@ import re
 import os
 from bot.log import log_command
 import uuid
-
+from discord import ClientException
+import asyncio
 
 class CustomPlayer(wavelink.Player):
     """Custom player class for wavelink."""
@@ -139,7 +140,8 @@ class Music(commands.Cog):
         sc = spotify.SpotifyClient(
             client_id=self.cid, client_secret=self.csecret
         )
-        node: wavelink.Node = wavelink.Node(uri='http://localhost:2333', password='1234')
+        node: wavelink.Node = wavelink.Node(
+            uri='http://localhost:2333', password='1234')
         await wavelink.NodePool.connect(client=self.bot, nodes=[node], spotify=sc)
 
     @commands.Cog.listener()
@@ -153,12 +155,10 @@ class Music(commands.Cog):
             self.current_track = next_track
             await player.play(next_track)
 
-
     @commands.Cog.listener()
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         """Event fired when a node has finished connecting."""
         print(f'Node: <{node.identifier}> is ready!')
-
 
     @commands.command()
     @log_command
@@ -176,12 +176,16 @@ class Music(commands.Cog):
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
         self.middlequeues[str(guild_id)] = []
-        # Check if already connected to vc
-        if not vc or vc.channel.id != vc_id:
+        while not vc or vc.channel.id != vc_id:
             if vc:
                 await vc.disconnect()
+                await asyncio.sleep(0.5)
             channel = guild.get_channel(vc_id)
-            await channel.connect(cls=CustomPlayer())
+            try:
+                await channel.connect(cls=CustomPlayer())
+            except ClientException:
+                continue
+            break
 
     @commands.command()
     @log_command
