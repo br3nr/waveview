@@ -8,6 +8,7 @@ from bot.log import log_command
 import uuid
 from discord import ClientException
 import asyncio
+from wavelink.tracks import YouTubeTrack
 
 class CustomPlayer(wavelink.Player):
     """Custom player class for wavelink."""
@@ -18,9 +19,10 @@ class CustomPlayer(wavelink.Player):
 
 
 class MiddleQueue:
-    def __init__(self, track):
+    def __init__(self, track, thumbnail_uri):
         self.uuid = str(uuid.uuid4())
         self.track = track
+        self.thumbnail_uri = thumbnail_uri 
 
 
 class Music(commands.Cog):
@@ -300,7 +302,7 @@ class Music(commands.Cog):
                 vc.queue.put(item=partial)
                 guild_id = str(vc.guild.id)
                 cur_queue = self.middlequeues.get(guild_id, [])
-                cur_queue.append(MiddleQueue(partial))
+                cur_queue.append(MiddleQueue(partial, partial.images[-1]))
                 self.middlequeues[str(guild_id)] = cur_queue
             else:
                 await vc.play(partial)

@@ -112,9 +112,12 @@ async def get_queue_json(queue_list):
         track_uuid = queue_list[i].uuid
         track_title = queue_list[i].track.title
         try:
-            thumbnail_url = queue_list[i].track.thumbnail
-            if compare_images(thumbnail_url):
-                thumbnail_url = "/images/default.png"
+            if queue_list[i].thumbnail_uri is not None:
+                thumbnail_url = queue_list[i].thumbnail_uri
+            else: 
+                thumbnail_url = queue_list[i].track.thumbnail
+                if compare_images(thumbnail_url):
+                    thumbnail_url = "/images/default.png"
         except AttributeError:
             thumbnail_url = "/images/default.png"
 
