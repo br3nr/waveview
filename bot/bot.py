@@ -93,13 +93,13 @@ async def ws(websocket: WebSocket):
         
 
 async def get_track_info(music_player):
-    if music_player.source is None:
+    if music_player.current is None:
         return get_default_guild_track_data()
     else:  
-        thumbnail_url = music_player.source.thumbnail
+        thumbnail_url = music_player.current.thumbnail
         if compare_images(thumbnail_url):
             thumbnail_url = "/images/default.png"
-        track_title = music_player.source.title
+        track_title = music_player.current.title
         return {
             'title': track_title,
             'thumbnail': thumbnail_url
@@ -216,14 +216,14 @@ async def play_song(guild_id: str, request: Request):
 async def playing(guild_id):
     try:
         music_player = Music(bot).get_player(guild_id)
-        thumbnail_url = music_player.source.thumbnail
+        thumbnail_url = music_player.current.thumbnail
 
         # Check if thumbnail is the default image
         if compare_images(thumbnail_url):
             thumbnail_url = "/images/default.png"
 
         return jsonify({
-            'title': music_player.source.title,
+            'title': music_player.current.title,
             'thumbnail': thumbnail_url
         })
 
