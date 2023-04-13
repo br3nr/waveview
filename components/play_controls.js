@@ -29,7 +29,6 @@ function PlayControls(props) {
 
 	async function handleClick() {
 		setButtonState(buttonState === "play" ? "pause" : "play");
-
 		if (buttonState == "pause") {
 			const response = await fetch(`/pause/${props.selectedServer}`);
 		} else {
@@ -39,6 +38,7 @@ function PlayControls(props) {
 
 	async function skipSong() {
 		await fetch(`/skip/${props.selectedServer}`);
+		setButtonState("pause");
 	}
 
 	return (

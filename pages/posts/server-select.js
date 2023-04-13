@@ -1,14 +1,24 @@
-import React from 'react';
-import { RiDiscordFill } from 'react-icons/ri';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-import { Box, Button, Center, Flex, Heading, HStack, Image, Link, Spacer, Text, VStack } from '@chakra-ui/react';
-import styles from '../../styles/ServerSelect.module.css';
-
+import React from "react";
+import { RiDiscordFill } from "react-icons/ri";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  HStack,
+  Image,
+  Link,
+  Spacer,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import styles from "../../styles/ServerSelect.module.css";
 
 function ServerSelect() {
-
   const [userInformation, setUserInformation] = useState({});
   const [serverList, setServerList] = useState([{}]);
   const [loading, setLoading] = useState(true);
@@ -16,9 +26,9 @@ function ServerSelect() {
 
   function handleServerClick(server) {
     router.push({
-      pathname: 'music-dashboard',
-      query: { serverId: server.id },
+      pathname: "music-dashboard",
     });
+    localStorage.setItem("serverId", server.id);
   }
 
   useEffect(() => {
@@ -29,7 +39,7 @@ function ServerSelect() {
         const response = await fetch(`/auth/login/${sessionId}`);
 
         if (!response.ok) {
-          router.push('/');
+          router.push("/");
         } else {
           const userJson = await response.json();
           const serverUrl = `/get_servers/${userJson.id}`;
@@ -37,10 +47,10 @@ function ServerSelect() {
 
           const userServers = await (await fetch(serverUrl)).json();
           setServerList(userServers);
-          console.log(userServers)
+          console.log(userServers);
         }
       } else {
-        router.push('/');
+        router.push("/");
       }
       setLoading(false);
     };
@@ -50,22 +60,33 @@ function ServerSelect() {
   return (
     <>
       <Center h="100vh">
-        <Flex >
+        <Flex>
           {serverList.map((server, index) => {
             return (
-              <Box onClick={() => handleServerClick(server)} key={index} w="200px" h="200px" m="30px">
+              <Box
+                onClick={() => handleServerClick(server)}
+                key={index}
+                w="200px"
+                h="200px"
+                m="30px"
+              >
                 <div className={styles.div}>
-                  <Image   src={server.icon} w="200px" h="200px" borderRadius="10px" objectFit="cover" />
-                <Text align="center">{server.name}</Text>
+                  <Image
+                    src={server.icon}
+                    w="200px"
+                    h="200px"
+                    borderRadius="10px"
+                    objectFit="cover"
+                  />
+                  <Text align="center">{server.name}</Text>
                 </div>
-
               </Box>
-            )
+            );
           })}
         </Flex>
       </Center>
     </>
-  )
+  );
 }
 
 export default ServerSelect;
