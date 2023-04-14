@@ -9,11 +9,8 @@ function ThumbnailImage({ thumbnailUrl }) {
             src={thumbnailUrl}
             fallbackSrc="/images/default.png"
             borderRadius='20px'
-            style={{
-              width: "600px",
-              objectFit: "cover",
-              objectPosition: "center",
-            }}
+            objectFit="cover"
+            objectPosition="center"
           />
         )}
       </Center>
