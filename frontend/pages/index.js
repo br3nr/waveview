@@ -11,27 +11,22 @@ import Login from '../components/Login';
 export default function Home() {
   const router = useRouter()
 
+  const redirectUri = "https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2Flocalhost%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds"
+  //const redirectUri = "https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2Flocalhost%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds"
+
   async function checkIsLoggedIn()
   {
-    //
-    const session_id = Cookies.get("session_id");
-
-    if (session_id) {
-      router.push('/posts/server-select')
-      console.log(session_id);
+    const sessionId = Cookies.get("session_id");
+    if (sessionId) {
+      const response = await fetch(`/auth/login/${sessionId}`);
+      if (!response.ok) {
+        router.push(redirectUri);
+      } else {
+        router.push('/posts/server-select')
+      }
+    } else {
+      router.push(redirectUri);
     }
-    else
-    {
-     //router.push('https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2F45.32.191.6%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds')
-     router.push('https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2Flocalhost%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds')
-    }
-
-
-    //const response = await fetch('http://localhost:5090/auth/login');
-    //const data = await response.json();
-    //console.log(data)
-    //      <Image margin={10} src="https://static1.personality-database.com/profile_images/4097d505c488482688656aad6cd03992.png" alt="Discord Logo" />
-
   }
 
   return (

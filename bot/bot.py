@@ -3,21 +3,32 @@ import os
 import discord
 import json
 import uuid
+import wavelink
 from fastapi.encoders import jsonable_encoder as jsonify
 from fastapi import FastAPI, HTTPException, Request, Response, WebSocket
 from fastapi.responses import RedirectResponse, JSONResponse
 from discord.ext import commands
-from bot.music import Music
+from src.music.music_player import Music
 from discord import ClientException
-from bot.utils import compare_images
-from bot.config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT_LOC, VPS_REDIRECT_URI
+from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT_LOC, VPS_REDIRECT_URI
 from zenora import APIClient
 
 
 app = FastAPI(debug=True)
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 api_client = APIClient(TOKEN, client_secret=CLIENT_SECRET)
-session = {}
+
+
+# Define the file path
+file_path = 'session.json'  # Update this with the actual file path
+
+try:
+    # Read the file
+    with open(file_path, 'r') as file:
+        session = json.load(file)  # Load the JSON data into a dictionary
+except FileNotFoundError:
+    # If the file does not exist, create an empty session dictionary
+    session = {}
 
 
 @app.get("/")
@@ -49,6 +60,10 @@ async def callback(code: str):
         session_id = str(uuid.uuid4())
 
     session[session_id] = user
+    
+    # Save the updated session dictionary back to the file
+    with open(file_path, 'w') as file:
+        json.dump(session, file)
 
     response = RedirectResponse(REDIRECT_LOC)
     response.set_cookie("session_id", session_id)
@@ -73,10 +88,10 @@ async def ws(websocket: WebSocket):
     while True:
         await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
         guild_tracks = {}
-        for guild in music_cls.get_guilds():
+        for guild in bot.guilds:
             music_player = music_cls.get_player(guild.id)
             if music_player is not None:
-                track_info = await get_track_info(music_player)
+                track_info = await get_track_info(music_cls.current_track)
                 queue_list = music_cls.get_queue(str(guild.id))
                 json_queue = await get_queue_json(queue_list)
 
@@ -93,13 +108,15 @@ async def ws(websocket: WebSocket):
         
 
 async def get_track_info(music_player):
-    if music_player.current is None:
+    if music_player is None:
         return get_default_guild_track_data()
     else:  
-        thumbnail_url = music_player.current.thumbnail
-        if compare_images(thumbnail_url):
-            thumbnail_url = "/images/default.png"
-        track_title = music_player.current.title
+        if hasattr(music_player, 'thumbnail'): 
+            thumbnail_url = await music_player.fetch_thumbnail()
+        else:
+            thumbnail_url = music_player.images[0]
+       
+        track_title = music_player.title
         return {
             'title': track_title,
             'thumbnail': thumbnail_url
@@ -115,9 +132,7 @@ async def get_queue_json(queue_list):
             if queue_list[i].thumbnail_uri is not None:
                 thumbnail_url = queue_list[i].thumbnail_uri
             else: 
-                thumbnail_url = queue_list[i].track.thumbnail
-                if compare_images(thumbnail_url):
-                    thumbnail_url = "/images/default.png"
+                thumbnail_url = await queue_list[i].track.fetch_thumbnail()
         except AttributeError:
             thumbnail_url = "/images/default.png"
 
@@ -180,7 +195,6 @@ async def get_servers(user_id):
 
 @app.get("/get_vc/{guild_id}")
 async def get_vc(guild_id):
-    print(guild_id)
     guild = bot.get_guild(int(guild_id))
     vc_list = []
     for vc in guild.voice_channels:
@@ -219,12 +233,11 @@ async def play_song(guild_id: str, request: Request):
 async def playing(guild_id):
     try:
         music_player = Music(bot).get_player(guild_id)
-        thumbnail_url = music_player.current.thumbnail
-
-        # Check if thumbnail is the default image
-        if compare_images(thumbnail_url):
-            thumbnail_url = "/images/default.png"
-
+        
+        if hasattr(music_player, 'thumbnail'): 
+            thumbnail_url = music_player.thumbnail
+        else:
+            thumbnail_url = music_player.images[0]
         return jsonify({
             'title': music_player.current.title,
             'thumbnail': thumbnail_url
@@ -236,18 +249,20 @@ async def playing(guild_id):
 
 @app.get("/queue/{guild_id}")
 async def queue(guild_id):
-
+    print("Yo queue")
     music_player = Music(bot).get_player(guild_id)
     queue_list = list(music_player.queue)
     json_queue = []
 
     # loop through queue
     for i in range(len(queue_list)):
-        thumbnail_url = queue_list[i].thumbnail
+        thumbnail_url = queue_list[i].fetch_thumbnail()
         track_title = queue_list[i].title
         # add to dict
         if compare_images(thumbnail_url):
-            thumbnail_url = "/images/default.png"
+            #thumbnail_url = "/images/default.png"
+            thumbnail_url = thumbnail_url.replace(
+                "maxresdefault", "hqdefault")
         json_queue.append({
             'title': track_title,
             'thumbnail': thumbnail_url
