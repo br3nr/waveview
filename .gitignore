@@ -5,6 +5,7 @@ frontend/node_modules
 frontend/.env
 bot/session.json
 
+
 # ------
 
 .vscode
@@ -15,6 +16,9 @@ bot/__pycache__
 logs
 keys
 bot/config.py
+bot/src/api/__pycache__
+bot/src/music/__pycache__
+
 # dependencies
 /node_modules
 /.pnp
