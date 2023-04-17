@@ -3,7 +3,7 @@ import { FaPlay, FaPause, FaStepForward } from "react-icons/fa";
 import React from "react";
 import { useState } from "react";
 import { Input, InputGroup, InputRightElement, Image } from "@chakra-ui/react";
-import {BsSearchHeart} from "react-icons/bs"
+import { BsSearchHeart } from "react-icons/bs";
 
 function PlayControls(props) {
   const [buttonState, setButtonState] = useState("pause");
@@ -13,22 +13,21 @@ function PlayControls(props) {
 
   const handleChange = (event) => {
     setValue(event.target.value);
-    const regexPattern = /^((?:https?:\/\/)?(?:[a-z]+\.)?spotify\.com\/[a-zA-Z0-9/]+)$/;
-	const regex = new RegExp(regexPattern);
-	console.log(regex.test(event.target.value))
+    const regexPattern =
+      /^((?:https?:\/\/)?(?:[a-z]+\.)?spotify\.com\/[a-zA-Z0-9/]+)$/;
+    const regex = new RegExp(regexPattern);
+    console.log(regex.test(event.target.value));
 
     if (regex.test(event.target.value)) {
       setIsSpotify(true);
+    } else {
+      setIsSpotify(false);
     }
-	else
-	{
-		setIsSpotify(false);
-	}
-
   };
 
   const handleKeyPress = async (event) => {
     if (event.key === "Enter") {
+      setIsSpotify(false);
       setValue("");
       const url = `/play_song/${props.selectedServer}`;
       await fetch(url, {
@@ -59,7 +58,7 @@ function PlayControls(props) {
 
   return (
     <>
-      <Center >
+      <Center>
         <Box paddingRight={10}>
           <Button onClick={handleClick}>
             {buttonState === "play" ? (
@@ -81,17 +80,19 @@ function PlayControls(props) {
             value={value}
             onChange={handleChange}
           />
-          {isSpotify ? ( 
-            <InputRightElement 
+          {isSpotify ? (
+            <InputRightElement
               children={
-                <Image boxSize="20px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/29px-Spotify_icon.svg.png" />
+                <Image
+                  boxSize="20px"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/29px-Spotify_icon.svg.png"
+                />
               }
             />
           ) : (
-            <InputRightElement paddingRight="10px"
-              children={
-				<BsSearchHeart size="20px"/>
-			}
+            <InputRightElement
+              paddingRight="10px"
+              children={<BsSearchHeart size="20px" />}
             />
           )}
         </InputGroup>

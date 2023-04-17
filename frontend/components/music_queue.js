@@ -9,7 +9,7 @@ function MusicQueue(props) {
   const removeTrack = useCallback(
     async (track) => {
       setRemovedTrackIds([...removedTrackIds, track.uuid]);
-      const url = `/remove_track/${props.selectedServer}/${track.uuid}`;
+      const url = `/remove_track/${localStorage.getItem("serverId")}/${track.uuid}`;
       await fetch(url);
     },
     [removedTrackIds]

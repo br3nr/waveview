@@ -6,8 +6,6 @@ import {
   Text,
   List,
   ListItem,
-  ListIcon,
-  Select,
   Flex,
 } from "@chakra-ui/react";
 import Nav from "../../components/navbar";
@@ -15,17 +13,15 @@ import MusicQueue from "../../components/music_queue";
 import ThumbnailImage from "../../components/thumbnail_image";
 import MarqueeText from "../../components/marquee_text";
 import PlayControls from "../../components/play_controls";
-import _, { set } from "lodash";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { RiDiscordFill } from "react-icons/ri";
-import Link from "next/link";
 
 function MusicDashboard() {
   const router = useRouter();
-  const [thumbnailUrl, setThumbnailUrl] = useState("/images/default.png");
+  const [thumbnailUrl, setThumbnailUrl] = useState("/images/default2.png");
   const [songState, setSongState] = useState("No song is playing.");
-  const [selectedServer, setSelectedServer] = useState(null);
+  const [selectedServer, setSelectedServer] = useState();
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -102,7 +98,7 @@ function MusicDashboard() {
       const data = JSON.parse(event.data);
       const server = data[selectedServer];
       setSongState(server.title);
-      setThumbnailUrl(server.thumbnail);
+      setThumbnailUrl(server.thumbnail === null ? "/images/default2.png" : server.thumbnail);
       setTrackQueue(server.queue);
       setServerDetails(server);
     });

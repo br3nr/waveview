@@ -6,11 +6,11 @@ function MarqueeText({ songState }) {
     return (
       <Center>
         <Marquee
-          speed={40}
+          speed={30}
           gradientColor="#1A202C"
           gradientWidth={50}
           style={{
-            width: "550px",
+            width: "450px",
           }}
         >
           {songState}
