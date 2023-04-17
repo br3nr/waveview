@@ -90,10 +90,9 @@ class BotAPI:
             for guild in self.bot.guilds:
                 music_player = music_cls.get_player(guild.id)
                 if music_player is not None:
-                    track_info = await self.get_track_info(music_cls.current_track)
+                    track_info = await self.get_track_info(music_player.current)
                     queue_list = music_cls.get_queue(str(guild.id))
                     json_queue = await self.get_queue_json(queue_list)
-
                     guild_tracks[str(guild.id)] = {
                         "title": track_info["title"],
                         "thumbnail": track_info["thumbnail"],
@@ -101,7 +100,6 @@ class BotAPI:
                     }
                 else:
                     guild_tracks[str(guild.id)] = self.get_default_guild_track_data()
-
             await self.send_guild_tracks(guild_tracks, websocket)
 
     async def get_servers(self, user_id):
