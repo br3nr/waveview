@@ -352,42 +352,38 @@ class Music(commands.Cog):
     async def play_youtube_song(
         self, ctx: discord.ext.commands.Context, query: str, vc: CustomPlayer
     ):
-        try:
-            # remove time from youtube link
-            query = re.sub(r"&t=\d+", "", query)
-            track = await wavelink.NodePool.get_node().get_tracks(
-                wavelink.YouTubeTrack, query
-            )
-            track = track[0]
-            guild_id = ctx.guild.id
-            cur_queue = self.middlequeues.get(guild_id, [])
-            if vc.is_playing() or not vc.queue.is_empty:
-                vc.queue.put(item=track)
-                cur_queue.append(MiddleQueue(track))
-                if ctx is not None:
-                    await ctx.send(
-                        embed=discord.Embed(
-                            title=track.title,
-                            url=track.uri,
-                            description=f"Queued {track.title} in {vc.channel}",
-                        )
+        # remove time from youtube link
+        query = re.sub(r"&t=\d+", "", query)
+        track = await wavelink.NodePool.get_node().get_tracks(
+            wavelink.YouTubeTrack, query
+        )
+        track = track[0]
+        guild_id = ctx.guild.id
+        cur_queue = self.middlequeues.get(guild_id, [])
+        if vc.is_playing() or not vc.queue.is_empty:
+            vc.queue.put(item=track)
+            cur_queue.append(MiddleQueue(track))
+            if ctx is not None:
+                await ctx.send(
+                    embed=discord.Embed(
+                        title=track.title,
+                        url=track.uri,
+                        description=f"Queued {track.title} in {vc.channel}",
                     )
-            else:
-                await vc.play(track)
-                self.current_track = track
-                if ctx is not None:
-                    await ctx.send(
-                        embed=discord.Embed(
-                            title=vc.current.title,
-                            url=vc.current.uri,
-                            description=f"Playing {vc.current.title} in {vc.channel}",
-                        )
+                )
+        else:
+            await vc.play(track)
+            self.current_track = track
+            if ctx is not None:
+                await ctx.send(
+                    embed=discord.Embed(
+                        title=vc.current.title,
+                        url=vc.current.uri,
+                        description=f"Playing {vc.current.title} in {vc.channel}",
                     )
-            self.middlequeues[guild_id] = cur_queue
-        except Exception as e:
-            await ctx.send(
-                f"That link is weird. Make sure there's no timestamp at the end."
-            )
+                )
+        self.middlequeues[guild_id] = cur_queue
+        
 
     async def play_youtube_playlist(ctx: discord.ext.commands.Context, playlist: str):
         # play youtube playlist

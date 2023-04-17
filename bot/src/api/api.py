@@ -36,7 +36,6 @@ class BotAPI:
         self.app.get("/join_vc/{guild_id}/{vc_id}")(self.join_vc)
         self.app.post("/play_song/{guild_id}")(self.play_song)
         self.app.get("/playing/{guild_id}")(self.playing)
-        self.app.get("/queue/{guild_id}")(self.queue)
         self.app.get("/pause/{guild_id}")(self.pause)
         self.app.get("/thumbnail/{guild_id}")(self.thumbnail)
         self.app.get("/skip/{guild_id}")(self.skip)
@@ -190,23 +189,6 @@ class BotAPI:
         except AttributeError:
             raise HTTPException(status_code=500, detail="Server bronk")
 
-    async def queue(self, guild_id):
-        music_player = Music(self.bot).get_player(guild_id)
-        queue_list = list(music_player.queue)
-        json_queue = []
-
-        # loop through queue
-        for i in range(len(queue_list)):
-            thumbnail_url = queue_list[i].fetch_thumbnail()
-            track_title = queue_list[i].title
-            # add to dict
-            if self.compare_images(thumbnail_url):
-                # thumbnail_url = "/images/default.png"
-                thumbnail_url = thumbnail_url.replace("maxresdefault", "hqdefault")
-            json_queue.append({"title": track_title, "thumbnail": thumbnail_url})
-
-        return jsonify({"queue": json.dumps(json_queue)})
-
     async def pause(self, guild_id: str):
         await Music(self.bot).pause_track(guild_id)
         return {"message": "OK"}
@@ -249,7 +231,7 @@ class BotAPI:
                 else:
                     thumbnail_url = await queue_list[i].track.fetch_thumbnail()
             except AttributeError:
-                thumbnail_url = "/images/default.png"
+                thumbnail_url = None
 
             json_queue.append(
                 {
@@ -264,7 +246,7 @@ class BotAPI:
     def get_default_guild_track_data(self):
         return {
             "title": "No track playing",
-            "thumbnail": "/images/default.png",
+            "thumbnail": None,
             "queue": [],
         }
 
