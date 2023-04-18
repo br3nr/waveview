@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import {Flex, Image, Text, Spinner } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/react";
 import { RxCross2 } from "react-icons/rx";
+import styles from './musicQueue.module.css';
 
 function MusicQueue(props) {
   const [removedTrackIds, setRemovedTrackIds] = useState([]);
@@ -20,8 +21,10 @@ function MusicQueue(props) {
       <Flex
         flexDirection="column"
         overflowY="scroll"
+        width="100%"
         height="800px"
         marginTop="10px"
+        className={styles.customScrollbar}
       >
         {props.trackQueue.map((track) => (
           <Flex

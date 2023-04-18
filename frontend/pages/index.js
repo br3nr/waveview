@@ -5,7 +5,7 @@ import { ChakraProvider, Image } from '@chakra-ui/react'
 import { Button, Center, Text, Flex, Box } from '@chakra-ui/react'
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router'
-import Login from '../components/Login';
+import Login from '../components/LoginGraphic/loginGraphic';
 
 
 export default function Home() {

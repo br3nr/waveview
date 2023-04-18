@@ -8,11 +8,9 @@ import {
   ListItem,
   Flex,
 } from "@chakra-ui/react";
-import Nav from "../../components/navbar";
-import MusicQueue from "../../components/music_queue";
-import ThumbnailImage from "../../components/thumbnail_image";
-import MarqueeText from "../../components/marquee_text";
-import PlayControls from "../../components/play_controls";
+import Nav from "../../components/Navbar/navbar";
+import MusicQueue from "../../components/MusicQueue/musicQueue";
+import MusicPlayer from "../../components/MusicPlayer/musicPlayer";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { RiDiscordFill } from "react-icons/ri";
@@ -139,9 +137,7 @@ function MusicDashboard() {
           </List>
         </GridItem>
         <GridItem colSpan={1}>
-          <ThumbnailImage thumbnailUrl={thumbnailUrl} />
-          <MarqueeText songState={songState} />
-          <PlayControls selectedServer={selectedServer} />
+          <MusicPlayer songState={songState} thumbnailUrl={thumbnailUrl} selectedServer={selectedServer} />
         </GridItem>
         <GridItem colSpan={1}>
           <Text as="b" paddingLeft="10px">

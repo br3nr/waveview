@@ -2,7 +2,7 @@ import React from "react";
 import Marquee from "react-fast-marquee";
 import { Center } from "@chakra-ui/react";
 
-function MarqueeText({ songState }) {
+function TrackTitle({ songState }) {
     return (
       <Center>
         <Marquee
@@ -19,4 +19,4 @@ function MarqueeText({ songState }) {
     );
   }
 
-export default MarqueeText;
+export default TrackTitle;

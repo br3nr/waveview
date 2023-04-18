@@ -1,0 +1,19 @@
+.customScrollbar::-webkit-scrollbar {
+  width: 100px; /* Set the width of the scrollbar */
+  background-color: transparent; /* Set the color of the scrollbar thumb */
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Set the color of the scrollbar thumb */
+  border-radius: 10px; /* Set the border radius of the scrollbar thumb */
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: transparent; /* Set the color of the scrollbar thumb on hover */
+  border-radius: 10px; /* Set the border radius of the scrollbar thumb */
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background-color: transparent; /* Set the background color of the scrollbar track */
+  border-radius: 10px; /* Set the border radius of the scrollbar thumb */
+}
