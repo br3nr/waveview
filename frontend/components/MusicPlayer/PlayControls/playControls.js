@@ -22,7 +22,7 @@ function PlayControls(props) {
 
   return (
     <>
-      <Center>
+      <Center paddingTop="10px">
         <Box paddingRight={10}>
           <Button onClick={handleClick}>
             {buttonState === "play" ? (

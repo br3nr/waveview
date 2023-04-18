@@ -10,7 +10,7 @@ function TrackTitle({ songState }) {
           gradientColor="#1A202C"
           gradientWidth={50}
           style={{
-            width: "450px",
+            width: "80%",
           }}
         >
           {songState}

@@ -96,6 +96,8 @@ class BotAPI:
                     guild_tracks[str(guild.id)] = {
                         "title": track_info["title"],
                         "thumbnail": track_info["thumbnail"],
+                        "position": music_player.position,
+                        "length": track_info["length"],
                         "queue": json_queue,
                     }
                 else:
@@ -214,9 +216,9 @@ class BotAPI:
                 thumbnail_url = await music_player.fetch_thumbnail()
             else:
                 thumbnail_url = music_player.images[0]
-
+        
             track_title = music_player.title
-            return {"title": track_title, "thumbnail": thumbnail_url}
+            return {"title": track_title, "thumbnail": thumbnail_url, "length": music_player.length}
 
     async def get_queue_json(self, queue_list):
         json_queue = []
@@ -245,6 +247,8 @@ class BotAPI:
         return {
             "title": "No track playing",
             "thumbnail": None,
+            "length": 0,
+            "position": 0,
             "queue": [],
         }
 

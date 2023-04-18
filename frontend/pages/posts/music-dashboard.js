@@ -32,6 +32,7 @@ function MusicDashboard() {
   const [serverDetails, setServerDetails] = useState({});
   const [voiceChannel, setVoiceChannel] = useState();
   const [isLoaded, setIsLoaded] = useState(false);
+	const [ trackTime, setTrackTime ] = useState([0, 0]);
 
   function handleServerClick(server) {
     props.handleServerClick(server);
@@ -99,6 +100,7 @@ function MusicDashboard() {
       setThumbnailUrl(server.thumbnail === null ? "/images/default2.png" : server.thumbnail);
       setTrackQueue(server.queue);
       setServerDetails(server);
+			setTrackTime([server.position, server.length]);
     });
 
     return () => {
@@ -137,7 +139,7 @@ function MusicDashboard() {
           </List>
         </GridItem>
         <GridItem colSpan={1}>
-          <MusicPlayer songState={songState} thumbnailUrl={thumbnailUrl} selectedServer={selectedServer} />
+          <MusicPlayer songState={songState} thumbnailUrl={thumbnailUrl} selectedServer={selectedServer} trackTime={trackTime} />
         </GridItem>
         <GridItem colSpan={1}>
           <Text as="b" paddingLeft="10px">
