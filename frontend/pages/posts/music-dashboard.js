@@ -14,6 +14,7 @@ import MusicPlayer from "../../components/MusicPlayer/musicPlayer";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { RiDiscordFill } from "react-icons/ri";
+import getConfig from "next/config";
 
 function MusicDashboard() {
   const router = useRouter();
@@ -22,17 +23,10 @@ function MusicDashboard() {
   const [selectedServer, setSelectedServer] = useState();
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [userInformation, setUserInformation] = useState({});
-  const [serverList, setServerList] = useState([{}]);
-  const [serverIcon, setServerIcon] = useState(
-    "https://www.svgrepo.com/show/353655/discord-icon.svg"
-  );
-  const { serverId, setServerId } = useState();
-  const [serverDetails, setServerDetails] = useState({});
   const [voiceChannel, setVoiceChannel] = useState();
-  const [isLoaded, setIsLoaded] = useState(false);
-	const [ trackTime, setTrackTime ] = useState([0, 0]);
+  const [trackTime, setTrackTime] = useState([0, 0]);
+  const { publicRuntimeConfig } = getConfig();
 
   function handleServerClick(server) {
     props.handleServerClick(server);
@@ -50,11 +44,7 @@ function MusicDashboard() {
           router.push("/");
         } else {
           const userJson = await response.json();
-          const serverUrl = `/get_servers/${userJson.id}`;
           setUserInformation(userJson);
-          const userServers = await (await fetch(serverUrl)).json();
-          setServerList(userServers);
-          setIsLoaded(true);
         }
       } else {
         router.push("/");
@@ -62,7 +52,6 @@ function MusicDashboard() {
           window.location.reload();
         }, 200);
       }
-      setLoading(false);
     };
     fetchData();
   }, []);
@@ -91,16 +80,17 @@ function MusicDashboard() {
   }, [selectedServer, voiceChannel]);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:5090/ws");
-    //const socket = new WebSocket('ws://45.32.191.6:5090/ws');
+    const websocketUrl = publicRuntimeConfig.websocketUrl;
+    const socket = new WebSocket(websocketUrl);
     socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
       const server = data[selectedServer];
       setSongState(server.title);
-      setThumbnailUrl(server.thumbnail === null ? "/images/default2.png" : server.thumbnail);
+      setThumbnailUrl(
+        server.thumbnail === null ? "/images/default2.png" : server.thumbnail
+      );
       setTrackQueue(server.queue);
-      setServerDetails(server);
-			setTrackTime([server.position, server.length]);
+      setTrackTime([server.position, server.length]);
     });
 
     return () => {
@@ -139,7 +129,12 @@ function MusicDashboard() {
           </List>
         </GridItem>
         <GridItem colSpan={1}>
-          <MusicPlayer songState={songState} thumbnailUrl={thumbnailUrl} selectedServer={selectedServer} trackTime={trackTime} />
+          <MusicPlayer
+            songState={songState}
+            thumbnailUrl={thumbnailUrl}
+            selectedServer={selectedServer}
+            trackTime={trackTime}
+          />
         </GridItem>
         <GridItem colSpan={1}>
           <Text as="b" paddingLeft="10px">

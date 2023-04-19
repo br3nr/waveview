@@ -6,14 +6,14 @@ import { Button, Center, Text, Flex, Box } from '@chakra-ui/react'
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router'
 import Login from '../components/LoginGraphic/loginGraphic';
-
+import getConfig from 'next/config';
 
 export default function Home() {
   const router = useRouter()
+  const { publicRuntimeConfig } = getConfig();
 
-  const redirectUri = "https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2Flocalhost%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds"
-  //const redirectUri = "https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2Flocalhost%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds"
-
+  //const redirectUri = "https://discord.com/api/oauth2/authorize?client_id=748778849751400871&redirect_uri=http%3A%2F%2F45.32.191.6%3A5090%2Fauth%2Fredirect&response_type=code&scope=guilds%20identify"
+  const redirectUri = publicRuntimeConfig.redirectUri;
   async function checkIsLoggedIn()
   {
     const sessionId = Cookies.get("session_id");

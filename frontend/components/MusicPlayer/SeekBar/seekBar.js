@@ -17,7 +17,7 @@ function SeekBar({ track, thumbnailUrl }) {
    
       <Box
         w="80%"
-        h="10px"
+        h="5px"
         bg="gray.900"
         borderRadius="full"
         position="relative"
