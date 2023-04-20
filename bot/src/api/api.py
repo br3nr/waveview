@@ -40,6 +40,7 @@ class BotAPI:
         self.app.get("/thumbnail/{guild_id}")(self.thumbnail)
         self.app.get("/skip/{guild_id}")(self.skip)
         self.app.get("/resume/{guild_id}")(self.resume)
+        self.app.get("/seek/{guild_id}/{time}")(self.seek)
 
     async def callback(self, code: str):
         global session
@@ -199,6 +200,10 @@ class BotAPI:
 
     async def resume(self, guild_id: str):
         await Music(self.bot).resume_track(guild_id)
+        return {"message": "OK"}
+
+    async def seek(self, guild_id: str, time: str):
+        await Music(self.bot).seek_track(guild_id, time)
         return {"message": "OK"}
 
     async def thumbnail(self, guild_id: str):

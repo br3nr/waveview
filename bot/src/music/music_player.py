@@ -228,6 +228,11 @@ class Music(commands.Cog):
         queue = vc.queue
         await vc.play(vc.current)
         vc.queue = queue
+        
+    async def seek_track(self, guild_id, seek_time):
+        guild = self.bot.get_guild(int(guild_id))
+        vc = guild.voice_client
+        await vc.seek(seek_time)
 
     async def get_thumbnail(self, guild_id):
 

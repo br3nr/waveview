@@ -13,15 +13,16 @@ import SeekBar from "./SeekBar/seekBar";
 function MusicPlayer(props) {
   return (
     <>
-      <Center paddingBottom="20px">
-        <SearchBar selectedServer={props.selectedServer} />
-      </Center>
+      
       <TrackImage thumbnailUrl={props.thumbnailUrl} />
       <TrackTitle songState={props.songState} />
       <Center>
-        <SeekBar track={props.trackTime} thumbnailUrl={props.thumbnailUrl}/>
+        <SeekBar track={props.trackTime} thumbnailUrl={props.thumbnailUrl} guildId={props.selectedServer}/>
       </Center>
       <PlayControls selectedServer={props.selectedServer} />
+      <Center paddingBottom="20px">
+        <SearchBar selectedServer={props.selectedServer} />
+      </Center>
     </>
   );
 }
