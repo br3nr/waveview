@@ -41,6 +41,8 @@ class BotAPI:
         self.app.get("/skip/{guild_id}")(self.skip)
         self.app.get("/resume/{guild_id}")(self.resume)
         self.app.get("/seek/{guild_id}/{time}")(self.seek)
+        self.app.get("/reorder/{guild_id}/{time}/{new_position}")(self.reorder)
+
 
     async def callback(self, code: str):
         global session
@@ -204,6 +206,14 @@ class BotAPI:
 
     async def seek(self, guild_id: str, time: str):
         await Music(self.bot).seek_track(guild_id, time)
+        return {"message": "OK"}
+    
+    async def reorder(self, guild_id: str, time: str, new_position: int):
+        await Music(self.bot).reorder_queue(guild_id, time, new_position)
+        return {"message": "OK"}
+
+    async def reorder_queue(self, guild_id):
+        print("HI")
         return {"message": "OK"}
 
     async def thumbnail(self, guild_id: str):

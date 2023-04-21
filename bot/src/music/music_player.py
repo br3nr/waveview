@@ -9,7 +9,8 @@ import asyncio
 from .custom_player import CustomPlayer
 from .middle_queue import MiddleQueue
 from .music_utils import check_string
-import re 
+import re
+
 
 class Music(commands.Cog):
     """Suite of commands allowing BrennerBot to play music from Youtube and Spotify."""
@@ -22,7 +23,7 @@ class Music(commands.Cog):
         return cls._instance
 
     def __init__(self, bot: commands.Bot):
-        if hasattr(self, 'initialized'):
+        if hasattr(self, "initialized"):
             return
         self.initialized = True
 
@@ -36,7 +37,7 @@ class Music(commands.Cog):
         # for each guild, create a middlequeue
         for guild in self.bot.guilds:
             self.middlequeues[str(guild.id)] = []
-            
+
         # Map URL types to their corresponding functions
         self.url_type_mapping = {
             "Spotify Track": self.play_spotify_track,
@@ -61,16 +62,15 @@ class Music(commands.Cog):
     @commands.Cog.listener()
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         """Event fired when a node has finished connecting."""
-        print(f'Node: <{node.identifier}> is ready!')
-        
+        print(f"Node: <{node.identifier}> is ready!")
+
     async def connect_nodes(self):
         """Connect to our Lavalink nodes."""
         await self.bot.wait_until_ready()
-        sc = spotify.SpotifyClient(
-            client_id=self.cid, client_secret=self.csecret
-        )
+        sc = spotify.SpotifyClient(client_id=self.cid, client_secret=self.csecret)
         node: wavelink.Node = wavelink.Node(
-            uri='http://localhost:2333', password='1234')
+            uri="http://localhost:2333", password="1234"
+        )
         await wavelink.NodePool.connect(client=self.bot, nodes=[node], spotify=sc)
 
     @commands.command()
@@ -96,8 +96,14 @@ class Music(commands.Cog):
 
     @commands.command()
     @log_command
-    async def play(self, ctx: commands.Context, *, search: str = commands.parameter(
-            description="Plays a song from url or query. Accepted urls are: spotify [track,album,playlist], youtube.")):
+    async def play(
+        self,
+        ctx: commands.Context,
+        *,
+        search: str = commands.parameter(
+            description="Plays a song from url or query. Accepted urls are: spotify [track,album,playlist], youtube."
+        ),
+    ):
         """
         Play requested song (url or query). Queues if a song is already playing.
 
@@ -109,8 +115,7 @@ class Music(commands.Cog):
         vc = ctx.voice_client
         if not vc:
             custom_player = CustomPlayer()
-            vc: CustomPlayer = await ctx.author.voice.channel.connect(
-                cls=custom_player)
+            vc: CustomPlayer = await ctx.author.voice.channel.connect(cls=custom_player)
         if action:
             await action(self, ctx, search, vc)
         else:
@@ -192,11 +197,29 @@ class Music(commands.Cog):
         guild.voice_client.queue = wavelinkQueue
         self.middlequeues[guild_id] = cur_queue
 
+    async def reorder_queue(self, guild_id, uuid, new_position):
+        guild = self.bot.get_guild(int(guild_id))
+        cur_queue = self.middlequeues[guild_id]
+
+        for i in range(len(cur_queue)):
+            print(cur_queue[i].uuid, uuid)
+            if cur_queue[i].uuid == uuid:
+                track = cur_queue[i]
+                del cur_queue[i]
+                cur_queue.insert(new_position, track)
+                break
+        
+        wavelinkQueue = wavelink.Queue()
+        for i in range(len(cur_queue)):
+            wavelinkQueue.put(cur_queue[i].track)
+
+        guild.voice_client.queue = wavelinkQueue
+        
+
     def get_player(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
         return vc
-
 
     async def pause_track(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
@@ -228,18 +251,17 @@ class Music(commands.Cog):
         queue = vc.queue
         await vc.play(vc.current)
         vc.queue = queue
-        
+
     async def seek_track(self, guild_id, seek_time):
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
         await vc.seek(seek_time)
 
     async def get_thumbnail(self, guild_id):
-
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
         return vc.current.thumbnail
-    
+
     def get_guilds(self):
         return self.bot.guilds
 
@@ -250,7 +272,6 @@ class Music(commands.Cog):
         action = self.url_type_mapping.get(url_type, None)
         if action:
             await action(None, query, vc)
-
 
     async def join_vc(self, guild_id, vc_id):
         guild = self.bot.get_guild(int(guild_id))
@@ -266,8 +287,7 @@ class Music(commands.Cog):
             except ClientException:
                 continue
             break
-        
-        
+
     async def play_query(
         self, ctx: discord.ext.commands.Context, search: str, vc: CustomPlayer
     ):
@@ -299,7 +319,6 @@ class Music(commands.Cog):
                     )
                 )
 
-
     async def play_spotify_track(
         self, ctx: discord.ext.commands.Context, track: str, vc: CustomPlayer
     ):
@@ -330,7 +349,6 @@ class Music(commands.Cog):
                     )
                 )
 
-
     async def play_spotify_playlist(
         self, ctx: discord.ext.commands.Context, playlist: str, vc: CustomPlayer
     ):
@@ -351,8 +369,6 @@ class Music(commands.Cog):
                             description=f"Playing {vc.current.title} in {vc.channel}",
                         )
                     )
-
-    
 
     async def play_youtube_song(
         self, ctx: discord.ext.commands.Context, query: str, vc: CustomPlayer
@@ -388,7 +404,6 @@ class Music(commands.Cog):
                     )
                 )
         self.middlequeues[guild_id] = cur_queue
-        
 
     async def play_youtube_playlist(ctx: discord.ext.commands.Context, playlist: str):
         # play youtube playlist
