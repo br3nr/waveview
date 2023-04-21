@@ -10,7 +10,6 @@ function LoginCallback() {
     const accessToken = Cookies.get("access_token");
     if (accessToken) {
       // Do something with the access token
-      console.log(accessToken);
     } else {
       toast({
         title: "Error",

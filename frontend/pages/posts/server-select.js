@@ -47,7 +47,6 @@ function ServerSelect() {
 
           const userServers = await (await fetch(serverUrl)).json();
           setServerList(userServers);
-          console.log(userServers);
         }
       } else {
         router.push("/");

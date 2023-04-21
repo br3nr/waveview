@@ -18,8 +18,6 @@ function SearchBar(props) {
     const regexPattern =
       /^((?:https?:\/\/)?(?:[a-z]+\.)?spotify\.com\/[a-zA-Z0-9/]+)$/;
     const regex = new RegExp(regexPattern);
-    console.log(regex.test(event.target.value));
-
     if (regex.test(event.target.value)) {
       setIsSpotify(true);
     } else {
@@ -39,8 +37,6 @@ function SearchBar(props) {
         },
         body: JSON.stringify({ url: value }),
       });
-      console.log("Enter key pressed!");
-      console.log(value);
     }
   };
 

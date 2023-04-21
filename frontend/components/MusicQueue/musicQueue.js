@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from "react";
-import {Flex, Image, Text, Spinner } from "@chakra-ui/react";
+import { Flex, Image, Text, Spinner, Box } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/react";
 import { RxCross2 } from "react-icons/rx";
-import styles from './musicQueue.module.css';
+import styles from "./musicQueue.module.css";
+import QueueChip from "./QueueChip/queueChip";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 function MusicQueue(props) {
   const [removedTrackIds, setRemovedTrackIds] = useState([]);
@@ -10,11 +12,27 @@ function MusicQueue(props) {
   const removeTrack = useCallback(
     async (track) => {
       setRemovedTrackIds([...removedTrackIds, track.uuid]);
-      const url = `/remove_track/${localStorage.getItem("serverId")}/${track.uuid}`;
+      const url = `/remove_track/${localStorage.getItem("serverId")}/${
+        track.uuid
+      }`;
       await fetch(url);
     },
     [removedTrackIds]
   );
+
+  const onDragEnd = async (result) => {
+    if (!result.destination) {
+      return;
+    }
+    const items = Array.from(props.trackQueue);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    props.setTrackQueue(items);
+    const reorderedItemUuid = reorderedItem.uuid;
+    const url = `/reorder/${localStorage.getItem("serverId")}/${reorderedItemUuid}/${
+      result.destination.index}`;
+    await fetch(url);
+  };
 
   return (
     <>
@@ -26,61 +44,46 @@ function MusicQueue(props) {
         marginTop="10px"
         className={styles.customScrollbar}
       >
-        {props.trackQueue.map((track) => (
-          <Flex
-            key={track.id}
-            borderRadius="50px"
-            alignItems="center"
-            width={550}
-            margin="10px"
-          >
-            <Flex w="80%" alignItems="center">
-              <Image
-                src={track.thumbnail}
-                alt={track.title}
-                boxSize="50px"
-                objectFit="cover"
-                borderRadius="10px"
-              />
-              <Text
-                marginLeft="15px"
-                marginRight="0px"
-                as="h2"
-                size="md"
-                noOfLines={1}
-              >
-                {track.title}
-              </Text>
-            </Flex>
-            <Flex w="20%" alignItems="center" justifyContent="center">
-              {removedTrackIds.includes(track.uuid) ? (
-                <IconButton
-                  height="40px"
-                  width="40px"
-                  borderRadius="50px"
-                  background="transparent"
-                  onClick={() => removeTrack(track)}
-                  marginLeft="auto"
-                  variant="link"
-                  icon={<Spinner width="15px" height="15px" />}
-                  align="center" // Add align prop to align vertically
-                />
-              ) : (
-                <IconButton
-                  height="40px"
-                  width="40px"
-                  variant="outline"
-                  borderRadius="50px"
-                  background="transparent"
-                  onClick={() => removeTrack(track)}
-                  marginLeft="auto"
-                  icon={<RxCross2 width="15px" height="15px" />}
-                  align="center" // Add align prop to align vertically
-                ></IconButton>
-              )}
-            </Flex>
-          </Flex>
-        ))}
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="items">
+            {(provided, snapshot) => (
+              <Box ref={provided.innerRef} {...provided.droppableProps}>
+                {props.trackQueue.map((track, index) => (
+                  <Draggable
+                    key={track.id.toString()}
+                    draggableId={track.id.toString()}
+                    index={index}
+                    
+                  >
+                    {(provided, snapshot) => (
+                      <Box
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          userSelect: "none",
+                          padding:"6px",
+                          margin: "0 0 4px 4px",
+                          minHeight: "50px",
+                          borderRadius: "1px",
+                         
+                          ...provided.draggableProps.style,
+                        }}
+                      >
+                        <QueueChip
+                          track={track}
+                          removedTrackIds={removedTrackIds}
+                          removeTrack={removeTrack}
+                        ></QueueChip>
+                      </Box>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </Box>
+            )}
+          </Droppable>
+        </DragDropContext>
       </Flex>
     </>
   );
