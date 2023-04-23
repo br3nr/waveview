@@ -19,8 +19,6 @@ const SearchBar = memo(() => {
     }
   });
 
-  console.log("memo")
-
   const handleChange = (event) => {
     setValue(event.target.value);
     const regexPattern =

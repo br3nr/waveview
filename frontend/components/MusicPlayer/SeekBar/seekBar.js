@@ -8,16 +8,11 @@ import {
   SliderThumb,
   SliderMark,
 } from "@chakra-ui/react";
-import { BsX } from "react-icons/bs";
 import { useCallback } from "react";
 
 function SeekBar({ track }) {
   const [progress, setProgress] = useState(0.0);
   const inputRef = useRef(null);
-
-  useEffect(() => {
-    console.log("inputRef.current", inputRef.current);
-  }, [inputRef.current]);
 
   useEffect(() => {
     const progress = (parseInt(track[0]) / parseInt(track[1])) * 100;
@@ -45,11 +40,12 @@ function SeekBar({ track }) {
           value={progress}
           minH="1"
           onChange={(value) => handleChange(value)}
+          focusThumbOnChange={false}
         >
           <SliderTrack bg="gray.900">
             <SliderFilledTrack bg="red" />
           </SliderTrack>
-          <SliderThumb />
+          <SliderThumb/>
         </Slider>
       ) : (
         <Slider
