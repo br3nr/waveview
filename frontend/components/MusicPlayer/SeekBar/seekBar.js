@@ -1,6 +1,6 @@
 import { Center, Box } from "@chakra-ui/react";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Slider,
   SliderTrack,
@@ -9,23 +9,32 @@ import {
   SliderMark,
 } from "@chakra-ui/react";
 import { BsX } from "react-icons/bs";
+import { useCallback } from "react";
 
-function SeekBar({ track, thumbnailUrl, guildId }) {
-  const [progress, setProgress] = useState(0);
+function SeekBar({ track }) {
+  const [progress, setProgress] = useState(0.0);
+  const inputRef = useRef(null);
 
   useEffect(() => {
-    setProgress((track[0] / track[1]) * 100);
+    console.log("inputRef.current", inputRef.current);
+  }, [inputRef.current]);
+
+  useEffect(() => {
+    const progress = (parseInt(track[0]) / parseInt(track[1])) * 100;
+    if(!isNaN(progress)) {
+      setProgress(progress);
+    }
   }, [track]);
 
-  const handleChange = async (value) => {
+  const handleChange = useCallback(async (value) => {
     const response = await fetch(
-      `/seek/${guildId}/${track[1] * (value * 0.01)}`
+      `/seek/${  localStorage.getItem("serverId")}/${track[1] * (value * 0.01)}`
     );
     if (response.ok) {
       setProgress(value);
     }
-  };
-
+  }, [track]);
+  
   return (
     <>
       {!(track[1] === 0) ? (

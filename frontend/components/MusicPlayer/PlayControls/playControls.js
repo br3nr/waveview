@@ -9,14 +9,14 @@ function PlayControls(props) {
   async function handleClick() {
     setButtonState(buttonState === "play" ? "pause" : "play");
     if (buttonState == "pause") {
-      const response = await fetch(`/pause/${props.selectedServer}`);
+      const response = await fetch(`/pause/${props.selectedServerId}`);
     } else {
-      const response = await fetch(`/resume/${props.selectedServer}`);
+      const response = await fetch(`/resume/${props.selectedServerId}`);
     }
   }
 
   async function skipSong() {
-    await fetch(`/skip/${props.selectedServer}`);
+    await fetch(`/skip/${props.selectedServerId}`);
     setButtonState("pause");
   }
 

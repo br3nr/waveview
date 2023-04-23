@@ -16,11 +16,11 @@ function MusicPlayer(props) {
       <TrackImage thumbnailUrl={props.thumbnailUrl} />
       <TrackTitle songState={props.songState} />
       <Center>
-        <SeekBar track={props.trackTime} thumbnailUrl={props.thumbnailUrl} guildId={props.selectedServer}/>
+        <SeekBar track={props.trackTime}/>
       </Center>
-      <PlayControls selectedServer={props.selectedServer} />
+      <PlayControls selectedServerId={props.selectedServerId} />
       <Center paddingBottom="20px">
-        <SearchBar selectedServer={props.selectedServer} />
+        <SearchBar />
       </Center>
     </>
   );

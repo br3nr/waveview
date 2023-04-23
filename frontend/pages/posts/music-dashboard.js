@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Grid,
   GridItem,
@@ -20,7 +20,7 @@ function MusicDashboard() {
   const router = useRouter();
   const [thumbnailUrl, setThumbnailUrl] = useState("/images/default2.png");
   const [songState, setSongState] = useState("No song is playing.");
-  const [selectedServer, setSelectedServer] = useState();
+  const [selectedServerId, setSelectedServerId] = useState();
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [trackQueue, setTrackQueue] = useState([]);
   const [userInformation, setUserInformation] = useState({});
@@ -35,7 +35,7 @@ function MusicDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setSelectedServer(localStorage.getItem("serverId"));
+      setSelectedServerId(localStorage.getItem("serverId"));
       // check if cookie exists
       const sessionId = Cookies.get("session_id");
       if (sessionId) {
@@ -61,7 +61,7 @@ function MusicDashboard() {
   // if it doesn't, redirect to the login page
 
   async function handleJoinServer(vc_id) {
-    const url = `/join_vc/${selectedServer}/${vc_id}`;
+    const url = `/join_vc/${selectedServerId}/${vc_id}`;
     const response = await fetch(url);
     if (response.ok) {
       setVoiceChannel(vc_id);
@@ -69,34 +69,38 @@ function MusicDashboard() {
   }
 
   useEffect(() => {
-    if (selectedServer) {
+    // If it works, leave it?
+    if (localStorage.getItem("serverId")) {
       const fetchData = async () => {
-        const response = await fetch(`/get_vc/${selectedServer}`);
+        const response = await fetch(
+          `/get_vc/${localStorage.getItem("serverId")}`
+        );
         const servers = await response.json();
         setVoiceChannels(servers);
       };
       fetchData();
     }
-  }, [selectedServer, voiceChannel]);
+  }, [voiceChannel]);
 
   useEffect(() => {
     const websocketUrl = publicRuntimeConfig.websocketUrl;
     const socket = new WebSocket(websocketUrl);
     socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
-      const server = data[selectedServer];
-      setSongState(server.title);
+      const track = data[localStorage.getItem("serverId")];
+      setSongState(track.title);
       setThumbnailUrl(
-        server.thumbnail === null ? "/images/default2.png" : server.thumbnail
+        track.thumbnail === null ? "/images/default2.png" : track.thumbnail
       );
-      setTrackQueue(server.queue);
-      setTrackTime([server.position, server.length]);
+      setTrackQueue(track.queue);
+      setTrackTime([track.position, track.length]);
     });
 
     return () => {
       socket.close();
     };
-  }, [selectedServer]);
+  }, [selectedServerId]);
+
 
   return (
     <>
@@ -132,7 +136,7 @@ function MusicDashboard() {
           <MusicPlayer
             songState={songState}
             thumbnailUrl={thumbnailUrl}
-            selectedServer={selectedServer}
+            selectedServerId={selectedServerId}
             trackTime={trackTime}
           />
         </GridItem>
@@ -141,7 +145,7 @@ function MusicDashboard() {
             Song Queue
           </Text>
           <MusicQueue
-            selectedServer={selectedServer}
+            selectedServerId={selectedServerId}
             trackQueue={trackQueue}
             setTrackQueue={setTrackQueue}
           />

@@ -1,17 +1,25 @@
+import React, { useState, memo, useRef, useEffect } from "react";
 import {
   Input,
   InputGroup,
   InputRightElement,
   Image,
-  Center,
 } from "@chakra-ui/react";
 import { BsSearchHeart } from "react-icons/bs";
-import React from "react";
-import { useState } from "react";
 
-function SearchBar(props) {
-  const [value, setValue] = React.useState("");
+const SearchBar = memo(() => {
+  const [value, setValue] = useState("");
   const [isSpotify, setIsSpotify] = useState(false);
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    // Set focus back to search bar input element after each websocket update
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  });
+
+  console.log("memo")
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -29,7 +37,7 @@ function SearchBar(props) {
     if (event.key === "Enter") {
       setIsSpotify(false);
       setValue("");
-      const url = `/play_song/${props.selectedServer}`;
+      const url = `/play_song/${localStorage.getItem("serverId")}`;
       await fetch(url, {
         method: "POST",
         headers: {
@@ -41,12 +49,15 @@ function SearchBar(props) {
   };
 
   return (
-    <InputGroup width="80%" >
+    <InputGroup width="80%">
       <Input
+        key="searchBar"
         placeholder="Search for music via query or url"
         onKeyPress={handleKeyPress}
+        defaultValue={value}
         value={value}
         onChange={handleChange}
+        ref={searchInputRef}
       />
       {isSpotify ? (
         <InputRightElement
@@ -65,6 +76,6 @@ function SearchBar(props) {
       )}
     </InputGroup>
   );
-}
+});
 
 export default SearchBar;

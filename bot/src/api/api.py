@@ -11,7 +11,6 @@ from config import (
 )
 from zenora import APIClient
 
-
 class BotAPI:
     def __init__(self, bot, token, client_secret):
         self.app = FastAPI(debug=True)
@@ -88,24 +87,28 @@ class BotAPI:
         await websocket.accept()
         music_cls = Music(self.bot)
         while True:
-            await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
-            guild_tracks = {}
-            for guild in self.bot.guilds:
-                music_player = music_cls.get_player(guild.id)
-                if music_player is not None:
-                    track_info = await self.get_track_info(music_player.current)
-                    queue_list = music_cls.get_queue(str(guild.id))
-                    json_queue = await self.get_queue_json(queue_list)
-                    guild_tracks[str(guild.id)] = {
-                        "title": track_info["title"],
-                        "thumbnail": track_info["thumbnail"],
-                        "position": music_player.position,
-                        "length": track_info["length"],
-                        "queue": json_queue,
-                    }
-                else:
-                    guild_tracks[str(guild.id)] = self.get_default_guild_track_data()
-            await self.send_guild_tracks(guild_tracks, websocket)
+            try:
+                await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
+                guild_tracks = {}
+                for guild in self.bot.guilds:
+                    music_player = music_cls.get_player(guild.id)
+                    if music_player is not None:
+                        track_info = await self.get_track_info(music_player.current)
+                        queue_list = music_cls.get_queue(str(guild.id))
+                        json_queue = await self.get_queue_json(queue_list)
+                        guild_tracks[str(guild.id)] = {
+                            "title": track_info["title"],
+                            "thumbnail": track_info["thumbnail"],
+                            "position": music_player.position,
+                            "length": track_info["length"],
+                            "queue": json_queue,
+                        }
+                    else:
+                        guild_tracks[str(guild.id)] = self.get_default_guild_track_data()
+                await self.send_guild_tracks(guild_tracks, websocket)
+            except TypeError as e:
+                print("TypeError in ws: ", e)
+                pass
 
     async def get_servers(self, user_id):
         active_servers = self.bot.guilds

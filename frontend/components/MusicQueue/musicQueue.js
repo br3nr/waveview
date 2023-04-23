@@ -66,7 +66,7 @@ function MusicQueue(props) {
                           margin: "0 0 4px 4px",
                           minHeight: "50px",
                           borderRadius: "1px",
-                         
+                          
                           ...provided.draggableProps.style,
                         }}
                       >
