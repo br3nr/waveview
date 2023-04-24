@@ -4,9 +4,9 @@ import styles from "./musicQueue.module.css";
 import QueueChip from "./QueueChip/queueChip";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
-function MusicQueue(props) {
+const MusicQueue = React.memo(( props ) => {
   const [removedTrackIds, setRemovedTrackIds] = useState([]);
-
+  console.log("queue rendered");
   const removeTrack = useCallback(
     async (track) => {
       setRemovedTrackIds([...removedTrackIds, track.uuid]);
@@ -27,8 +27,9 @@ function MusicQueue(props) {
     items.splice(result.destination.index, 0, reorderedItem);
     props.setTrackQueue(items);
     const reorderedItemUuid = reorderedItem.uuid;
-    const url = `/reorder/${localStorage.getItem("serverId")}/${reorderedItemUuid}/${
-      result.destination.index}`;
+    const url = `/reorder/${localStorage.getItem(
+      "serverId"
+    )}/${reorderedItemUuid}/${result.destination.index}`;
     await fetch(url);
   };
 
@@ -51,7 +52,6 @@ function MusicQueue(props) {
                     key={track.id.toString()}
                     draggableId={track.id.toString()}
                     index={index}
-                    
                   >
                     {(provided, snapshot) => (
                       <Box
@@ -60,11 +60,11 @@ function MusicQueue(props) {
                         {...provided.dragHandleProps}
                         style={{
                           userSelect: "none",
-                          padding:"6px",
+                          padding: "6px",
                           margin: "0 0 4px 4px",
                           minHeight: "50px",
                           borderRadius: "1px",
-                          
+
                           ...provided.draggableProps.style,
                         }}
                       >
@@ -85,6 +85,6 @@ function MusicQueue(props) {
       </Flex>
     </>
   );
-}
+});
 
 export default MusicQueue;

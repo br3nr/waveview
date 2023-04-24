@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { RiDiscordFill } from "react-icons/ri";
 import getConfig from "next/config";
+import _ from 'lodash';
 
 function MusicDashboard() {
   const router = useRouter();
@@ -27,6 +28,8 @@ function MusicDashboard() {
   const [voiceChannel, setVoiceChannel] = useState();
   const [trackTime, setTrackTime] = useState([0, 0]);
   const { publicRuntimeConfig } = getConfig();
+  const trackQueueRef = useRef([]);
+
 
   function handleServerClick(server) {
     props.handleServerClick(server);
@@ -55,7 +58,7 @@ function MusicDashboard() {
     };
     fetchData();
   }, []);
-
+  console.log("parent")
   // make a useEffect that checks if the cookie exists
   // if it does, fetch the user information
   // if it doesn't, redirect to the login page
@@ -88,18 +91,32 @@ function MusicDashboard() {
     socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
       const track = data[localStorage.getItem("serverId")];
-      setSongState(track.title);
-      setThumbnailUrl(
-        track.thumbnail === null ? "/images/default2.png" : track.thumbnail
-      );
-      setTrackQueue(track.queue);
+      
+      if(track.title !== songState)
+      {
+        setSongState(track.title);
+        setThumbnailUrl(
+          track.thumbnail === null ? "/images/default2.png" : track.thumbnail
+        );
+      }
+
+      if(!(_.isEqual(track.queue, trackQueueRef.current)))
+      {
+        trackQueueRef.current = track.queue;
+      }
       setTrackTime([track.position, track.length]);
     });
-
+  
     return () => {
       socket.close();
     };
   }, [selectedServerId]);
+  
+  useEffect(() => {
+    console.log(trackQueueRef.current)
+    setTrackQueue(trackQueueRef.current);
+  }, [trackQueueRef.current]);
+  
 
   return (
     <>
