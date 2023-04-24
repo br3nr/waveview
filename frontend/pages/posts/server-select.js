@@ -1,27 +1,12 @@
 import React from "react";
-import { RiDiscordFill } from "react-icons/ri";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  HStack,
-  Image,
-  Link,
-  Spacer,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
 import styles from "../../styles/ServerSelect.module.css";
+import { useRouter } from "next/router";
 
 function ServerSelect() {
-  const [userInformation, setUserInformation] = useState({});
   const [serverList, setServerList] = useState([{}]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   function handleServerClick(server) {
@@ -43,15 +28,12 @@ function ServerSelect() {
         } else {
           const userJson = await response.json();
           const serverUrl = `/get_servers/${userJson.id}`;
-          setUserInformation(userJson);
-
           const userServers = await (await fetch(serverUrl)).json();
           setServerList(userServers);
         }
       } else {
         router.push("/");
       }
-      setLoading(false);
     };
     fetchData();
   }, []);

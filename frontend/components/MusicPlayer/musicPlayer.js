@@ -1,10 +1,5 @@
-import { Box, Center, Button, Icon } from "@chakra-ui/react";
-import { FaPlay, FaPause, FaStepForward } from "react-icons/fa";
+import { Center } from "@chakra-ui/react";
 import React from "react";
-import { useState } from "react";
-import { Input, InputGroup, InputRightElement, Image } from "@chakra-ui/react";
-import { BsSearchHeart } from "react-icons/bs";
-import Marquee from "react-fast-marquee";
 import TrackImage from "./TrackImage/trackImage";
 import SearchBar from "./SearchBar/searchBar";
 import PlayControls from "./PlayControls/playControls";
@@ -16,7 +11,7 @@ function MusicPlayer(props) {
       <TrackImage thumbnailUrl={props.thumbnailUrl} />
       <TrackTitle songState={props.songState} />
       <Center>
-        <SeekBar track={props.trackTime}/>
+        <SeekBar track={props.trackTime} />
       </Center>
       <PlayControls selectedServerId={props.selectedServerId} />
       <Center paddingBottom="20px">

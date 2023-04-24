@@ -1,8 +1,6 @@
-import styles from './Login.module.css';
-
+import styles from "./Login.module.css";
 
 function Login() {
-
   return (
     <div className={styles.body}>
       <div className={styles.screen}>

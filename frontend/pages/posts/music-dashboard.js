@@ -101,7 +101,6 @@ function MusicDashboard() {
     };
   }, [selectedServerId]);
 
-
   return (
     <>
       <Nav

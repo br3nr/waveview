@@ -1,7 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Flex, Image, Text, Spinner, Box } from "@chakra-ui/react";
-import { IconButton } from "@chakra-ui/react";
-import { RxCross2 } from "react-icons/rx";
+import { Flex, Box } from "@chakra-ui/react";
 import styles from "./musicQueue.module.css";
 import QueueChip from "./QueueChip/queueChip";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";

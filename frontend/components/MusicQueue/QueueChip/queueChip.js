@@ -1,13 +1,12 @@
 import React from "react";
-import { Flex, Image, Text, Spinner, useColorMode} from "@chakra-ui/react";
+import { Flex, Image, Text, Spinner, useColorMode } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/react";
 import { RxCross2 } from "react-icons/rx";
-import { useState } from "react";
 
 function QueueChip(props) {
   const { colorMode } = useColorMode();
   const bgColor = colorMode === "dark" ? "gray.900" : "gray.100";
-  
+
   return (
     <>
       <Flex
@@ -37,7 +36,12 @@ function QueueChip(props) {
             {props.track.title}
           </Text>
         </Flex>
-        <Flex w="20%" alignItems="center" justifyContent="center" marginRight="3px">
+        <Flex
+          w="20%"
+          alignItems="center"
+          justifyContent="center"
+          marginRight="3px"
+        >
           {props.removedTrackIds.includes(props.track.uuid) ? (
             <IconButton
               height="40px"

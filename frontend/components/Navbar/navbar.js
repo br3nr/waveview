@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Box,
   Flex,
@@ -7,28 +6,21 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
   useColorModeValue,
   Stack,
   useColorMode,
-  Text,
   Center,
-  IconButton
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import React from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { BiLeftArrowAlt } from 'react-icons/bi'
 
 export default function Nav(props) {
   const { colorMode, toggleColorMode } = useColorMode();
-  const [serverList, setServerList] = useState([{}]);
-  const [serverIcon, setServerIcon] = useState("https://www.svgrepo.com/show/353655/discord-icon.svg");
   const router = useRouter();
 
   function handleMenuClick() {
-    // TODO: Make this work without reloading the page
     router.push("/posts/server-select")
     setTimeout(() => {
       window.location.reload()

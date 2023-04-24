@@ -1,9 +1,10 @@
-import React, { useState, memo, useRef, useEffect } from "react";
+import React, { useState, memo, useRef } from "react";
 import {
   Input,
   InputGroup,
   InputRightElement,
   Image,
+  IconButton,
 } from "@chakra-ui/react";
 import { BsSearchHeart } from "react-icons/bs";
 
@@ -11,13 +12,6 @@ const SearchBar = memo(() => {
   const [value, setValue] = useState("");
   const [isSpotify, setIsSpotify] = useState(false);
   const searchInputRef = useRef(null);
-
-  useEffect(() => {
-    // Set focus back to search bar input element after each websocket update
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  });
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -46,6 +40,19 @@ const SearchBar = memo(() => {
     }
   };
 
+  async function handleSearchClick() {
+    setIsSpotify(false);
+    setValue("");
+    const url = `/play_song/${localStorage.getItem("serverId")}`;
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: value }),
+    });
+  }
+
   return (
     <InputGroup width="80%">
       <Input
@@ -56,6 +63,7 @@ const SearchBar = memo(() => {
         value={value}
         onChange={handleChange}
         ref={searchInputRef}
+        onClick={handleKeyPress}
       />
       {isSpotify ? (
         <InputRightElement
@@ -68,8 +76,14 @@ const SearchBar = memo(() => {
         />
       ) : (
         <InputRightElement
-          paddingRight="10px"
-          children={<BsSearchHeart size="20px" />}
+          children={
+            <IconButton
+              onClick={handleSearchClick}
+              backgroundColor="transparent"
+            >
+              <BsSearchHeart size="20px" />
+            </IconButton>
+          }
         />
       )}
     </InputGroup>
