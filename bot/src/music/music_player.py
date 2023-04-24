@@ -208,13 +208,12 @@ class Music(commands.Cog):
                 del cur_queue[i]
                 cur_queue.insert(new_position, track)
                 break
-        
+
         wavelinkQueue = wavelink.Queue()
         for i in range(len(cur_queue)):
             wavelinkQueue.put(cur_queue[i].track)
 
         guild.voice_client.queue = wavelinkQueue
-        
 
     def get_player(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
@@ -274,19 +273,23 @@ class Music(commands.Cog):
             await action(None, query, vc)
 
     async def join_vc(self, guild_id, vc_id):
+        # TODO: Work out why I used a while loop here
+        # what was I trying to prevent? 
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
-        self.middlequeues[str(guild_id)] = []
-        while not vc or vc.channel.id != vc_id:
+        while not vc or vc.channel.id != vc_id: 
             if vc:
                 await vc.disconnect()
+                self.middlequeues[str(guild_id)] = []
                 await asyncio.sleep(0.5)
             channel = guild.get_channel(vc_id)
             try:
                 await channel.connect(cls=CustomPlayer())
-            except ClientException:
+            except ClientException as e:  
+                print(e)
                 continue
-            break
+            else:
+                break
 
     async def play_query(
         self, ctx: discord.ext.commands.Context, search: str, vc: CustomPlayer

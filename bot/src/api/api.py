@@ -10,6 +10,7 @@ from config import (
     REDIRECT_LOC,
 )
 from zenora import APIClient
+from websockets.exceptions import ConnectionClosedError
 
 class BotAPI:
     def __init__(self, bot, token, client_secret):
@@ -109,6 +110,11 @@ class BotAPI:
             except TypeError as e:
                 print("TypeError in ws: ", e)
                 pass
+            except ConnectionClosedError:
+                print("Websocket unexpectedly closed.")
+                await websocket.close()
+                break
+                
 
     async def get_servers(self, user_id):
         active_servers = self.bot.guilds
