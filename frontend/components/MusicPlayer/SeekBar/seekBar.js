@@ -5,14 +5,17 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  useColorMode
 } from "@chakra-ui/react";
 import { useCallback } from "react";
 
 function SeekBar({ track }) {
   const [progress, setProgress] = useState(0.0);
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === "dark" ? ["gray.900", "gray.100"] : ["gray.100", "gray.900"];
 
   useEffect(() => {
-    const progress = (parseInt(track[0]) / parseInt(track[1])) * 100;
+    const progress = (track[0] / track[1]) * 100;
     if (!isNaN(progress)) {
       setProgress(progress);
     }
@@ -42,8 +45,8 @@ function SeekBar({ track }) {
           onChange={(value) => handleChange(value)}
           focusThumbOnChange={false}
         >
-          <SliderTrack bg="gray.900">
-            <SliderFilledTrack bg="red" />
+          <SliderTrack bg={bgColor[0]}>
+            <SliderFilledTrack bg={bgColor[1]}/>
           </SliderTrack>
           <SliderThumb />
         </Slider>

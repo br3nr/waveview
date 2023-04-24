@@ -7,10 +7,10 @@ function TrackImage({ thumbnailUrl }) {
       {thumbnailUrl && (
         <Image
           src={thumbnailUrl}
-          fallbackSrc="/images/default2.png"
           borderRadius="20px"
           objectFit="cover"
           objectPosition="center"
+          fallbackSrc=""
           height="500px"
           width="500px"
         />

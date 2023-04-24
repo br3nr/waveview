@@ -1,4 +1,4 @@
-import { Center } from "@chakra-ui/react";
+import { Center, Box } from "@chakra-ui/react";
 import React from "react";
 import TrackImage from "./TrackImage/trackImage";
 import SearchBar from "./SearchBar/searchBar";
@@ -8,6 +8,7 @@ import SeekBar from "./SeekBar/seekBar";
 function MusicPlayer(props) {
   return (
     <>
+      <Box paddingTop={10}></Box>
       <TrackImage thumbnailUrl={props.thumbnailUrl} />
       <TrackTitle songState={props.songState} />
       <Center>

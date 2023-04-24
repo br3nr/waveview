@@ -4,7 +4,7 @@ import styles from "./musicQueue.module.css";
 import QueueChip from "./QueueChip/queueChip";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
-const MusicQueue = React.memo(( props ) => {
+const MusicQueue = React.memo((props) => {
   const [removedTrackIds, setRemovedTrackIds] = useState([]);
   console.log("queue rendered");
   const removeTrack = useCallback(
@@ -64,7 +64,7 @@ const MusicQueue = React.memo(( props ) => {
                           margin: "0 0 4px 4px",
                           minHeight: "50px",
                           borderRadius: "1px",
-
+                          boxShadow: snapshot.isDragging,
                           ...provided.draggableProps.style,
                         }}
                       >

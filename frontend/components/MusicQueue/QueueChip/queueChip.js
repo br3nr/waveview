@@ -12,7 +12,7 @@ function QueueChip(props) {
       <Flex
         key={props.track.id}
         borderRightRadius="50px"
-        borderLeftRadius="10px"
+        borderLeftRadius="50px"
         alignItems="center"
         backgroundColor={bgColor}
         width={550}

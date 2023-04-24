@@ -19,7 +19,6 @@ import { BiLeftArrowAlt } from 'react-icons/bi'
 export default function Nav(props) {
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
-
   function handleMenuClick() {
     router.push("/posts/server-select")
     setTimeout(() => {
