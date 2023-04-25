@@ -34,6 +34,7 @@ class BotAPI:
         self.app.get("/get_servers/{user_id}")(self.get_servers)
         self.app.get("/get_vc/{guild_id}")(self.get_vc)
         self.app.get("/join_vc/{guild_id}/{vc_id}")(self.join_vc)
+        self.app.get("/leave_vc/{guild_id}/{vc_id}")(self.leave_vc)
         self.app.post("/play_song/{guild_id}")(self.play_song)
         self.app.get("/playing/{guild_id}")(self.playing)
         self.app.get("/pause/{guild_id}")(self.pause)
@@ -173,6 +174,11 @@ class BotAPI:
     async def join_vc(self, guild_id, vc_id):
         print("Joining vc: " + vc_id + " in guild: " + guild_id + "")
         await Music(self.bot).join_vc(int(guild_id), int(vc_id))
+        return "Success"
+    
+    async def leave_vc(self, guild_id, vc_id):
+        print("Leaving vc: " + vc_id + " in guild: " + guild_id + "")
+        await Music(self.bot).leave_vc(int(guild_id), int(vc_id))
         return "Success"
 
     async def play_song(self, guild_id: str, request: Request):

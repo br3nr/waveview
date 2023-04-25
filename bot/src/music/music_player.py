@@ -291,6 +291,13 @@ class Music(commands.Cog):
             else:
                 break
 
+    async def leave_vc(self, guild_id, vc_id):
+        guild = self.bot.get_guild(int(guild_id))
+        vc = guild.voice_client
+        if vc:
+            await vc.disconnect()
+            self.middlequeues[str(guild_id)] = []
+
     async def play_query(
         self, ctx: discord.ext.commands.Context, search: str, vc: CustomPlayer
     ):
