@@ -8,7 +8,7 @@ import SeekBar from "./SeekBar/seekBar";
 function MusicPlayer(props) {
   return (
     <>
-      <Box paddingTop={10}></Box>
+      <Box paddingTop={4}></Box>
       <TrackImage thumbnailUrl={props.thumbnailUrl} />
       <TrackTitle songState={props.songState} />
       <Center>
