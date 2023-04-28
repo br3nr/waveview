@@ -29,6 +29,13 @@ function MusicDashboard() {
   const { publicRuntimeConfig } = getConfig();
   const trackQueueRef = useRef([]);
 
+  useEffect(() => {
+    const serverId = localStorage.getItem("serverId");
+    if (serverId) {
+      setSelectedServerId(serverId);
+    }
+  }, []);
+
   function handleServerClick(server) {
     props.handleServerClick(server);
     setServerIcon(server.icon);
@@ -95,7 +102,7 @@ function MusicDashboard() {
       <br />
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem colSpan={1}>
-          <LeftPane></LeftPane>
+          <LeftPane selectedServerId={selectedServerId}/>
         </GridItem>
         <GridItem colSpan={1}>
           <MusicPlayer

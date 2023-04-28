@@ -13,16 +13,16 @@ import {
 import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 
-function leftPane() {
+function leftPane({selectedServerId}) {
   const [voiceChannels, setVoiceChannels] = useState([{}]);
   const [voiceChannel, setVoiceChannel] = useState();
   const [isHovered, setIsHovered] = useState({});
-  const selectedServerId = localStorage.getItem("serverId");
   const { colorMode } = useColorMode();
   const speakerColor = colorMode === "dark" ? "white" : "black";
   const bgColor = colorMode === "dark" ?  "gray.900" : "gray.100"
+
   useEffect(() => {
-    if (localStorage.getItem("serverId")) {
+    if (selectedServerId) {
       const fetchData = async () => {
         const response = await fetch(`/get_vc/${selectedServerId}`);
         const servers = await response.json();
@@ -30,7 +30,7 @@ function leftPane() {
       };
       fetchData();
     }
-  }, [voiceChannel]);
+  }, [voiceChannel, selectedServerId]);
 
   async function handleJoinServer(vc_id) {
     const url = `/join_vc/${selectedServerId}/${vc_id}`;
