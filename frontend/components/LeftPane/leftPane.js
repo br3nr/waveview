@@ -55,7 +55,7 @@ function leftPane({selectedServerId}) {
 
   return (
     <>
-      <Box borderRadius="25px" backgroundColor={bgColor} marginLeft={10} marginTop={4} width="92%" height="flex" paddingBottom={4}>
+      <Box borderRadius="25px" backgroundColor="transparent" marginLeft={10} width="300px" height="flex" paddingBottom={4}>
         <Box height="50px" paddingLeft={5} paddingTop="15px">
         <Text as="b">
           Channels:

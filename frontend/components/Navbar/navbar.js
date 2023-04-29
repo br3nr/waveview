@@ -29,13 +29,13 @@ export default function Nav(props) {
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} pl={2} pr={4}>
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+        <Flex h="6vh" alignItems={'center'} justifyContent={'space-between'}>
             <Button height="50px" width="50px" background="transparent" onClick={handleMenuClick}>
               <BiLeftArrowAlt />
             </Button>
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
-              <Button onClick={toggleColorMode}>
+              <Button background="transparent" borderRadius="10px" height="4vh" onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
               <Menu>
@@ -44,7 +44,7 @@ export default function Nav(props) {
                   rounded={'full'}
                   variant={'link'}
                   cursor={'pointer'}
-                  minW={0}>
+                  >
                   <Avatar
                     size={'sm'}
                     src={props.currentUser.avatar_url}

@@ -5,6 +5,7 @@ import {
   Button,
   Text,
   List,
+  Box,
   ListItem,
   Flex,
 } from "@chakra-ui/react";
@@ -95,6 +96,7 @@ function MusicDashboard() {
 
   return (
     <>
+    <Box>
       <Nav
         handleServerClick={handleServerClick}
         currentUser={userInformation}
@@ -104,7 +106,7 @@ function MusicDashboard() {
         <GridItem colSpan={1}>
           <LeftPane selectedServerId={selectedServerId}/>
         </GridItem>
-        <GridItem colSpan={1}>
+        <GridItem colSpan={1} paddingTop="15px">
           <MusicPlayer
             songState={songState}
             thumbnailUrl={thumbnailUrl}
@@ -112,7 +114,7 @@ function MusicDashboard() {
             trackTime={trackTime}
           />
         </GridItem>
-        <GridItem colSpan={1}>
+        <GridItem colSpan={1} paddingTop="15px">
           <Text as="b" paddingLeft="10px">
             Song Queue
           </Text>
@@ -123,6 +125,7 @@ function MusicDashboard() {
           />
         </GridItem>
       </Grid>
+      </Box>
     </>
   );
 }

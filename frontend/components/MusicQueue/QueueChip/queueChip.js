@@ -15,7 +15,7 @@ function QueueChip(props) {
         borderLeftRadius="50px"
         alignItems="center"
         backgroundColor={bgColor}
-        width={550}
+        width="95%"
       >
         <Flex w="80%" alignItems="center">
           <Image

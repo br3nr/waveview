@@ -39,7 +39,7 @@ const MusicQueue = React.memo((props) => {
         flexDirection="column"
         overflowY="scroll"
         width="100%"
-        height="800px"
+        height="85vh"
         marginTop="10px"
         className={styles.customScrollbar}
       >
