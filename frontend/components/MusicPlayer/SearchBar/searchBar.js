@@ -7,11 +7,13 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { BsSearchHeart } from "react-icons/bs";
+import { useToast } from "@chakra-ui/react";
 
 const SearchBar = memo(() => {
   const [value, setValue] = useState("");
   const [isSpotify, setIsSpotify] = useState(false);
   const searchInputRef = useRef(null);
+  const toast = useToast();
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -30,13 +32,22 @@ const SearchBar = memo(() => {
       setIsSpotify(false);
       setValue("");
       const url = `/play_song/${localStorage.getItem("serverId")}`;
-      await fetch(url, {
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ url: value }),
       });
+      if (!response.ok) {
+        toast({
+          title: "Error",
+          description: "Is the bot connected to a channel?",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
