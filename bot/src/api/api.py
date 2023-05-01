@@ -254,14 +254,15 @@ class BotAPI:
 
     async def get_queue_json(self, queue_list):
         json_queue = []
-        for i in range(len(queue_list)):
-            track_uuid = queue_list[i].uuid
-            track_title = queue_list[i].track.title
+        tmp_list = queue_list.copy()
+        for i in range(len(tmp_list)):
+            track_uuid = tmp_list[i].uuid
+            track_title = tmp_list[i].track.title
             try:
-                if queue_list[i].thumbnail_uri is not None:
-                    thumbnail_url = queue_list[i].thumbnail_uri
+                if tmp_list[i].thumbnail_uri is not None:
+                    thumbnail_url = tmp_list[i].thumbnail_uri
                 else:
-                    thumbnail_url = await queue_list[i].track.fetch_thumbnail()
+                    thumbnail_url = await tmp_list[i].track.fetch_thumbnail()
             except AttributeError:
                 thumbnail_url = None
 

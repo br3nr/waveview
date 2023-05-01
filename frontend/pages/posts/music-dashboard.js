@@ -72,12 +72,18 @@ function MusicDashboard() {
       const track = data[localStorage.getItem("serverId")];
 
       if (track.title !== songState) {
-        setSongState(track.title);
-        setThumbnailUrl(
-          track.thumbnail === null ? "/images/default2.png" : track.thumbnail
-        );
+        if (track.thumbnail === null) {
+          if (trackQueueRef.current.length == 0) {
+            console.log("no track in queue")
+            setThumbnailUrl("/images/default2.png");
+            setSongState(track.title);
+          }
+        } else {
+          setThumbnailUrl(track.thumbnail);
+          setSongState(track.title);
+        }
       }
-
+      // Check if track has changed via dnd, if so, update queue
       if (!_.isEqual(track.queue, trackQueueRef.current)) {
         trackQueueRef.current = track.queue;
       }
@@ -96,35 +102,35 @@ function MusicDashboard() {
 
   return (
     <>
-    <Box>
-      <Nav
-        handleServerClick={handleServerClick}
-        currentUser={userInformation}
-      />
-      <br />
-      <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-        <GridItem colSpan={1}>
-          <LeftPane selectedServerId={selectedServerId}/>
-        </GridItem>
-        <GridItem colSpan={1} paddingTop="15px">
-          <MusicPlayer
-            songState={songState}
-            thumbnailUrl={thumbnailUrl}
-            selectedServerId={selectedServerId}
-            trackTime={trackTime}
-          />
-        </GridItem>
-        <GridItem colSpan={1} paddingTop="15px">
-          <Text as="b" paddingLeft="10px">
-            Song Queue
-          </Text>
-          <MusicQueue
-            selectedServerId={selectedServerId}
-            trackQueue={trackQueue}
-            setTrackQueue={setTrackQueue}
-          />
-        </GridItem>
-      </Grid>
+      <Box>
+        <Nav
+          handleServerClick={handleServerClick}
+          currentUser={userInformation}
+        />
+        <br />
+        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+          <GridItem colSpan={1}>
+            <LeftPane selectedServerId={selectedServerId} />
+          </GridItem>
+          <GridItem colSpan={1} paddingTop="15px">
+            <MusicPlayer
+              songState={songState}
+              thumbnailUrl={thumbnailUrl}
+              selectedServerId={selectedServerId}
+              trackTime={trackTime}
+            />
+          </GridItem>
+          <GridItem colSpan={1} paddingTop="15px">
+            <Text as="b" paddingLeft="10px">
+              Song Queue
+            </Text>
+            <MusicQueue
+              selectedServerId={selectedServerId}
+              trackQueue={trackQueue}
+              setTrackQueue={setTrackQueue}
+            />
+          </GridItem>
+        </Grid>
       </Box>
     </>
   );

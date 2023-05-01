@@ -48,7 +48,7 @@ function QueueChip(props) {
               width="40px"
               borderRadius="50px"
               background="transparent"
-              onClick={() => removeTrack(props.track)}
+              onClick={() => props.removeTrack(props.track)}
               marginLeft="auto"
               variant="link"
               icon={<Spinner width="15px" height="15px" />}
