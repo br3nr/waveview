@@ -43,6 +43,7 @@ class BotAPI:
         self.app.get("/resume/{guild_id}")(self.resume)
         self.app.get("/seek/{guild_id}/{time}")(self.seek)
         self.app.get("/reorder/{guild_id}/{time}/{new_position}")(self.reorder)
+        self.app.get("/delete_queue/{guild_id}")(self.delete_queue)
 
 
     async def callback(self, code: str):
@@ -231,6 +232,10 @@ class BotAPI:
 
     async def reorder_queue(self, guild_id):
         print("HI")
+        return {"message": "OK"}
+    
+    async def delete_queue(self, guild_id):
+        await Music(self.bot).delete_queue_by_guild(guild_id)
         return {"message": "OK"}
 
     async def thumbnail(self, guild_id: str):

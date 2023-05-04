@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   Grid,
   GridItem,
-  Button,
+  IconButton,
   Text,
   List,
   Box,
@@ -18,6 +18,7 @@ import { RiDiscordFill } from "react-icons/ri";
 import getConfig from "next/config";
 import _ from "lodash";
 import LeftPane from "../../components/LeftPane/leftPane";
+import { MdPlaylistRemove } from "react-icons/md";
 
 function MusicDashboard() {
   const router = useRouter();
@@ -40,6 +41,12 @@ function MusicDashboard() {
   function handleServerClick(server) {
     props.handleServerClick(server);
     setServerIcon(server.icon);
+  } 
+
+  function deleteQueueClick()
+  {
+    const url = `/delete_queue/${selectedServerId}`;
+    fetch(url)
   }
 
   useEffect(() => {
@@ -74,7 +81,7 @@ function MusicDashboard() {
       if (track.title !== songState) {
         if (track.thumbnail === null) {
           if (trackQueueRef.current.length == 0) {
-            console.log("no track in queue")
+            console.log("no track in queue");
             setThumbnailUrl("/images/default2.png");
             setSongState(track.title);
           }
@@ -121,9 +128,14 @@ function MusicDashboard() {
             />
           </GridItem>
           <GridItem colSpan={1} paddingTop="15px">
-            <Text as="b" paddingLeft="10px">
-              Song Queue
-            </Text>
+            <Flex alignItems="center">
+              <Text as="b" paddingLeft="10px" paddingRight="10px">
+                Song Queue
+              </Text>
+              <IconButton onClick={deleteQueueClick} backgroundColor="transparent">
+                <MdPlaylistRemove></MdPlaylistRemove>
+              </IconButton>
+            </Flex>
             <MusicQueue
               selectedServerId={selectedServerId}
               trackQueue={trackQueue}

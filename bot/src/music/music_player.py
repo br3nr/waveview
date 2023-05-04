@@ -214,7 +214,14 @@ class Music(commands.Cog):
             wavelinkQueue.put(cur_queue[i].track)
 
         guild.voice_client.queue = wavelinkQueue
-
+        
+    async def delete_queue_by_guild(self, guild_id):
+        guild = self.bot.get_guild(int(guild_id))
+        vc = guild.voice_client
+        if vc:
+            vc.queue.reset()
+            self.middlequeues[guild_id] = []
+    
     def get_player(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
