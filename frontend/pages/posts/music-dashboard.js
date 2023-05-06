@@ -115,9 +115,11 @@ function MusicDashboard() {
           currentUser={userInformation}
         />
         <br />
-        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+        <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
           <GridItem colSpan={1}>
+            <Flex width="100%"> 
             <LeftPane selectedServerId={selectedServerId} />
+            </Flex>
           </GridItem>
           <GridItem colSpan={1} paddingTop="15px">
             <MusicPlayer
