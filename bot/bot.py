@@ -1,7 +1,9 @@
 import os
 import discord
 from discord.ext import commands
-from src.music.music_player import Music
+from src.music.music_control import Music
+from src.music.music_commands import MusicCommands
+
 import asyncio
 from src.api.api import BotAPI
 from config import TOKEN, CLIENT_SECRET, REDIRECT_URI, SESSION_KEY, REDIRECT_LOC, VPS_REDIRECT_URI
@@ -14,7 +16,8 @@ app = BotAPI(bot, TOKEN, CLIENT_SECRET).app
 async def on_connect():
     print('Connected to Discord')
     await bot.add_cog(Music(bot))
-    print('Music cog added to bot')
+    await bot.add_cog(MusicCommands(bot))
+    print('Music cogs added to bot')
 
 async def run():
     try:

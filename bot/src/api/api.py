@@ -4,7 +4,7 @@ import uuid
 from fastapi.encoders import jsonable_encoder as jsonify
 from fastapi import FastAPI, HTTPException, Request, Response, WebSocket
 from fastapi.responses import RedirectResponse, JSONResponse
-from src.music.music_player import Music
+from src.music.music_control import Music
 from config import (
     REDIRECT_URI,
     REDIRECT_LOC,
