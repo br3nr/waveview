@@ -26,7 +26,6 @@ class Music(commands.Cog):
         self.song_queue = {}
         self.cid = os.environ["SPOTIFY_CLIENT_ID"]
         self.csecret = os.environ["SPOTIFY_CLIENT_SECRET"]
-        bot.loop.create_task(self.connect_nodes())
         self.middlequeues = {}
         # for each guild, create a middlequeue
         for guild in self.bot.guilds:
@@ -41,6 +40,9 @@ class Music(commands.Cog):
             "YouTube Playlist": YoutubePlayer().play_playlist,
             "Text": YoutubePlayer().play,
         }
+    
+    def initialise_player(self):
+        self.bot.loop.create_task(self.connect_nodes())
 
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, payload: wavelink.TrackEventPayload):
@@ -177,7 +179,9 @@ class Music(commands.Cog):
         url_type = check_string(query)
         action = self.url_type_mapping.get(url_type, None)
         if action:
-            track = await action(query, vc, self.middlequeues)
+            print(self.middlequeues)
+            mq = await action(query, vc, self.middlequeues)
+            print(mq)
 
     async def join_vc(self, guild_id, vc_id):
         # TODO: Work out why I used a while loop here

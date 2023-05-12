@@ -30,11 +30,12 @@ class MusicPlayer(ABC):
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
             guild_id = str(vc.guild.id)
-            cur_queue = middlequeues[guild_id]
+            cur_queue = middlequeues.setdefault(guild_id, [])
             cur_queue.append(MiddleQueue(track))
             middlequeues[guild_id] = cur_queue
         else:
             await vc.play(track)
+        return middlequeues
 
 
 class YoutubePlayer(MusicPlayer):
