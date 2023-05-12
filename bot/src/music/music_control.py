@@ -11,17 +11,8 @@ from .music_players import *
 
 
 class Music(commands.Cog):
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
 
     def __init__(self, bot: commands.Bot):
-        if hasattr(self, "initialized"):
-            return
-        self.initialized = True
         self.bot = bot
         self.song_queue = {}
         self.cid = os.environ["SPOTIFY_CLIENT_ID"]
@@ -180,8 +171,7 @@ class Music(commands.Cog):
         action = self.url_type_mapping.get(url_type, None)
         if action:
             print(self.middlequeues)
-            mq = await action(query, vc, self.middlequeues)
-            print(mq)
+            await action(query, vc, self.middlequeues)
 
     async def join_vc(self, guild_id, vc_id):
         # TODO: Work out why I used a while loop here

@@ -11,14 +11,16 @@ from src.routers.player_router import PlayerRouter
 from src.routers.player_ws import PlayerWebsocket
 from config import (
     TOKEN,
-    CLIENT_SECRET
+    CLIENT_SECRET,
+    REDIRECT_LOC,
+    REDIRECT_URI
 )
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 player = Music(bot)
 app = FastAPI(debug=True)
 
-auth_router = AuthRouter(TOKEN, CLIENT_SECRET)
+auth_router = AuthRouter(TOKEN, CLIENT_SECRET, REDIRECT_URI, REDIRECT_LOC)
 music_router = PlayerRouter(bot, player)
 player_ws = PlayerWebsocket(bot, player)
 
