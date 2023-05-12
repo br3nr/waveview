@@ -11,6 +11,8 @@ class PlayerRouter(APIRouter):
         self.configure_routes()
 
     def configure_routes(self):
+        print("start")
+
         self.add_api_route("/remove_track/{guild_id}/{track_id}", self.remove_track, methods=["GET"])
         self.add_api_route("/get_servers/{user_id}", self.get_servers, methods=["GET"])
         self.add_api_route("/get_vc/{guild_id}", self.get_vc, methods=["GET"])
@@ -18,13 +20,14 @@ class PlayerRouter(APIRouter):
         self.add_api_route("/leave_vc/{guild_id}/{vc_id}", self.leave_vc, methods=["GET"])
         self.add_api_route("/play_song/{guild_id}", self.play_song, methods=["POST"])
         self.add_api_route("/playing/{guild_id}", self.playing, methods=["GET"])
+        self.add_api_route("/thumbnail/{guild_id}", self.thumbnail, methods=["GET"])
+        self.add_api_route("/delete_queue/{guild_id}", self.delete_queue, methods=["GET"])
+        self.add_api_route("/reorder/{guild_id}/{time}/{new_position}", self.reorder, methods=["GET"])
+        self.add_api_route("/seek/{guild_id}/{time}", self.seek, methods=["GET"])
+        self.add_api_route("/resume/{guild_id}", self.resume, methods=["GET"])
         self.add_api_route("/pause/{guild_id}", self.pause, methods=["GET"])
-        self.add_api_route("thumbnail/{guild_id}", self.thumbnail, methods=["GET"])
-        self.add_api_route("delete_queue/{guild_id}", self.delete_queue, methods=["GET"])
-        self.add_api_route("reorder/{guild_id}/{time}/{new_position}", self.reorder, methods=["GET"])
-        self.add_api_route("seek/{guild_id}/{time}", self.seek, methods=["GET"])
-        self.add_api_route("resume/{guild_id}", self.resume, methods=["GET"])
-        self.add_api_route("skip/{guild_id}", self.skip, methods=["GET"])
+        self.add_api_route("/skip/{guild_id}", self.skip, methods=["GET"])
+        print("Done")
 
     async def remove_track(self, guild_id, track_id):
         try:
@@ -106,9 +109,7 @@ class PlayerRouter(APIRouter):
         except AttributeError:
             raise HTTPException(status_code=500, detail="Server bronk")
 
-    async def pause(self, guild_id: str):
-        await self.player.pause_track(guild_id)
-        return {"message": "OK"}
+    
 
     async def skip(self, guild_id: str):
         await self.player.skip_track(guild_id)
@@ -116,6 +117,10 @@ class PlayerRouter(APIRouter):
 
     async def resume(self, guild_id: str):
         await self.player.resume_track(guild_id)
+        return {"message": "OK"}
+    
+    async def pause(self, guild_id: str):
+        await self.player.pause_track(guild_id)
         return {"message": "OK"}
 
     async def seek(self, guild_id: str, time: str):
