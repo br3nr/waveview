@@ -1,5 +1,6 @@
 import re
 
+
 def check_string(input_string):
     youtube_pattern = re.compile(
         (
