@@ -54,7 +54,7 @@ class Music(commands.Cog):
         await self.bot.wait_until_ready()
         sc = spotify.SpotifyClient(client_id=self.cid, client_secret=self.csecret)
         node: wavelink.Node = wavelink.Node(
-            uri="http://localhost:2333", password="1234"
+            uri="http://lavalink:2333", password="1234"
         )
         await wavelink.NodePool.connect(client=self.bot, nodes=[node], spotify=sc)
 
