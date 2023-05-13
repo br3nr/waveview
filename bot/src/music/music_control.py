@@ -2,7 +2,7 @@ from discord.ext import commands
 import wavelink
 from wavelink.ext import spotify
 import os
-from log import log_command
+from src.logger.log import log_command
 from discord import ClientException
 import asyncio
 from .custom_player import CustomPlayer

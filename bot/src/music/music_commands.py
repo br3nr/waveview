@@ -1,5 +1,5 @@
 from discord.ext import commands
-from log import log_command
+from src.logger.log import log_command
 from .custom_player import CustomPlayer
 from .music_utils import check_string
 from .music_players import *
