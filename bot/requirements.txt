@@ -1,0 +1,6 @@
+uvicorn 
+discord
+Wavelink
+fastapi
+Zenora
+websockets

@@ -2,7 +2,7 @@ from discord.ext import commands
 import wavelink
 from wavelink.ext import spotify
 import os
-from log import log_command
+from src.logger.log import log_command
 from discord import ClientException
 import asyncio
 from .custom_player import CustomPlayer
@@ -12,12 +12,13 @@ from .music_players import *
 
 class Music(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot, spotify_id, spotify_secret, lavalink_uri):
         self.bot = bot
         self.song_queue = {}
-        self.cid = os.environ["SPOTIFY_CLIENT_ID"]
-        self.csecret = os.environ["SPOTIFY_CLIENT_SECRET"]
+        self.cid = spotify_id
+        self.csecret = spotify_secret
         self.middlequeues = {}
+        self.lavalink_uri = lavalink_uri
         # for each guild, create a middlequeue
         for guild in self.bot.guilds:
             self.middlequeues[str(guild.id)] = []
@@ -54,7 +55,7 @@ class Music(commands.Cog):
         await self.bot.wait_until_ready()
         sc = spotify.SpotifyClient(client_id=self.cid, client_secret=self.csecret)
         node: wavelink.Node = wavelink.Node(
-            uri="http://localhost:2333", password="1234"
+            uri=self.lavalink_uri, password="1234"
         )
         await wavelink.NodePool.connect(client=self.bot, nodes=[node], spotify=sc)
 
@@ -95,7 +96,6 @@ class Music(commands.Cog):
         cur_queue = self.middlequeues[guild_id]
 
         for i in range(len(cur_queue)):
-            print(cur_queue[i].uuid, uuid)
             if cur_queue[i].uuid == uuid:
                 track = cur_queue[i]
                 del cur_queue[i]
@@ -170,7 +170,6 @@ class Music(commands.Cog):
         url_type = check_string(query)
         action = self.url_type_mapping.get(url_type, None)
         if action:
-            print(self.middlequeues)
             await action(query, vc, self.middlequeues)
 
     async def join_vc(self, guild_id, vc_id):

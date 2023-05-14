@@ -4,21 +4,21 @@ import {
   GridItem,
   IconButton,
   Text,
-  List,
   Box,
-  ListItem,
   Flex,
+  AbsoluteCenter,
 } from "@chakra-ui/react";
 import Nav from "../../components/Navbar/navbar";
 import MusicQueue from "../../components/MusicQueue/musicQueue";
 import MusicPlayer from "../../components/MusicPlayer/musicPlayer";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { RiDiscordFill } from "react-icons/ri";
 import getConfig from "next/config";
 import _ from "lodash";
 import LeftPane from "../../components/LeftPane/leftPane";
 import { MdPlaylistRemove } from "react-icons/md";
+import { Spinner } from "@chakra-ui/react";
+import { BsDiscord } from "react-icons/bs";
 
 function MusicDashboard() {
   const router = useRouter();
@@ -30,6 +30,17 @@ function MusicDashboard() {
   const [trackTime, setTrackTime] = useState([0, 0]);
   const { publicRuntimeConfig } = getConfig();
   const trackQueueRef = useRef([]);
+  const websocketUrl =
+    process.env.NEXT_PUBLIC_WEBSOCKET_URL || publicRuntimeConfig.websocketUrl;
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate an asynchronous operation
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000); // Replace this with your actual data fetching or rendering code
+  }, []);
 
   useEffect(() => {
     const serverId = localStorage.getItem("serverId");
@@ -41,12 +52,11 @@ function MusicDashboard() {
   function handleServerClick(server) {
     props.handleServerClick(server);
     setServerIcon(server.icon);
-  } 
+  }
 
-  function deleteQueueClick()
-  {
+  function deleteQueueClick() {
     const url = `/delete_queue/${selectedServerId}`;
-    fetch(url)
+    fetch(url);
   }
 
   useEffect(() => {
@@ -72,7 +82,6 @@ function MusicDashboard() {
   }, []);
 
   useEffect(() => {
-    const websocketUrl = publicRuntimeConfig.websocketUrl;
     const socket = new WebSocket(websocketUrl);
     socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
@@ -109,43 +118,55 @@ function MusicDashboard() {
 
   return (
     <>
-      <Box>
-        <Nav
-          handleServerClick={handleServerClick}
-          currentUser={userInformation}
-        />
-        <br />
-        <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
-          <GridItem colSpan={1}>
-            <Flex width="100%"> 
-            <LeftPane selectedServerId={selectedServerId} />
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={1} paddingTop="15px">
-            <MusicPlayer
-              songState={songState}
-              thumbnailUrl={thumbnailUrl}
-              selectedServerId={selectedServerId}
-              trackTime={trackTime}
-            />
-          </GridItem>
-          <GridItem colSpan={1} paddingTop="15px">
-            <Flex alignItems="center">
-              <Text as="b" paddingLeft="10px" paddingRight="10px">
-                Song Queue
-              </Text>
-              <IconButton onClick={deleteQueueClick} backgroundColor="transparent">
-                <MdPlaylistRemove></MdPlaylistRemove>
-              </IconButton>
-            </Flex>
-            <MusicQueue
-              selectedServerId={selectedServerId}
-              trackQueue={trackQueue}
-              setTrackQueue={setTrackQueue}
-            />
-          </GridItem>
-        </Grid>
-      </Box>
+      {loading ? (
+        <Box width="100vw" height="100vh">
+          <AbsoluteCenter>
+            <Spinner width="50px" height="50px">
+              </Spinner>
+          </AbsoluteCenter>
+        </Box>
+      ) : (
+        <Box>
+          <Nav
+            handleServerClick={handleServerClick}
+            currentUser={userInformation}
+          />
+          <br />
+          <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
+            <GridItem colSpan={1}>
+              <Flex width="100%">
+                <LeftPane selectedServerId={selectedServerId} />
+              </Flex>
+            </GridItem>
+            <GridItem colSpan={1} paddingTop="15px">
+              <MusicPlayer
+                songState={songState}
+                thumbnailUrl={thumbnailUrl}
+                selectedServerId={selectedServerId}
+                trackTime={trackTime}
+              />
+            </GridItem>
+            <GridItem colSpan={1} paddingTop="15px">
+              <Flex alignItems="center">
+                <Text as="b" paddingLeft="10px" paddingRight="10px">
+                  Song Queue
+                </Text>
+                <IconButton
+                  onClick={deleteQueueClick}
+                  backgroundColor="transparent"
+                >
+                  <MdPlaylistRemove></MdPlaylistRemove>
+                </IconButton>
+              </Flex>
+              <MusicQueue
+                selectedServerId={selectedServerId}
+                trackQueue={trackQueue}
+                setTrackQueue={setTrackQueue}
+              />
+            </GridItem>
+          </Grid>
+        </Box>
+      )}
     </>
   );
 }

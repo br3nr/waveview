@@ -1,0 +1,28 @@
+version: '3'
+services:
+  fastapi:
+    build:
+      context: ./bot
+    ports:
+      - 5090:5090
+    networks:
+      - my-network
+
+  lavalink:
+    build:
+      context: ./lavalink
+    ports:
+      - 2333:2333
+    networks:
+      - my-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - 3000:3000
+    networks:
+      - my-network
+
+networks:
+  my-network:

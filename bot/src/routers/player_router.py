@@ -1,7 +1,7 @@
+import wavelink
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder as jsonify
-from fastapi import FastAPI, HTTPException, Request
-
+from fastapi import HTTPException, Request
 
 class PlayerRouter(APIRouter):
     def __init__(self, bot, player, *args, **kwargs):
@@ -11,8 +11,6 @@ class PlayerRouter(APIRouter):
         self.configure_routes()
 
     def configure_routes(self):
-        print("start")
-
         self.add_api_route("/remove_track/{guild_id}/{track_id}", self.remove_track, methods=["GET"])
         self.add_api_route("/get_servers/{user_id}", self.get_servers, methods=["GET"])
         self.add_api_route("/get_vc/{guild_id}", self.get_vc, methods=["GET"])
@@ -27,7 +25,6 @@ class PlayerRouter(APIRouter):
         self.add_api_route("/resume/{guild_id}", self.resume, methods=["GET"])
         self.add_api_route("/pause/{guild_id}", self.pause, methods=["GET"])
         self.add_api_route("/skip/{guild_id}", self.skip, methods=["GET"])
-        print("Done")
 
     async def remove_track(self, guild_id, track_id):
         try:
@@ -93,6 +90,19 @@ class PlayerRouter(APIRouter):
                 status_code=500,
                 detail="You need to connected to a voice channel first.",
             )
+        except wavelink.ext.spotify.SpotifyRequestError:
+            raise HTTPException(
+                status_code=403,
+                detail="""Error: Spotify API not set up.
+                    Please provide the API key and client ID to enable Spotify integration.
+                    Contact the administrator for assistance."""
+            )
+        except wavelink.exceptions.NoTracksError:
+            raise HTTPException(
+                status_code=404,
+                detail="No tracks found with that query."
+            )
+            
 
     async def playing(self, guild_id):
         try:

@@ -1,26 +1,38 @@
-import os
+import asyncio
 import discord
+from fastapi import FastAPI
+import os
 from discord.ext import commands
 from src.music.music_control import Music
 from src.music.music_commands import MusicCommands
-import asyncio
-from fastapi import FastAPI
-import asyncio
 from src.routers.auth_router import AuthRouter
 from src.routers.player_router import PlayerRouter
 from src.routers.player_ws import PlayerWebsocket
 from config import (
-    TOKEN,
-    CLIENT_SECRET,
+    BOT_TOKEN,
+    BOT_OAUTH_SECRET,
     REDIRECT_LOC,
-    REDIRECT_URI
+    REDIRECT_URI,
+    SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET
 )
 
+try: # Helps w local testing
+    BOT_TOKEN = os.environ["BOT_TOKEN"]
+    BOT_CLIENT_ID = os.environ["BOT_CLIENT_ID"]
+    BOT_OAUTH_SECRET = os.environ["BOT_OAUTH_SECRET"]
+    SPOTIFY_CLIENT_SECRET = os.environ["SPOTIFY_CLIENT_SECRET"]
+    SPOTIFY_CLIENT_ID = os.environ["SPOTIFY_CLIENT_ID"]
+    LAVALINK_URI = os.environ["LAVALINK_URI"]
+except KeyError:
+    LAVALINK_URI = "http://0.0.0.0:2333"
+    pass
+
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-player = Music(bot)
+player = Music(bot, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, LAVALINK_URI)
 app = FastAPI(debug=True)
 
-auth_router = AuthRouter(TOKEN, CLIENT_SECRET, REDIRECT_URI, REDIRECT_LOC)
+auth_router = AuthRouter(BOT_TOKEN, BOT_OAUTH_SECRET, REDIRECT_URI, REDIRECT_LOC)
 music_router = PlayerRouter(bot, player)
 player_ws = PlayerWebsocket(bot, player)
 
@@ -40,7 +52,7 @@ async def on_connect():
 
 async def run():
     try:
-        await bot.start(os.environ["DEV_CLIENT_ID"])
+        await bot.start(BOT_TOKEN)
     except KeyboardInterrupt:
         await bot.logout()
 
