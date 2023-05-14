@@ -40,9 +40,10 @@ const SearchBar = memo(() => {
         body: JSON.stringify({ url: value }),
       });
       if (!response.ok) {
+        const responseJson = await response.json();
         toast({
           title: "Error",
-          description: "Is the bot connected to a channel?",
+          description: responseJson.detail,
           status: "error",
           duration: 5000,
           isClosable: true,

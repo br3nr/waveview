@@ -1,7 +1,7 @@
+import wavelink
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder as jsonify
-from fastapi import FastAPI, HTTPException, Request
-
+from fastapi import HTTPException, Request
 
 class PlayerRouter(APIRouter):
     def __init__(self, bot, player, *args, **kwargs):
@@ -93,6 +93,14 @@ class PlayerRouter(APIRouter):
                 status_code=500,
                 detail="You need to connected to a voice channel first.",
             )
+        except wavelink.ext.spotify.SpotifyRequestError:
+            raise HTTPException(
+                status_code=403,
+                detail="""Error: Spotify API not set up.
+                    Please provide the API key and client ID to enable Spotify integration.
+                    Contact the administrator for assistance."""
+            )
+            
 
     async def playing(self, guild_id):
         try:

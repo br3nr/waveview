@@ -16,5 +16,13 @@ services:
     networks:
       - my-network
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - 3000:3000
+    networks:
+      - my-network
+
 networks:
   my-network:

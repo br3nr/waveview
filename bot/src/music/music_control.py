@@ -12,11 +12,11 @@ from .music_players import *
 
 class Music(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot, spotify_id, spotify_secret: commands.Bot):
         self.bot = bot
         self.song_queue = {}
-        self.cid = os.environ["SPOTIFY_CLIENT_ID"]
-        self.csecret = os.environ["SPOTIFY_CLIENT_SECRET"]
+        self.cid = spotify_id
+        self.csecret = spotify_secret
         self.middlequeues = {}
         # for each guild, create a middlequeue
         for guild in self.bot.guilds:
@@ -54,7 +54,7 @@ class Music(commands.Cog):
         await self.bot.wait_until_ready()
         sc = spotify.SpotifyClient(client_id=self.cid, client_secret=self.csecret)
         node: wavelink.Node = wavelink.Node(
-            uri="http://lavalink:2333", password="1234"
+            uri="http://0.0.0.0:2333", password="1234"
         )
         await wavelink.NodePool.connect(client=self.bot, nodes=[node], spotify=sc)
 
@@ -170,7 +170,6 @@ class Music(commands.Cog):
         url_type = check_string(query)
         action = self.url_type_mapping.get(url_type, None)
         if action:
-            print(self.middlequeues)
             await action(query, vc, self.middlequeues)
 
     async def join_vc(self, guild_id, vc_id):

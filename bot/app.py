@@ -16,8 +16,11 @@ from config import (
     REDIRECT_URI
 )
 
+cis = os.environ["SPOTIFY_CLIENT_ID"]
+cs = os.environ["SPOTIFY_CLIENT_SECRET"]
+
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-player = Music(bot)
+player = Music(bot, None, None)
 app = FastAPI(debug=True)
 
 auth_router = AuthRouter(TOKEN, CLIENT_SECRET, REDIRECT_URI, REDIRECT_LOC)

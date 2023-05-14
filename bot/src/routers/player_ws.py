@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi import WebSocket
-from websockets.exceptions import ConnectionClosedError
+from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from fastapi import WebSocket
 import asyncio
 
@@ -19,7 +19,7 @@ class PlayerWebsocket(APIRouter):
         await websocket.accept()
         while True:
             try:
-                await asyncio.sleep(0.1)  # Sleep for 0.1 seconds
+                await asyncio.sleep(0.1)
                 guild_tracks = {}
                 for guild in self.bot.guilds:
                     music_player = self.music_cls.get_player(guild.id)
@@ -39,13 +39,15 @@ class PlayerWebsocket(APIRouter):
                             str(guild.id)
                         ] = self.get_default_guild_track_data()
                 await websocket.send_json(guild_tracks)
-            except TypeError as e:
-                print("TypeError in ws: ", e)
-                pass
             except ConnectionClosedError:
                 print("Websocket unexpectedly closed.")
                 await websocket.close()
                 break
+            except ConnectionClosedOK:
+                print("Websocket closed.")
+                await websocket.close()
+                break
+                
 
     async def get_track_info(self, music_player):
         if music_player is None:
