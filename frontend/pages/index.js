@@ -12,8 +12,8 @@ export default function Home() {
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig();
 
-  //const redirectUri = "https://discord.com/api/oauth2/authorize?client_id=748778849751400871&redirect_uri=http%3A%2F%2F45.32.191.6%3A5090%2Fauth%2Fredirect&response_type=code&scope=guilds%20identify"
-  const redirectUri = publicRuntimeConfig.redirectUri;
+  const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI || publicRuntimeConfig.redirectUri;
+
   async function checkIsLoggedIn()
   {
     const sessionId = Cookies.get("session_id");

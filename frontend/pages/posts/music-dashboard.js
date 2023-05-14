@@ -4,9 +4,7 @@ import {
   GridItem,
   IconButton,
   Text,
-  List,
   Box,
-  ListItem,
   Flex,
 } from "@chakra-ui/react";
 import Nav from "../../components/Navbar/navbar";
@@ -14,7 +12,6 @@ import MusicQueue from "../../components/MusicQueue/musicQueue";
 import MusicPlayer from "../../components/MusicPlayer/musicPlayer";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { RiDiscordFill } from "react-icons/ri";
 import getConfig from "next/config";
 import _ from "lodash";
 import LeftPane from "../../components/LeftPane/leftPane";
@@ -30,6 +27,7 @@ function MusicDashboard() {
   const [trackTime, setTrackTime] = useState([0, 0]);
   const { publicRuntimeConfig } = getConfig();
   const trackQueueRef = useRef([]);
+  const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || publicRuntimeConfig.websocketUrl;
 
   useEffect(() => {
     const serverId = localStorage.getItem("serverId");
@@ -72,7 +70,6 @@ function MusicDashboard() {
   }, []);
 
   useEffect(() => {
-    const websocketUrl = publicRuntimeConfig.websocketUrl;
     const socket = new WebSocket(websocketUrl);
     socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
