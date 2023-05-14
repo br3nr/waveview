@@ -23,11 +23,13 @@ try: # Helps w local testing
     BOT_OAUTH_SECRET = os.environ["BOT_OAUTH_SECRET"]
     SPOTIFY_CLIENT_SECRET = os.environ["SPOTIFY_CLIENT_SECRET"]
     SPOTIFY_CLIENT_ID = os.environ["SPOTIFY_CLIENT_ID"]
+    LAVALINK_URI = os.environ["LAVALINK_URI"]
 except KeyError:
+    LAVALINK_URI = "http://0.0.0.0:2333"
     pass
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-player = Music(bot, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
+player = Music(bot, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, LAVALINK_URI)
 app = FastAPI(debug=True)
 
 auth_router = AuthRouter(BOT_TOKEN, BOT_OAUTH_SECRET, REDIRECT_URI, REDIRECT_LOC)

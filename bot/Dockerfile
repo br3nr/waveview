@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /api
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt .
@@ -11,9 +11,12 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Set environment variable in Docker
-ENV SPOTIFY_CLIENT_ID=""
-ENV SPOTIFY_CLIENT_SECRET=""
-ENV DEV_CLIENT_ID=""
+ENV SPOTIFY_CLIENT_ID=
+ENV SPOTIFY_CLIENT_SECRET=
+ENV BOT_CLIENT_ID=
+ENV BOT_TOKEN= 
+ENV BOT_OAUTH_SECRET=
+ENV LAVALINK_URI=
 
 # Copy the entire content of the current directory to the container
 COPY . .
