@@ -95,7 +95,6 @@ class Music(commands.Cog):
         cur_queue = self.middlequeues[guild_id]
 
         for i in range(len(cur_queue)):
-            print(cur_queue[i].uuid, uuid)
             if cur_queue[i].uuid == uuid:
                 track = cur_queue[i]
                 del cur_queue[i]
