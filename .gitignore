@@ -15,6 +15,7 @@ bot/keys
 logs
 keys
 bot/config.py
+bot/local_app.py
 
 
 *__pycache__
