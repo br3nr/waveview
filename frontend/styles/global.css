@@ -1,6 +1,6 @@
 :root {
   
-  --blue-rgb: 255 204 204;
+  --blue-rgb: 204 229 255;
   --primary-rgb: var(--blue-rgb);
   
   --blob-color-1: rgb(var(--blue-rgb));

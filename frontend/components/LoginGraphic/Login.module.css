@@ -33,14 +33,16 @@
 }
 
 .screen > .screenimage {
-  background-image: url("https://pbs.twimg.com/media/EWWCUv0U8AEw5mf?format=jpg&name=4096x4096");
+  background-image: url("../../public/images/login.png");
   width: 100%;
   height: 100%;
   background-size: 300%;
   position: absolute;
-  filter: sepia(100%) hue-rotate(260deg);
+  /*filter: sepia(100%) hue-rotate(260deg);*/
   opacity: 0.6;
-  animation: pan-image 20s infinite linear;
+  background-position: 50% 50%;
+  background-size: 150%;
+  /*animation: pan-image 20s infinite linear;*/
 }
 
 @keyframes pan-overlay {
