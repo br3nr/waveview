@@ -66,16 +66,3 @@ class AuthRouter(APIRouter):
 
         response.status_code = 401
         return response
-
-
-
-
-
-
-
-
-
-
-
-
-

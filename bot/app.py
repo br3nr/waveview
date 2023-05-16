@@ -14,7 +14,7 @@ from src.routers.player_ws import PlayerWebsocket
 
 # REQUIRED: Env variables for your bot token, client_id, and client_secret
 # These can be found in the developer portal under Bot and OAuth2 -> General 
-BOT_TOKEN = os.environ.get(["BOT_TOKEN"], None)
+BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
 BOT_CLIENT_ID = os.environ.get("BOT_CLIENT_ID", None)
 BOT_CLIENT_SECRET = os.environ.get("BOT_CLIENT_SECRET", None)
 
