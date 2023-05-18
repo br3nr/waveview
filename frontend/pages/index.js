@@ -34,7 +34,7 @@ export default function Home() {
       <Flex direction={'column'} alignItems={'center'} justifyContent={'center'} height={'100vh'}>
       <h1 className="title">
         <Center>
-          <Text marginBottom={3} fontFamily="mono">br3nr bot</Text>
+          <Text marginBottom={3} fontFamily="mono">wavebot music dashboard</Text>
         </Center>
         <Box onClick={() => checkIsLoggedIn()}>
           <Login/>
