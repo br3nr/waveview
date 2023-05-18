@@ -15,9 +15,9 @@ from src.routers.player_ws import PlayerWebsocket
 
 # REQUIRED: Env variables for your bot token, client_id, and client_secret
 # These can be found in the developer portal under Bot and OAuth2 -> General 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "MTA3NzQ3NDM4Mzc3OTYwNjYwMA.GqAWvR.9mt8mGO5gISBrBA7y5ypDgjAP_CLS6m0HkyHiw")
-BOT_CLIENT_ID = os.environ.get("BOT_CLIENT_ID", "1077474383779606600")
-BOT_CLIENT_SECRET = os.environ.get("BOT_CLIENT_SECRET", "8Y1J9-Gebdcr85aKWDTpG2TAOiVSABcP")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+BOT_CLIENT_ID = os.environ.get("BOT_CLIENT_ID", "")
+BOT_CLIENT_SECRET = os.environ.get("BOT_CLIENT_SECRET", "")
 
 # OPTIONAL: Leave as blank if you don't want to use Spotify
 SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET", None)
