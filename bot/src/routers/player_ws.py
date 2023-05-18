@@ -47,6 +47,9 @@ class PlayerWebsocket(APIRouter):
                 print("Websocket closed.")
                 await websocket.close()
                 break
+            except TypeError:
+                print("Mystery error occured!! Will this fix it?")
+                continue
                 
 
     async def get_track_info(self, music_player):

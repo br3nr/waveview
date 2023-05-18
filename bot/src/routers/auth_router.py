@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from zenora import APIClient
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi import Response 
-
+from ..session.session_manager import SessionManager
 
 class AuthRouter(APIRouter):
 
@@ -45,24 +45,19 @@ class AuthRouter(APIRouter):
             "access_token": str(access_token),  # may need to remove for security
         }
 
-        session_id = str(uuid.uuid4())
-
-        while session_id in self.session:  # make sure the uuid is unique
-            session_id = str(uuid.uuid4())
-
-        self.session[session_id] = user
-
-        with open(self.file_path, "w") as file:
-            json.dump(self.session, file)
+        session_manager = SessionManager.get_instance()
+        session_id = session_manager.create_session(user)
 
         response = RedirectResponse(self.redirect_loc)
         response.set_cookie("session_id", session_id)
-
         return response
     
-    async def login(self,session_id: str, response: Response):
-        if session_id in self.session.keys():
-            return JSONResponse(content=self.session[session_id])
+    async def login(self, session_id: str, response: Response):
+        session_manager = SessionManager.get_instance()
+        
+        if session_manager.is_authenticated(session_id):
+            user = session_manager.get_user(session_id)
+            return JSONResponse(content=user)
 
         response.status_code = 401
         return response

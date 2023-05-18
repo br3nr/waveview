@@ -1,7 +1,8 @@
 import asyncio
 import discord
-from fastapi import FastAPI
 import os
+from src.session.session_manager import SessionManager
+from fastapi import FastAPI, HTTPException
 from discord.ext import commands
 from src.music.music_control import Music
 from src.music.music_commands import MusicCommands
@@ -14,9 +15,9 @@ from src.routers.player_ws import PlayerWebsocket
 
 # REQUIRED: Env variables for your bot token, client_id, and client_secret
 # These can be found in the developer portal under Bot and OAuth2 -> General 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
-BOT_CLIENT_ID = os.environ.get("BOT_CLIENT_ID", None)
-BOT_CLIENT_SECRET = os.environ.get("BOT_CLIENT_SECRET", None)
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "MTA3NzQ3NDM4Mzc3OTYwNjYwMA.GqAWvR.9mt8mGO5gISBrBA7y5ypDgjAP_CLS6m0HkyHiw")
+BOT_CLIENT_ID = os.environ.get("BOT_CLIENT_ID", "1077474383779606600")
+BOT_CLIENT_SECRET = os.environ.get("BOT_CLIENT_SECRET", "8Y1J9-Gebdcr85aKWDTpG2TAOiVSABcP")
 
 # OPTIONAL: Leave as blank if you don't want to use Spotify
 SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET", None)
@@ -39,6 +40,22 @@ app.include_router(auth_router, tags=["auth"])
 app.include_router(music_router, tags=["music"])
 app.include_router(player_ws, tags=["player_ws"])
 
+
+@app.middleware("http")
+async def authenticate_request(request, call_next):
+    if request.url.path.startswith("/auth"):
+        response = await call_next(request)
+        return response
+    token = request.cookies.get("session_id")
+    session_manager = SessionManager.get_instance()
+    if(session_manager.is_authenticated(token)):
+        response = await call_next(request)
+        return response
+    else:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authorised to perform this action."
+        )
 
 @bot.event
 async def on_connect():

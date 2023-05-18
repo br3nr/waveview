@@ -129,7 +129,7 @@ class PlayerRouter(APIRouter):
         await self.player.resume_track(guild_id)
         return {"message": "OK"}
     
-    async def pause(self, guild_id: str):
+    async def pause(self, guild_id: str, request: Request):
         await self.player.pause_track(guild_id)
         return {"message": "OK"}
 
