@@ -1,12 +1,14 @@
 version: '3'
 services:
-  fastapi:
+  botapi:
     build:
       context: ./bot
     ports:
       - 5090:5090
     networks:
       - my-network
+    depends_on:
+      - lavalink
 
   lavalink:
     build:
@@ -23,6 +25,8 @@ services:
       - 3000:3000
     networks:
       - my-network
+    depends_on:
+      - botapi
 
 networks:
   my-network:
