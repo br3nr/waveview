@@ -40,11 +40,12 @@ class PlayerRouter(APIRouter):
 
         for guild in active_servers:
             if guild.get_member(int(user_id)):
+                icon_url = str(guild.icon.url) if guild.icon else None
                 guild_list.append(
                     {
                         "id": str(guild.id),
                         "name": str(guild.name),
-                        "icon": str(guild.icon.url),
+                        "icon": icon_url
                     }
                 )
         return jsonify(guild_list)
