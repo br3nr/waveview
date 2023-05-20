@@ -27,7 +27,7 @@ function ServerSelect() {
           router.push("/");
         } else {
           const userJson = await response.json();
-          const serverUrl = `/get_servers/${userJson.id}`;
+          const serverUrl = `/api/get_servers/${userJson.id}`;
           const userServers = await (await fetch(serverUrl)).json();
           setServerList(userServers);
         }

@@ -55,7 +55,7 @@ function MusicDashboard() {
   }
 
   function deleteQueueClick() {
-    const url = `/delete_queue/${selectedServerId}`;
+    const url = `/api/delete_queue/${selectedServerId}`;
     fetch(url);
   }
 

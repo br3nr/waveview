@@ -1,25 +1,19 @@
-# Use the official Node.js image as the base
 FROM node:18-alpine
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files
 COPY package*.json ./
 
-# Install the project dependencies
 RUN npm ci
 
-# Copy the rest of the application code
 COPY . .
 
-ENV NEXT_PUBLIC_WEBSOCKET_URL=ws://192.168.0.153:5090/ws
+ENV NEXT_WEBSOCKET_URL=ws://localhost:5090/ws
+ENV NEXT_REDIRECT_URI=https://discord.com/api/oauth2/authorize?client_id=1077474383779606600&redirect_uri=http%3A%2F%2Flocalhost%3A5090%2Fauth%2Fredirect&response_type=code&scope=identify%20guilds
+ENV NEXT_API_URL=http://botapi:5090/:path*
 
-# Build the Next.js application
 RUN npm run build
 
-# Expose the default Next.js port (3000)
 EXPOSE 3000
 
-# Start the Next.js application
 CMD ["npm", "start"]
