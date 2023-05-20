@@ -24,7 +24,7 @@ function SeekBar({ track }) {
   const handleChange = useCallback(
     async (value) => {
       const response = await fetch(
-        `/seek/${localStorage.getItem("serverId")}/${track[1] * (value * 0.01)}`
+        `/api/seek/${localStorage.getItem("serverId")}/${track[1] * (value * 0.01)}`
       );
       if (response.ok) {
         setProgress(value);

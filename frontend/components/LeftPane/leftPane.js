@@ -24,7 +24,7 @@ function leftPane({selectedServerId}) {
   useEffect(() => {
     if (selectedServerId) {
       const fetchData = async () => {
-        const response = await fetch(`/get_vc/${selectedServerId}`);
+        const response = await fetch(`/api/get_vc/${selectedServerId}`);
         const servers = await response.json();
         setVoiceChannels(servers);
       };
@@ -33,7 +33,7 @@ function leftPane({selectedServerId}) {
   }, [voiceChannel, selectedServerId]);
 
   async function handleJoinServer(vc_id) {
-    const url = `/join_vc/${selectedServerId}/${vc_id}`;
+    const url = `/api/join_vc/${selectedServerId}/${vc_id}`;
     const response = await fetch(url);
     if (response.ok) {
       setVoiceChannel(vc_id);
@@ -43,7 +43,7 @@ function leftPane({selectedServerId}) {
   async function handleDisconnect(event, vc_id) {
     event.stopPropagation();
     event.preventDefault();
-    const url = `/leave_vc/${selectedServerId}/${vc_id}`;
+    const url = `/api/leave_vc/${selectedServerId}/${vc_id}`;
     const response = await fetch(url);
     if (response.ok) {
       // give the backend time to disconnect

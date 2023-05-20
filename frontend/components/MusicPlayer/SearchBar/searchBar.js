@@ -31,7 +31,7 @@ const SearchBar = memo(() => {
     if (event.key === "Enter") {
       setIsSpotify(false);
       setValue("");
-      const url = `/play_song/${localStorage.getItem("serverId")}`;
+      const url = `/api/play_song/${localStorage.getItem("serverId")}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -55,7 +55,7 @@ const SearchBar = memo(() => {
   async function handleSearchClick() {
     setIsSpotify(false);
     setValue("");
-    const url = `/play_song/${localStorage.getItem("serverId")}`;
+    const url = `/api/play_song/${localStorage.getItem("serverId")}`;
     await fetch(url, {
       method: "POST",
       headers: {

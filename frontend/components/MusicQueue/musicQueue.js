@@ -10,7 +10,7 @@ const MusicQueue = React.memo((props) => {
   const removeTrack = useCallback(
     async (track) => {
       setRemovedTrackIds([...removedTrackIds, track.uuid]);
-      const url = `/remove_track/${localStorage.getItem("serverId")}/${
+      const url = `/api/remove_track/${localStorage.getItem("serverId")}/${
         track.uuid
       }`;
       await fetch(url);
@@ -27,7 +27,7 @@ const MusicQueue = React.memo((props) => {
     items.splice(result.destination.index, 0, reorderedItem);
     props.setTrackQueue(items);
     const reorderedItemUuid = reorderedItem.uuid;
-    const url = `/reorder/${localStorage.getItem(
+    const url = `/api/reorder/${localStorage.getItem(
       "serverId"
     )}/${reorderedItemUuid}/${result.destination.index}`;
     await fetch(url);
