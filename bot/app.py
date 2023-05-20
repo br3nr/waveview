@@ -3,9 +3,10 @@ import discord
 import os
 from src.session.session_manager import SessionManager
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from discord.ext import commands
 from src.music.music_control import Music
-from src.music.music_commands import MusicCommands
 from src.routers.auth_router import AuthRouter
 from src.routers.player_router import PlayerRouter
 from src.routers.player_ws import PlayerWebsocket
@@ -42,12 +43,14 @@ app.include_router(player_ws, tags=["player_ws"])
 
 
 @app.middleware("http")
-async def authenticate_request(request, call_next):
+async def authenticate_request(request, call_next):    
     if request.url.path.startswith("/auth"):
         response = await call_next(request)
         return response
+    
     token = request.cookies.get("session_id")
     session_manager = SessionManager.get_instance()
+    
     if(session_manager.is_authenticated(token)):
         response = await call_next(request)
         return response
@@ -57,13 +60,13 @@ async def authenticate_request(request, call_next):
             detail="Not authorised to perform this action."
         )
 
+
 @bot.event
 async def on_connect():
     print("Connected to Discord")
     await bot.add_cog(player)
     player.initialise_player()
-    await bot.add_cog(MusicCommands(bot))
-    print("Music cogs added to bot")
+    print("Cogs added to bot")
 
 
 async def run():
