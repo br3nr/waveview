@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # REQUIRED: Change these if you plan on hosting this
 # outside of localhost
-ENV LAVALINK_URI=http://lavalink:5090
+ENV LAVALINK_URI=http://lavalink:2333
 ENV REDIRECT_URI=http://0.0.0.0:5090/auth/redirect
 ENV REDIRECT_LOC=http://0.0.0.0:3000/posts/server-select
 
@@ -25,7 +25,6 @@ ENV BOT_CLIENT_SECRET=
 # OPTIONAL: Leave these as blank
 ENV SPOTIFY_CLIENT_ID=
 ENV SPOTIFY_CLIENT_SECRET=
-
 
 # Copy the entire content of the current directory to the container
 COPY . .
