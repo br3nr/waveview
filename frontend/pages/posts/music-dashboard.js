@@ -66,9 +66,6 @@ function MusicDashboard() {
         }
       } else {
         router.push("/");
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
       }
     };
     fetchData();
