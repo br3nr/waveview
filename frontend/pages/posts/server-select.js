@@ -1,12 +1,14 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Center, AbsoluteCenter, Flex, Image, Text } from "@chakra-ui/react";
 import styles from "../../styles/ServerSelect.module.css";
 import { useRouter } from "next/router";
+import { Spinner } from "@chakra-ui/react";
 
 function ServerSelect() {
   const [serverList, setServerList] = useState([{}]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   function handleServerClick(server) {
@@ -30,6 +32,7 @@ function ServerSelect() {
           const serverUrl = `/api/get_servers/${userJson.id}`;
           const userServers = await (await fetch(serverUrl)).json();
           setServerList(userServers);
+          setLoading(false);
         }
       } else {
         router.push("/");
@@ -40,32 +43,44 @@ function ServerSelect() {
 
   return (
     <>
-      <Center h="100vh">
-        <Flex>
-          {serverList.map((server, index) => {
-            return (
-              <Box
-                onClick={() => handleServerClick(server)}
-                key={index}
-                w="200px"
-                h="200px"
-                m="30px"
-              >
-                <div className={styles.div}>
-                  <Image
-                    src={server.icon}
+      {loading ? (
+        <Box width="100vw" height="100vh">
+          <AbsoluteCenter>
+            <Spinner width="50px" height="50px"></Spinner>
+          </AbsoluteCenter>
+        </Box>
+      ) : (
+        <Center h="100vh">
+          {serverList.length > 0 ? (
+            <Flex>
+              {serverList.map((server, index) => {
+                return (
+                  <Box
+                    onClick={() => handleServerClick(server)}
+                    key={index}
                     w="200px"
                     h="200px"
-                    borderRadius="10px"
-                    objectFit="cover"
-                  />
-                  <Text align="center">{server.name}</Text>
-                </div>
-              </Box>
-            );
-          })}
-        </Flex>
-      </Center>
+                    m="30px"
+                  >
+                    <div className={styles.div}>
+                      <Image
+                        src={server.icon}
+                        w="200px"
+                        h="200px"
+                        borderRadius="10px"
+                        objectFit="cover"
+                      />
+                      <Text align="center">{server.name}</Text>
+                    </div>
+                  </Box>
+                );
+              })}
+            </Flex>
+          ) : (
+            <></>
+          )}
+        </Center>
+      )}
     </>
   );
 }

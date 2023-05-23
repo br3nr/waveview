@@ -36,13 +36,6 @@ function MusicDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate an asynchronous operation
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Replace this with your actual data fetching or rendering code
-  }, []);
-
-  useEffect(() => {
     const serverId = localStorage.getItem("serverId");
     if (serverId) {
       setSelectedServerId(serverId);
@@ -104,6 +97,7 @@ function MusicDashboard() {
         trackQueueRef.current = track.queue;
       }
       setTrackTime([track.position, track.length]);
+      setLoading(false);
     });
 
     return () => {
