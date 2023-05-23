@@ -1,10 +1,9 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { Box, Center, AbsoluteCenter, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
 import styles from "../../styles/ServerSelect.module.css";
 import { useRouter } from "next/router";
-import { Spinner } from "@chakra-ui/react";
 
 function ServerSelect() {
   const [serverList, setServerList] = useState([{}]);
@@ -43,13 +42,6 @@ function ServerSelect() {
 
   return (
     <>
-      {loading ? (
-        <Box width="100vw" height="100vh">
-          <AbsoluteCenter>
-            <Spinner width="50px" height="50px"></Spinner>
-          </AbsoluteCenter>
-        </Box>
-      ) : (
         <Center h="100vh">
           {serverList.length > 0 ? (
             <Flex>
@@ -80,7 +72,6 @@ function ServerSelect() {
             <></>
           )}
         </Center>
-      )}
     </>
   );
 }
