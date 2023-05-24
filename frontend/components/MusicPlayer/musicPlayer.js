@@ -15,7 +15,7 @@ function MusicPlayer(props) {
       <TrackImage thumbnailUrl={props.thumbnailUrl} />
       <Box paddingTop={4}></Box>
       <TrackTitle songState={props.songState} />
-      <Center>
+      <Center paddingTop="10px" paddingBottom="10px">
         <SeekBar track={props.trackTime} />
       </Center>
       <PlayControls selectedServerId={props.selectedServerId} />

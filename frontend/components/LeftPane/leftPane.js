@@ -87,7 +87,7 @@ function leftPane({selectedServerId}) {
                     </Icon>
                   </Flex>
                   <Flex width="90%" alignItems="center">
-                    <Text paddingLeft={3} paddingTop={1}>
+                    <Text paddingLeft={3} paddingTop="2%">
                       {server.vc_name}
                     </Text>
                   </Flex>

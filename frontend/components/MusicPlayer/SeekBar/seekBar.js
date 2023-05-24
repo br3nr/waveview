@@ -48,7 +48,7 @@ function SeekBar({ track }) {
           <SliderTrack bg={bgColor[0]}>
             <SliderFilledTrack bg={bgColor[1]}/>
           </SliderTrack>
-          <SliderThumb />
+          <SliderThumb bg={bgColor[1]}/>
         </Slider>
       ) : (
         <Slider
