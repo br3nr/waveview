@@ -6,7 +6,7 @@ import styles from "../../styles/ServerSelect.module.css";
 import { useRouter } from "next/router";
 
 function ServerSelect() {
-  const [serverList, setServerList] = useState([{}]);
+  const [serverList, setServerList] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -42,36 +42,42 @@ function ServerSelect() {
 
   return (
     <>
-        <Center h="100vh">
-          {serverList.length > 0 ? (
-            <Flex>
-              {serverList.map((server, index) => {
-                return (
-                  <Box
-                    onClick={() => handleServerClick(server)}
-                    key={index}
-                    w="200px"
-                    h="200px"
-                    m="30px"
-                  >
-                    <div className={styles.div}>
-                      <Image
-                        src={server.icon}
-                        w="200px"
-                        h="200px"
-                        borderRadius="10px"
-                        objectFit="cover"
-                      />
-                      <Text align="center">{server.name}</Text>
-                    </div>
-                  </Box>
-                );
-              })}
-            </Flex>
-          ) : (
-            <></>
-          )}
-        </Center>
+      <Center h="100vh">
+        {serverList != null ? (
+          <>
+            {serverList.length > 0 ? (
+              <Flex>
+                {serverList.map((server, index) => {
+                  return (
+                    <Box
+                      onClick={() => handleServerClick(server)}
+                      key={index}
+                      w="200px"
+                      h="200px"
+                      m="30px"
+                    >
+                      <div className={styles.div}>
+                        <Image
+                          src={server.icon}
+                          w="200px"
+                          h="200px"
+                          borderRadius="10px"
+                          objectFit="cover"
+                        />
+                        <Text align="center">{server.name}</Text>
+                      </div>
+                    </Box>
+                  );
+                })}
+              </Flex>
+            ) : (
+              <Text fontSize="3xl">No servers found.</Text>
+            )}
+          </>
+        ) : (
+          <></>
+        )}
+      </Center>
     </>
   );
 }
