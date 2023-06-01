@@ -36,7 +36,6 @@ function PlayControls(props) {
           <Icon as={FaStepForward} />
         </Button>
       </Center>
-      <Center marginTop={20}></Center>
     </>
   );
 }

@@ -40,7 +40,6 @@ const MusicQueue = React.memo((props) => {
         overflowY="scroll"
         width="100%"
         height="85vh"
-        marginTop="10px"
         className={styles.customScrollbar}
       >
         <DragDropContext onDragEnd={onDragEnd}>

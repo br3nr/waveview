@@ -18,7 +18,6 @@ import _ from "lodash";
 import LeftPane from "../../components/LeftPane/leftPane";
 import { MdPlaylistRemove } from "react-icons/md";
 import { Spinner } from "@chakra-ui/react";
-import { BsDiscord } from "react-icons/bs";
 
 function MusicDashboard() {
   const router = useRouter();
@@ -110,14 +109,14 @@ function MusicDashboard() {
   return (
     <>
       {loading ? (
-        <Box width="100vw" height="100vh">
+        <Box>
           <AbsoluteCenter>
             <Spinner width="50px" height="50px">
               </Spinner>
           </AbsoluteCenter>
         </Box>
       ) : (
-        <Box>
+        <Box >
           <Nav
             handleServerClick={handleServerClick}
             currentUser={userInformation}
@@ -130,12 +129,14 @@ function MusicDashboard() {
               </Flex>
             </GridItem>
             <GridItem colSpan={1} paddingTop="15px">
+              <Box height="80%" backgroundColor="gray.900">
               <MusicPlayer
                 songState={songState}
                 thumbnailUrl={thumbnailUrl}
                 selectedServerId={selectedServerId}
                 trackTime={trackTime}
               />
+              </Box>
             </GridItem>
             <GridItem colSpan={1} paddingTop="15px">
               <Flex alignItems="center">
