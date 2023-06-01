@@ -109,14 +109,13 @@ function MusicDashboard() {
   return (
     <>
       {loading ? (
-        <Box>
+        <Box width="100vw" height="100vh">
           <AbsoluteCenter>
-            <Spinner width="50px" height="50px">
-              </Spinner>
+            <Spinner width="50px" height="50px"></Spinner>
           </AbsoluteCenter>
         </Box>
       ) : (
-        <Box >
+        <Box>
           <Nav
             handleServerClick={handleServerClick}
             currentUser={userInformation}
@@ -129,14 +128,12 @@ function MusicDashboard() {
               </Flex>
             </GridItem>
             <GridItem colSpan={1} paddingTop="15px">
-              <Box height="80%" backgroundColor="gray.900">
-              <MusicPlayer
-                songState={songState}
-                thumbnailUrl={thumbnailUrl}
-                selectedServerId={selectedServerId}
-                trackTime={trackTime}
-              />
-              </Box>
+                <MusicPlayer
+                  songState={songState}
+                  thumbnailUrl={thumbnailUrl}
+                  selectedServerId={selectedServerId}
+                  trackTime={trackTime}
+                />
             </GridItem>
             <GridItem colSpan={1} paddingTop="15px">
               <Flex alignItems="center">
