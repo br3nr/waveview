@@ -24,7 +24,7 @@ function PlayControls(props) {
     <>
       <Center paddingTop="10px">
         <Box paddingRight={10}>
-          <Button onClick={handleClick}>
+          <Button backgroundColor="transparent" onClick={handleClick}>
             {buttonState === "play" ? (
               <Icon as={FaPlay} />
             ) : (
@@ -32,7 +32,7 @@ function PlayControls(props) {
             )}
           </Button>
         </Box>
-        <Button onClick={skipSong}>
+        <Button backgroundColor="transparent" onClick={skipSong}>
           <Icon as={FaStepForward} />
         </Button>
       </Center>

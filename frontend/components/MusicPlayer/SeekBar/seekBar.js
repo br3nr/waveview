@@ -32,7 +32,7 @@ function SeekBar({ track }) {
     },
     [track]
   );
-
+  console.log(track)
   return (
     <>
       {!(track[1] === 0) ? (
@@ -56,7 +56,11 @@ function SeekBar({ track }) {
           width="80%"
           defaultValue={0}
           minH="1"
-        />
+        >
+          <SliderTrack bg={bgColor[0]}>
+            <SliderFilledTrack bg={bgColor[1]}/>
+          </SliderTrack>
+        </Slider>
       )}
     </>
   );
