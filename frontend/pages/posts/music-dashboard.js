@@ -97,6 +97,8 @@ function MusicDashboard() {
     });
 
     return () => {
+      setTrackQueue([]); // empty queue for reconnect
+      trackQueueRef.current = [];
       socket.close();
     };
   }, [selectedServerId]);
