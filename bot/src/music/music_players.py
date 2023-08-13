@@ -26,7 +26,9 @@ class MusicPlayer(ABC):
 
     async def play(self, search: str, vc: CustomPlayer, middlequeues):
         # convert query to youtube url
-        track = await wavelink.YouTubeTrack.search(search, return_first=True)
+        tracks = await wavelink.YouTubeTrack.search(search)
+        # TODO: Error check
+        track = tracks[0]
         if vc.is_playing() or not vc.queue.is_empty:
             vc.queue.put(item=track)
             guild_id = str(vc.guild.id)

@@ -86,7 +86,8 @@ class PlayerRouter(APIRouter):
         except IndexError:
             print(f"IndexError in remove_track. Calling track id: {url}")
             return {"error": "500 Internal Server Error"}
-        except AttributeError:
+        except AttributeError as e:
+            print(e)
             raise HTTPException(
                 status_code=500,
                 detail="You need to connected to a voice channel first.",
