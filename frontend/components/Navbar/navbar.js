@@ -20,7 +20,7 @@ export default function Nav(props) {
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   function handleMenuClick() {
-    router.push("/posts/server-select");
+    router.push("/server-select");
   }
 
   return (

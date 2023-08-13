@@ -22,7 +22,7 @@ export default function Home() {
       if (!response.ok) {
         router.push(redirectUri);
       } else {
-        router.push("/posts/server-select");
+        router.push("/server-select");
       }
     } else {
       router.push(redirectUri);
