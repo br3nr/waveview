@@ -1,9 +1,10 @@
-import { Center, Image, Box } from "@chakra-ui/react";
+import { Center, Image, Box, useColorMode } from "@chakra-ui/react";
 import React from "react";
 import { useState, useEffect } from "react";
 
 function TrackImage({ thumbnailUrl }) {
   const [size, setSize] = useState(0);
+  const { colorMode, toggleColorMode } = useColorMode();
 
   // Ensures that the image is a square, and based on 80%
   // of the container.
@@ -31,7 +32,7 @@ function TrackImage({ thumbnailUrl }) {
             width="100%"
             height="100%"
             borderRadius="20px"
-            backgroundColor="primary.900"
+            backgroundColor= {colorMode == "dark" ? "gray.900" : "gray.100"}
           />
         </Box>
       </Box>
