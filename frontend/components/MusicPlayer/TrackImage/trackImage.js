@@ -31,6 +31,7 @@ function TrackImage({ thumbnailUrl }) {
             width="100%"
             height="100%"
             borderRadius="20px"
+            backgroundColor="primary.900"
           />
         </Box>
       </Box>

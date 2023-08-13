@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <div>
-      <title>wavebot</title>
+      <title>waveview</title>
       <Flex
         direction={"column"}
         alignItems={"center"}
@@ -41,7 +41,7 @@ export default function Home() {
         <h1 className="title">
           <Center>
             <Text marginBottom={3} fontFamily="mono">
-              wavebot music dashboard
+              welcome to waveview
             </Text>
           </Center>
           <Box onClick={() => checkIsLoggedIn()}>

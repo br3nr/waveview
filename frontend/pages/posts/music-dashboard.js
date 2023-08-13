@@ -21,7 +21,7 @@ import { Spinner } from "@chakra-ui/react";
 
 function MusicDashboard() {
   const router = useRouter();
-  const [thumbnailUrl, setThumbnailUrl] = useState("/images/default2.png");
+  const [thumbnailUrl, setThumbnailUrl] = useState("/stacklogo_mini.png");
   const [songState, setSongState] = useState("No song is playing.");
   const [selectedServerId, setSelectedServerId] = useState();
   const [trackQueue, setTrackQueue] = useState([]);
@@ -80,7 +80,7 @@ function MusicDashboard() {
         if (track.thumbnail === null) {
           if (trackQueueRef.current.length == 0) {
             console.log("no track in queue");
-            setThumbnailUrl("/images/default2.png");
+            setThumbnailUrl("/stacklogo_mini.png");
             setSongState(track.title);
           }
         } else {
