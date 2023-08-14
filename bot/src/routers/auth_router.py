@@ -1,6 +1,5 @@
 import json
-import uuid
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from zenora import APIClient
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi import Response 
@@ -20,7 +19,7 @@ class AuthRouter(APIRouter):
         
     def configure_routes(self):
         self.add_api_route("/auth/redirect", self.redirect, methods=["GET"])
-        self.add_api_route("/auth/login/{session_id}", self.login, methods=["GET"])
+        self.add_api_route("/auth/login/", self.login, methods=["GET"])
         
     def initialise_session(self):
         try:
@@ -52,10 +51,11 @@ class AuthRouter(APIRouter):
         response.set_cookie("session_id", session_id)
         return response
     
-    async def login(self, session_id: str, response: Response):
+    async def login(self, response: Response, request: Request):
         session_manager = SessionManager.get_instance()
-        
-        if session_manager.is_authenticated(session_id):
+        session_id = request.cookies.get("session_id")
+
+        if session_id and session_manager.is_authenticated(session_id):
             user = session_manager.get_user(session_id)
             return JSONResponse(content=user)
 
