@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import Login from "../components/LoginGraphic/loginGraphic";
 import getConfig from "next/config";
+import { includes } from "lodash";
 
 export default function Home() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function Home() {
   async function checkIsLoggedIn() {
     const sessionId = Cookies.get("session_id");
     if (sessionId) {
-      const response = await fetch(`/auth/login/${sessionId}`);
+      const response = await fetch(`/auth/login/`, { credentials: "include" });
       if (!response.ok) {
         router.push(redirectUri);
       } else {

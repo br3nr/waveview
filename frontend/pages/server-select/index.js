@@ -22,7 +22,7 @@ function ServerSelect() {
       // check if cookie exists
       const sessionId = Cookies.get("session_id");
       if (sessionId) {
-        const response = await fetch(`/auth/login/${sessionId}`);
+        const response = await fetch(`/auth/login/`, { credentials: 'include' });
 
         if (!response.ok) {
           router.push("/");
