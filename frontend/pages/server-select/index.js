@@ -28,8 +28,16 @@ function ServerSelect() {
           router.push("/");
         } else {
           const userJson = await response.json();
+          // Make this more secure, anyone could call this for any user
+          // with a cookie
           const serverUrl = `/api/get_servers/${userJson.id}`;
-          const userServers = await (await fetch(serverUrl)).json();
+          let userServers = await (await fetch(serverUrl)).json();
+          
+          userServers = userServers.map(server => ({
+            ...server,
+            icon: server.icon === null ? "/discord.png" : server.icon
+          }));          
+          
           setServerList(userServers);
           setLoading(false);
         }
