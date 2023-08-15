@@ -60,7 +60,8 @@ function MusicDashboard() {
         if (!response.ok) {
           router.push("/");
         } else {
-          const userJson = await response.json();
+          let userJson = await response.json();
+          userJson.avatar_url = userJson.avatar_url === "None" ? "/discord.png" : userJson.avatar_url;
           setUserInformation(userJson);
         }
       } else {
