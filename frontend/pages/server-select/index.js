@@ -22,22 +22,22 @@ function ServerSelect() {
       // check if cookie exists
       const sessionId = Cookies.get("session_id");
       if (sessionId) {
-        const response = await fetch(`/auth/login/`, { credentials: 'include' });
+        const response = await fetch(`/auth/login/`, {
+          credentials: "include",
+        });
 
         if (!response.ok) {
           router.push("/");
         } else {
           const userJson = await response.json();
-          // Make this more secure, anyone could call this for any user
-          // with a cookie
           const serverUrl = `/api/get_servers/${userJson.id}`;
           let userServers = await (await fetch(serverUrl)).json();
-          
-          userServers = userServers.map(server => ({
+
+          userServers = userServers.map((server) => ({
             ...server,
-            icon: server.icon === null ? "/discord.png" : server.icon
-          }));          
-          
+            icon: server.icon === null ? "/discord.png" : server.icon,
+          }));
+
           setServerList(userServers);
           setLoading(false);
         }
@@ -65,15 +65,15 @@ function ServerSelect() {
                       m="30px"
                     >
                       <div className={styles.div}>
-                        <Image
-                          src={server.icon}
-                          w="200px"
-                          h="200px"
-                          borderRadius="10px"
-                          objectFit="cover"
-                        />
-                        <Text align="center">{server.name}</Text>
+                          <Image
+                            src={server.icon} 
+                            w="200px"
+                            h="200px"
+                            borderRadius="10px"
+                            objectFit="cover"
+                          />
                       </div>
+                      <Text align="center">{server.name}</Text>
                     </Box>
                   );
                 })}
