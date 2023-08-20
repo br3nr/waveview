@@ -10,11 +10,13 @@ import {
   Stack,
   useColorMode,
   Center,
+
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import React from "react";
 import { useRouter } from "next/router";
 import { BiLeftArrowAlt } from "react-icons/bi";
+import ServerDropdown from "./ServerDropdown/serverDropdown";
 
 export default function Nav(props) {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -27,14 +29,17 @@ export default function Nav(props) {
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} pl={2} pr={4}>
         <Flex h="6vh" alignItems={"center"} justifyContent={"space-between"}>
-          <Button
-            height="50px"
-            width="50px"
-            background="transparent"
-            onClick={handleMenuClick}
-          >
-            <BiLeftArrowAlt />
-          </Button>
+          <Flex gridGap={2} alignItems="center">
+            <Button
+              height="50px"
+              width="50px"
+              background="transparent"
+              onClick={handleMenuClick}
+            >
+              <BiLeftArrowAlt />
+            </Button>
+            <ServerDropdown/>
+          </Flex>
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
               <Button
