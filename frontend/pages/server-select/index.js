@@ -83,7 +83,7 @@ function ServerSelect() {
             )}
           </>
         ) : (
-          <></>
+          <Text fontSize="3xl">No servers found.</Text>
         )}
       </Center>
     </>
