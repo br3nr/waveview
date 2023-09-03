@@ -54,18 +54,14 @@ function MusicDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       setSelectedServerId(localStorage.getItem("serverId"));
-      const sessionId = Cookies.get("session_id");
-      if (sessionId) {
-        const response = await fetch(`/auth/login/`, { credentials: 'include' });
-        if (!response.ok) {
-          router.push("/");
-        } else {
-          let userJson = await response.json();
-          userJson.avatar_url = userJson.avatar_url === "None" ? "/discord.png" : userJson.avatar_url;
-          setUserInformation(userJson);
-        }
-      } else {
+      const response = await fetch(`/auth/login`, { credentials: "include" });
+      if (!response.ok) {
         router.push("/");
+      } else {
+        let userJson = await response.json();
+        userJson.avatar_url =
+          userJson.avatar_url === "None" ? "/discord.png" : userJson.avatar_url;
+        setUserInformation(userJson);
       }
     };
     fetchData();
@@ -131,12 +127,12 @@ function MusicDashboard() {
               </Flex>
             </GridItem>
             <GridItem colSpan={1} paddingTop="15px">
-                <MusicPlayer
-                  songState={songState}
-                  thumbnailUrl={thumbnailUrl}
-                  selectedServerId={selectedServerId}
-                  trackTime={trackTime}
-                />
+              <MusicPlayer
+                songState={songState}
+                thumbnailUrl={thumbnailUrl}
+                selectedServerId={selectedServerId}
+                trackTime={trackTime}
+              />
             </GridItem>
             <GridItem colSpan={1} paddingTop="15px">
               <Flex alignItems="center">

@@ -1,33 +1,26 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
-import Link from "next/link";
-import { ChakraProvider, Image } from "@chakra-ui/react";
-import { Button, Center, Text, Flex, Box } from "@chakra-ui/react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/router";
+import { Center, Text, Flex, Box } from "@chakra-ui/react";
+import { useRouter} from "next/router";
 import Login from "../components/LoginGraphic/loginGraphic";
 import getConfig from "next/config";
-import { includes } from "lodash";
+import {useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
   const { publicRuntimeConfig } = getConfig();
+  const [redirectUri, setRedirectUri] = useState("");
 
-  const redirectUri =
-    process.env.NEXT_PUBLIC_REDIRECT_URI || publicRuntimeConfig.redirectUri;
+  useEffect(() => {
+    setRedirectUri(process.env.NEXT_PUBLIC_REDIRECT_URI || publicRuntimeConfig.redirectUri);
+  },[]);
 
   async function checkIsLoggedIn() {
-    const sessionId = Cookies.get("session_id");
-    if (sessionId) {
-      const response = await fetch(`/auth/login/`, { credentials: "include" });
+
+      const response = await fetch(`http://localhost:5090/auth/login`, { credentials: "include" });
       if (!response.ok) {
         router.push(redirectUri);
       } else {
         router.push("/server-select");
       }
-    } else {
-      router.push(redirectUri);
-    }
   }
 
   return (

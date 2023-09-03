@@ -19,7 +19,7 @@ class AuthRouter(APIRouter):
         
     def configure_routes(self):
         self.add_api_route("/auth/redirect", self.redirect, methods=["GET"])
-        self.add_api_route("/auth/login/", self.login, methods=["GET"])
+        self.add_api_route("/auth/login", self.login, methods=["GET"])
         
     def initialise_session(self):
         try:
@@ -48,7 +48,7 @@ class AuthRouter(APIRouter):
         session_id = session_manager.create_session(user)
 
         response = RedirectResponse(self.redirect_loc)
-        response.set_cookie("session_id", session_id)
+        response.set_cookie("session_id", session_id, httponly=True)
         return response
     
     async def login(self, response: Response, request: Request):

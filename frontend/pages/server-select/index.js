@@ -20,29 +20,25 @@ function ServerSelect() {
   useEffect(() => {
     const fetchData = async () => {
       // check if cookie exists
-      const sessionId = Cookies.get("session_id");
-      if (sessionId) {
-        const response = await fetch(`/auth/login/`, {
-          credentials: "include",
-        });
 
-        if (!response.ok) {
-          router.push("/");
-        } else {
-          const userJson = await response.json();
-          const serverUrl = `/api/get_servers/${userJson.id}`;
-          let userServers = await (await fetch(serverUrl)).json();
+      const response = await fetch(`/auth/login`, {
+        credentials: "include",
+      });
 
-          userServers = userServers.map((server) => ({
-            ...server,
-            icon: server.icon === null ? "/discord.png" : server.icon,
-          }));
-
-          setServerList(userServers);
-          setLoading(false);
-        }
-      } else {
+      if (!response.ok) {
         router.push("/");
+      } else {
+        const userJson = await response.json();
+        const serverUrl = `/api/get_servers/${userJson.id}`;
+        let userServers = await (await fetch(serverUrl)).json();
+
+        userServers = userServers.map((server) => ({
+          ...server,
+          icon: server.icon === null ? "/discord.png" : server.icon,
+        }));
+
+        setServerList(userServers);
+        setLoading(false);
       }
     };
     fetchData();
@@ -65,13 +61,13 @@ function ServerSelect() {
                       m="30px"
                     >
                       <div className={styles.div}>
-                          <Image
-                            src={server.icon} 
-                            w="200px"
-                            h="200px"
-                            borderRadius="10px"
-                            objectFit="cover"
-                          />
+                        <Image
+                          src={server.icon}
+                          w="200px"
+                          h="200px"
+                          borderRadius="10px"
+                          objectFit="cover"
+                        />
                       </div>
                       <Text align="center">{server.name}</Text>
                     </Box>
