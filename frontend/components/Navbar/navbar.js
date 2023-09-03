@@ -38,7 +38,6 @@ export default function Nav(props) {
             >
               <BiLeftArrowAlt />
             </Button>
-            <ServerDropdown/>
           </Flex>
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
