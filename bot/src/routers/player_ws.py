@@ -48,7 +48,7 @@ class PlayerWebsocket(APIRouter):
                 await websocket.close()
                 break
             except TypeError:
-                print("Mystery error occured!! Will this fix it?")
+                print("Continue on strange LavaLink error")
                 continue
                 
 
