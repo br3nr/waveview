@@ -11,8 +11,8 @@
 Waveview is a discord music bot with a build in dashboard for taking greater control of your music experience. You can queue up, play, and enjoy music with your friends with ease.
 
 Waveview is built upon the [Wavelink](https://github.com/PythonistaGuild/Wavelink) library, a Lavalink wraper for [Discord.py](https://fastapi.tiangolo.com/) which handles the music playing functions contained within the bot.
-
-Come try it out [on the demo server](https://discord.gg/xHGEyCg7)
+https://discord.gg/YFq7QjqEuZ
+Come try it out [on the demo server](https://discord.gg/YFq7QjqEuZ)
 
 ## Preview
 
