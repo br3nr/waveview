@@ -91,7 +91,8 @@ class PlayerRouter(APIRouter):
             raise HTTPException(
                 status_code=500,
                 detail="You need to connected to a voice channel first.",
-            )
+        )
+        '''
         except wavelink.ext.spotify.SpotifyRequestError:
             raise HTTPException(
                 status_code=403,
@@ -104,7 +105,7 @@ class PlayerRouter(APIRouter):
                 status_code=404,
                 detail="No tracks found with that query."
             )
-            
+        ''' 
 
     async def playing(self, guild_id):
         try:
