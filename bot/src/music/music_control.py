@@ -8,6 +8,9 @@ from discord import ClientException
 import asyncio
 from .custom_player import CustomPlayer
 from .music_utils import check_string
+from typing import cast 
+import discord
+from discord import Guild
 
 class MiddleQueue:
     def __init__(self, track, thumbnail_uri=None):
@@ -28,51 +31,34 @@ class Music(commands.Cog):
         for guild in self.bot.guilds:
             self.middlequeues[str(guild.id)] = []
 
-        # Map URL types to their corresponding functions
-        self.url_type_mapping = {
-            #"Spotify Track": SpotifyPlayer().play_track,
-            #"Spotify Playlist": SpotifyPlayer().play_playlist,
-            #"Spotify Album": SpotifyPlayer().play_playlist,
-            #"YouTube Song": YoutubePlayer().play_track,
-            #"YouTube Playlist": YoutubePlayer().play_playlist,
-            #"Text": YoutubePlayer().play,
-        }
+    @commands.Cog.listener()
+    async def on_wavelink_track_start(self, payload: wavelink.TrackStartEventPayload) -> None:
+        player: wavelink.Player | None = payload.player
+        if not player:
+            # Handle edge cases...
+            return
+        guild_id = player.guild.id
+        cur_queue = self.middlequeues[str(guild_id)].pop(0)
+        self.middlequeues[guild_id] = cur_queue
+    
+    async def setup_hook(self) -> None:
+        nodes = [wavelink.Node(uri=self.lavalink_uri, password="1234")]
+        # cache_capacity is EXPERIMENTAL. Turn it off by passing None
+        await wavelink.Pool.connect(nodes=nodes, client=self.bot, cache_capacity=100)
     
     def initialise_player(self):
-        self.bot.loop.create_task(self.connect_nodes())
-
-    @commands.Cog.listener()
-    async def on_wavelink_track_end(self, payload: wavelink.TrackEndEventPayload):
-        player = payload.player
-        if not player.queue.is_empty:
-            guild_id = player.guild.id
-            cur_queue = self.middlequeues[str(guild_id)].pop(0)
-            self.middlequeues[guild_id] = cur_queue
-            next_track = player.queue.get()
-            await player.play(next_track)
+        self.bot.loop.create_task(self.setup_hook())
 
     @commands.Cog.listener()
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         """Event fired when a node has finished connecting."""
         print(f"Node: <{node.identifier}> is ready!")
 
-    async def connect_nodes(self):
-        nodes = [wavelink.Node(uri=self.lavalink_uri, password="1234")]
-        await wavelink.Pool.connect(nodes=nodes, client=self.bot, cache_capacity=100)
-    
     def get_queue(self, guild_id):
         if guild_id in self.middlequeues:
             return self.middlequeues[guild_id]
         else:
             return []
-
-    def get_current_song(self, guild_id):
-        guild = self.bot.get_guild(int(guild_id))
-        if guild is None:
-            return "Server not found"
-        vc = guild.voice_client
-        if vc.is_playing():
-            return vc.current
 
     async def dequeue_track_by_id(self, guild_id, track_id):
         guild = self.bot.get_guild(int(guild_id))
@@ -136,14 +122,14 @@ class Music(commands.Cog):
                 await vc.pause(False)
 
     async def skip_track(self, guild_id):
-        guild = self.bot.get_guild(int(guild_id))
+        guild: Guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
-        if vc:
-            if len(vc.queue) == 0:
-                print("AAAAAA")
-                return await vc.stop()
-            print(type(vc)) 
-            return await vc.skip()
+        player: wavelink.Player = cast(wavelink.Player, vc)
+        if player:
+            if len(player.queue) == 0:
+                return await player.stop()
+            res = await player.skip(force=True)
+            print(res)
 
     async def restart(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
@@ -158,78 +144,42 @@ class Music(commands.Cog):
         await vc.seek(seek_time)
 
     async def get_thumbnail(self, guild_id):
+        print("ping")
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
-        return vc.current.thumbnail
+        return vc.current.artwork
 
     def get_guilds(self):
         return self.bot.guilds
 
     async def play_song_by_query(self, guild_id, query):
-        guild = self.bot.get_guild(int(guild_id))
-        vc = guild.voice_client
+        guild: Guild | None = self.bot.get_guild(int(guild_id))
 
-        #player = wavelink.Node.get_player(guild_id)
-        player = vc
-        #url_type = check_string(query)control
-        #action = self.url_type_mapping.get(url_type, None)
-        #if action:
-        #    await action(query, vc, self.middlequeues)
+        vc = guild.voice_client
+        player = cast(wavelink.Player, vc)  # type: ignore 
+
+        player.autoplay = wavelink.AutoPlayMode.enabled 
         tracks: wavelink.Search = await wavelink.Playable.search(query)
-        if not tracks:
-            return # no tracks
-        
         cur_queue = self.middlequeues.get(guild_id, [])
 
         if isinstance(tracks, wavelink.Playlist):
-            # BUG: possible bug if len of player.queue is never 0
-            a = 1
+            for track in tracks:
+                if player.playing:
+                    cur_queue.append(MiddleQueue(track))
+                    await player.queue.put_wait(track)
+                else:
+                    await player.play(track)
         else:
             track: wavelink.Playable = tracks[0]
-            if player.playing or not len(player.queue) == 0:
-                print("Adding song to queue")
+            await player.queue.put_wait(track)
+            if player.playing:
                 cur_queue.append(MiddleQueue(track))
-                await player.queue.put_wait(track)
-            else:
-                await player.play(track)
+
+        if not player.playing:
+            await player.play(player.queue.get(), volume=30)
+    
         self.middlequeues[guild_id] = cur_queue
-        print(self.middlequeues[guild_id])
-    """
-    async def play_track(self, query: str, vc: CustomPlayer, middlequeues):
-        # remove time from youtube link
-        query = re.sub(r"&t=\d+", "", query)
-        tracks = await wavelink.NodePool.get_node().get_tracks(
-            wavelink.YouTubeTrack, query
-        )
-        track = tracks[0]
-        guild_id = str(vc.guild.id)
-        cur_queue = middlequeues.get(guild_id, [])
-        if vc.is_playing() or not vc.queue.is_empty:
-            vc.queue.put(item=track)
-            cur_queue.append(MiddleQueue(track))
-        else:
-            await vc.play(track)
-        middlequeues[guild_id] = cur_queue
-
-    async def play_playlist(self, query: str, vc: CustomPlayer, middlequeues):
-        # Plays a yt playlist
-        # TODO: Make this fast
-        playlist = await wavelink.NodePool.get_node().get_playlist(
-            wavelink.YouTubePlaylist, query
-        )
-        tracks = playlist.tracks
-        guild_id = str(vc.guild.id)
-        cur_queue = middlequeues.get(guild_id, [])
-        for track in tracks:
-            print(track)
-            if vc.is_playing() or not vc.queue.is_empty:
-                vc.queue.put(item=track)
-                cur_queue.append(MiddleQueue(track))
-            else:
-                await vc.play(track)
-            middlequeues[guild_id] = cur_queue
-    """
-
+    
     async def join_vc(self, guild_id, vc_id):
         # TODO: Work out why I used a while loop here
         # what was I trying to prevent?
