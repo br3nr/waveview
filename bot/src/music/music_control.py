@@ -98,8 +98,10 @@ class Music(commands.Cog):
     async def delete_queue_by_guild(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
         vc = guild.voice_client
-        if vc:
-            vc.queue.reset()
+        player = cast(wavelink.Player, vc)
+
+        if player:
+            player.queue.clear()
             self.middlequeues[guild_id] = []
 
     def get_player(self, guild_id):
@@ -127,9 +129,11 @@ class Music(commands.Cog):
         player: wavelink.Player = cast(wavelink.Player, vc)
         if player:
             if len(player.queue) == 0:
-                return await player.stop()
-            res = await player.skip(force=True)
-            print(res)
+                await player.stop()
+            else:
+                await player.pause(False)
+                await player.skip(force=True)
+            
 
     async def restart(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
