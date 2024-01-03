@@ -1,5 +1,4 @@
 uvicorn==0.22.0
-import discord 
 discord==2.2.3
 Wavelink==3.1.2 
 fastapi==0.95.2
