@@ -55,7 +55,7 @@ You will need the following 4x environment variables for the Dockerfiles in orde
 - Redirect URI (Oauth2 -> URL Generator)
   - Set this in `frontend/Dockerfile` for the variable `NEXT_REDIRECT URI` (See below for details on how to create this)
 
-You can leave the rest of the environment variables as they are. If you plan to self host this, you may change them as needed. Furhter, if you want Spotify support, you should set the `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_ID` environment variables.
+You can leave the rest of the environment variables as they are. If you plan to self host this, you may change them as needed. Furhter, if you want Spotify support, you should set the `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_ID` environment variables in `Lavalink/application.yml`.
 
 #### Creating a Redirect URI
 
