@@ -182,25 +182,21 @@ class Music(commands.Cog):
 
         self.middlequeues[guild_id] = cur_queue
 
-    async def join_vc(self, guild_id, vc_id):
-        # TODO: Work out why I used a while loop here
-        # what was I trying to prevent?
-        guild = self.bot.get_guild(int(guild_id))
-        vc = guild.voice_client
-        while not vc or vc.channel.id != vc_id:
-            if vc:
-                await vc.disconnect()
-                self.middlequeues[str(guild_id)] = []
-                await asyncio.sleep(0.5)
-            channel = guild.get_channel(vc_id)
-            try:
-                await channel.connect(cls=CustomPlayer())
-            except ClientException as e:
-                print(e)
-                continue
-            else:
-                break
 
+    async def join_vc(self, guild_id, vc_id):
+        guild: Guild | None = self.bot.get_guild(int(guild_id))
+        player = cast(wavelink.Player, guild.voice_client)
+        if player:
+            if player.channel.id != vc_id:
+                await player.disconnect()
+                self.middlequeues[str(guild_id)] = []                
+                await asyncio.sleep(0.5)
+        try:
+            channel = guild.get_channel(vc_id)
+            await channel.connect(cls=wavelink.Player) # type: ignore
+        except ClientException:
+            pass
+            
     async def leave_vc(self, guild_id, vc_id):
         guild: Guild | None = self.bot.get_guild(int(guild_id))
         player = cast(wavelink.Player, guild.voice_client)

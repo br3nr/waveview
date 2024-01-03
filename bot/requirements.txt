@@ -1,6 +1,8 @@
 uvicorn==0.22.0
+import discord 
 discord==2.2.3
-Wavelink==3.1.0 
+Wavelink==3.1.2 
 fastapi==0.95.2
 Zenora==0.0.3
+python-dotenv==1.0.0
 websockets==11.0.3
