@@ -3,7 +3,7 @@ from fastapi import WebSocket
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from fastapi import WebSocket
 import asyncio
-
+import traceback
 
 class PlayerWebsocket(APIRouter):
     def __init__(self, bot, music_cls, *args, **kwargs):
@@ -47,20 +47,16 @@ class PlayerWebsocket(APIRouter):
                 print("Websocket closed.")
                 await websocket.close()
                 break
-            except TypeError:
-                print("Continue on strange LavaLink error")
-                continue
+            except TypeError as e:
+                traceback.print_exc()
+                break
                 
 
     async def get_track_info(self, music_player):
         if music_player is None:
             return self.get_default_guild_track_data()
         else:
-            if hasattr(music_player, "thumbnail"):
-                thumbnail_url = await music_player.fetch_thumbnail()
-            else:
-                thumbnail_url = music_player.images[0]
-
+            thumbnail_url = music_player.artwork
             track_title = music_player.title
             return {
                 "title": track_title,
@@ -78,7 +74,8 @@ class PlayerWebsocket(APIRouter):
                 if tmp_list[i].thumbnail_uri is not None:
                     thumbnail_url = tmp_list[i].thumbnail_uri
                 else:
-                    thumbnail_url = await tmp_list[i].track.fetch_thumbnail()
+                    # BUG: Potential bug here if artwork does not exist on track
+                    thumbnail_url = tmp_list[i].track.artwork
             except AttributeError:
                 thumbnail_url = None
 

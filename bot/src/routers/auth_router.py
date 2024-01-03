@@ -9,6 +9,7 @@ class AuthRouter(APIRouter):
 
     def __init__(self, token, client_secret, redirect_uri, redirect_loc, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        print(token, client_secret, redirect_uri)
         self.api_client = APIClient(token=token, client_secret=client_secret)
         self.session = {}
         self.file_path = "session.json"

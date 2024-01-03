@@ -30,7 +30,6 @@ Waveview comes with a bunch of cool features:
 - Authentication - Waveview uses discords OAuth2 system to allow users to login and control the bot in the servers they are part of. Authentication only requires the identify scope (userame and profile picture)
 - Enhanced Control - Waveview has advanced track controls, including queue reordering, track scrubbing, and queue clearing features.
 - Snappy UI - Waveviews UI comes with intuitive but pleasant features that make interacting with the bot easy
-- Commands - If commands are more your thing, Waveview comes with those too! All commands  work with the queue
 - Seamless Music Playing - Thanks to the Wavelink library, the music playing experience is extremely smooth with no audio tearing
 
 
@@ -55,7 +54,7 @@ You will need the following 4x environment variables for the Dockerfiles in orde
 - Redirect URI (Oauth2 -> URL Generator)
   - Set this in `frontend/Dockerfile` for the variable `NEXT_REDIRECT URI` (See below for details on how to create this)
 
-You can leave the rest of the environment variables as they are. If you plan to self host this, you may change them as needed. Furhter, if you want Spotify support, you should set the `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_ID` environment variables.
+You can leave the rest of the environment variables as they are. If you plan to self host this, you may change them as needed. Furhter, if you want Spotify support, you should set the `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` environment variables in `Lavalink/application.yml`.
 
 #### Creating a Redirect URI
 

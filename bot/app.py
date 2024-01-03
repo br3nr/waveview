@@ -9,6 +9,9 @@ from src.routers.auth_router import AuthRouter
 from src.routers.player_router import PlayerRouter
 from src.routers.player_ws import PlayerWebsocket
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # NOTE: Replace the default None in os.environ.get with the
 # corresponding value, otherwise set as environment variable
