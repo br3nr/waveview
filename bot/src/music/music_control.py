@@ -42,6 +42,7 @@ class Music(commands.Cog):
             # TODO: Edge cases
             return
         elif player.guild:
+            await player.pause(False)
             guild_id: int = player.guild.id
             cur_queue = self.middlequeues[str(guild_id)].pop(0)
             self.middlequeues[guild_id] = cur_queue
@@ -123,9 +124,7 @@ class Music(commands.Cog):
         player = cast(wavelink.Player, guild.voice_client)
         if not player:
             return
-
-        if player.playing and not player.paused:
-            await player.pause(True)
+        await player.pause(True)
 
     async def resume_track(self, guild_id):
         guild = self.bot.get_guild(int(guild_id))
@@ -135,9 +134,7 @@ class Music(commands.Cog):
         player = cast(wavelink.Player, guild.voice_client)
         if not player:
             return
-
-        if player.playing and not player.paused:
-            await player.pause(False)
+        await player.pause(False)
 
     async def skip_track(self, guild_id):
         guild: Guild | None = self.bot.get_guild(int(guild_id))
@@ -149,7 +146,6 @@ class Music(commands.Cog):
                 if len(player.queue) == 0:
                     await player.stop()
                 else:
-                    await player.pause(False)
                     await player.skip(force=True)
 
     async def seek_track(self, guild_id, seek_time):
@@ -210,7 +206,7 @@ class Music(commands.Cog):
         vc = guild.voice_client
         if vc:
             await vc.disconnect()
-            self.middlequeues[str(guild_id)] = []
+            self.middlequeues[str(guild_id)t] = []
 
     @commands.command()
     @log_command
