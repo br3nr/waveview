@@ -10,6 +10,9 @@ COPY Lavalink.jar .
 # Copy the application.yml file to the container
 COPY application.yml .
 
+ENV PLUGINS_SPOTIFY_CLIENTID=
+ENV PLUGINS_SPOTIFY_CLIENTSECRET=
+
 # Expose the default port used by Lavalink
 EXPOSE 2333
 
